@@ -1016,7 +1016,7 @@ elif st.session_state.student_count_no_modules < 20:
 # ==========================================
 # 7. STUDENT COUNTER FUNCTION
 # ==========================================
-def student_counter(label, key, min_val=20, max_val=70, default=30):
+def student_counter(label, key, min_val=20, max_val=60, default=30):
     """
     Create a student counter with +/- buttons.
     
@@ -1024,7 +1024,7 @@ def student_counter(label, key, min_val=20, max_val=70, default=30):
         label: Display label for the counter
         key: Unique session state key
         min_val: Minimum value (default: 20)
-        max_val: Maximum value (default: 70)
+        max_val: Maximum value (default: 60)
         default: Default value (default: 30)
     
     Returns:
