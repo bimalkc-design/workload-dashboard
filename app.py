@@ -299,6 +299,18 @@ st.markdown("""
         color: #2e7d32;
     }
     
+    .module-detail-box {
+        background: #f8f9fa;
+        padding: 0.5rem 0.8rem;
+        border-radius: 4px;
+        margin: 0.3rem 0;
+        border-left: 3px solid #c9a84c;
+        font-size: 0.8rem;
+    }
+    .module-detail-box strong {
+        color: #1a2a4a;
+    }
+    
     @media (max-width: 768px) {
         .academic-header h1 { font-size: 1.4rem; }
         .wam-professional .number { font-size: 2.5rem; }
@@ -942,6 +954,7 @@ st.markdown(f"""
                 <span class="badge" style="margin-left:0.5rem;">🏛️ Academic Year 2026-2027</span>
             </div>
         </div>
+         </div>
         <div style="text-align:right; font-size:0.9rem; color: #ffffff;">
             <div>Faculty Self-Service Portal</div>
             <div>Workload Allocation Module</div>
@@ -1061,7 +1074,47 @@ with st.sidebar:
                 code = sel.split(" - ")[0]
                 mod = next(m for m in modules if m['code'] == code)
                 
-                students = st.slider("Student Enrolment", 25, 40, 30)
+                # ===== MODULE TYPE SELECTION (Always Available) =====
+                st.markdown("**Module Type**")
+                mod_type = st.radio(
+                    "Select Module Type",
+                    ["Theory Only", "Lab Only", "Theory + Lab"],
+                    index=0,
+                    horizontal=True,
+                    key="mod_type_from_list"
+                )
+                
+                # Hours based on type selection
+                col_t, col_l = st.columns(2)
+                with col_t:
+                    if mod_type in ["Theory Only", "Theory + Lab"]:
+                        theory = st.number_input(
+                            "Theory Hours", 
+                            min_value=0, 
+                            max_value=6, 
+                            value=mod['theory'] if mod['theory'] > 0 else 3, 
+                            step=1,
+                            key="theory_from_list"
+                        )
+                    else:
+                        theory = 0
+                        st.info("Theory hours: 0 (Lab Only module)")
+                
+                with col_l:
+                    if mod_type in ["Lab Only", "Theory + Lab"]:
+                        lab = st.number_input(
+                            "Lab Hours", 
+                            min_value=0, 
+                            max_value=6, 
+                            value=mod['lab'] if mod['lab'] > 0 else 3, 
+                            step=1,
+                            key="lab_from_list"
+                        )
+                    else:
+                        lab = 0
+                        st.info("Lab hours: 0 (Theory Only module)")
+                
+                students = st.slider("Student Enrolment", 25, 60, 30)
                 
                 room = st.text_input(
                     "Room / Laboratory",
@@ -1069,15 +1122,26 @@ with st.sidebar:
                     placeholder="e.g., Science Hall 1, Lab 203"
                 )
                 
-                # Show module type
-                mod_type = "Theory + Lab" if mod['theory'] > 0 and mod['lab'] > 0 else "Theory Only" if mod['lab'] == 0 else "Lab Only"
-                st.caption(f"📋 Type: {mod_type} | Theory: {mod['theory']}h | Lab: {mod['lab']}h")
+                # Show module summary
+                st.markdown(f"""
+                <div class="module-detail-box">
+                    <strong>📋 Module Summary:</strong><br>
+                    Type: {mod_type} • Theory: {theory}h • Lab: {lab}h • Total: {theory + lab}h • Students: {students}
+                </div>
+                """, unsafe_allow_html=True)
                 
                 col_a, col_b = st.columns(2)
                 with col_a:
                     if st.button("Add Module", use_container_width=True):
                         if not any(m['code'] == code for m in st.session_state.modules):
-                            st.session_state.modules.append(mod)
+                            # Create module with user-specified hours
+                            custom_mod = {
+                                'code': code,
+                                'name': mod['name'],
+                                'theory': theory,
+                                'lab': lab
+                            }
+                            st.session_state.modules.append(custom_mod)
                             st.session_state.counts[code] = students
                             if room:
                                 st.session_state.rooms[code] = room
@@ -1115,7 +1179,8 @@ with st.sidebar:
                 ["Theory Only", "Lab Only", "Theory + Lab"],
                 index=["Theory Only", "Lab Only", "Theory + Lab"].index(st.session_state.manual_module_type) 
                     if st.session_state.manual_module_type in ["Theory Only", "Lab Only", "Theory + Lab"] else 0,
-                horizontal=True
+                horizontal=True,
+                key="mod_type_manual"
             )
             st.session_state.manual_module_type = mod_type
             
@@ -1128,7 +1193,8 @@ with st.sidebar:
                         min_value=0, 
                         max_value=6, 
                         value=st.session_state.manual_theory if st.session_state.manual_theory > 0 else 3, 
-                        step=1
+                        step=1,
+                        key="theory_manual"
                     )
                 else:
                     theory = 0
@@ -1141,7 +1207,8 @@ with st.sidebar:
                         min_value=0, 
                         max_value=6, 
                         value=st.session_state.manual_lab if st.session_state.manual_lab > 0 else 3, 
-                        step=1
+                        step=1,
+                        key="lab_manual"
                     )
                 else:
                     lab = 0
@@ -1167,15 +1234,14 @@ with st.sidebar:
             st.session_state.manual_room = room
             
             # Summary of module
-            st.info(f"""
-            📋 **Module Summary:**
-            - Type: {mod_type}
-            - Theory Hours: {theory}h
-            - Lab Hours: {lab}h
-            - Total Hours: {theory + lab}h
-            - Students: {students}
-            - Room: {room if room else 'Not Assigned'}
-            """)
+            st.markdown(f"""
+            <div class="module-detail-box">
+                <strong>📋 Module Summary:</strong><br>
+                Code: {mod_code if mod_code else '(Not Set)'} • Name: {mod_name if mod_name else '(Not Set)'}<br>
+                Type: {mod_type} • Theory: {theory}h • Lab: {lab}h • Total: {theory + lab}h • Students: {students}<br>
+                Room: {room if room else 'Not Assigned'}
+            </div>
+            """, unsafe_allow_html=True)
             
             # Save to session state
             if mod_code:
@@ -1243,7 +1309,8 @@ with st.sidebar:
             ["Theory Only", "Lab Only", "Theory + Lab"],
             index=["Theory Only", "Lab Only", "Theory + Lab"].index(st.session_state.manual_module_type) 
                 if st.session_state.manual_module_type in ["Theory Only", "Lab Only", "Theory + Lab"] else 0,
-            horizontal=True
+            horizontal=True,
+            key="mod_type_no_modules"
         )
         st.session_state.manual_module_type = mod_type
         
@@ -1256,7 +1323,8 @@ with st.sidebar:
                     min_value=0, 
                     max_value=6, 
                     value=st.session_state.manual_theory if st.session_state.manual_theory > 0 else 3, 
-                    step=1
+                    step=1,
+                    key="theory_no_modules"
                 )
             else:
                 theory = 0
@@ -1269,7 +1337,8 @@ with st.sidebar:
                     min_value=0, 
                     max_value=6, 
                     value=st.session_state.manual_lab if st.session_state.manual_lab > 0 else 3, 
-                    step=1
+                    step=1,
+                    key="lab_no_modules"
                 )
             else:
                 lab = 0
@@ -1295,15 +1364,14 @@ with st.sidebar:
         st.session_state.manual_room = room
         
         # Summary of module
-        st.info(f"""
-        📋 **Module Summary:**
-        - Type: {mod_type}
-        - Theory Hours: {theory}h
-        - Lab Hours: {lab}h
-        - Total Hours: {theory + lab}h
-        - Students: {students}
-        - Room: {room if room else 'Not Assigned'}
-        """)
+        st.markdown(f"""
+        <div class="module-detail-box">
+            <strong>📋 Module Summary:</strong><br>
+            Code: {mod_code if mod_code else '(Not Set)'} • Name: {mod_name if mod_name else '(Not Set)'}<br>
+            Type: {mod_type} • Theory: {theory}h • Lab: {lab}h • Total: {theory + lab}h • Students: {students}<br>
+            Room: {room if room else 'Not Assigned'}
+        </div>
+        """, unsafe_allow_html=True)
         
         # Save to session state
         if mod_code:
