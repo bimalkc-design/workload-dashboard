@@ -1,259 +1,1070 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
 from datetime import datetime
+import json
 import os
-import streamlit.components.v1 as components
+import base64
 
 # ==========================================
-# 1. PAGE SETUP & ACADEMIC THEME
+# 1. PAGE CONFIGURATION
 # ==========================================
-st.set_page_config(page_title="DNS Workload Command", page_icon="⚖️", layout="wide")
+st.set_page_config(
+    page_title="DNS Workload Command Center",
+    page_icon="🎓",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 
-MASTER_LOG = "dns_workload_master.csv"
-
+# ==========================================
+# 2. ADVANCED STYLING - PREMIUM UI
+# ==========================================
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Playfair+Display:wght@700&display=swap');
-    :root { 
-        --rub-blue: #1a2a6c; 
-        --rub-red: #b21f1f; 
-        --rub-gold: #daa520; 
-        --parchment: #fdfbf7;
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+    
+    * { font-family: 'Inter', sans-serif; }
+    
+    .main { padding: 0 0.5rem !important; }
+    .block-container { padding: 0.5rem 0.5rem 1rem 0.5rem !important; max-width: 100% !important; }
+    
+    /* Premium Header */
+    .premium-header {
+        background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+        padding: 1.8rem 2rem;
+        border-radius: 16px;
+        margin-bottom: 1.5rem;
+        border: 1px solid rgba(255,255,255,0.08);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        position: relative;
+        overflow: hidden;
+    }
+    .premium-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -20%;
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(circle, rgba(102,126,234,0.1) 0%, transparent 70%);
+        border-radius: 50%;
+    }
+    .premium-header h1 {
+        font-size: 2.2rem;
+        font-weight: 800;
+        margin: 0;
+        background: linear-gradient(90deg, #fff, #a8b5ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .premium-header .sub {
+        font-size: 0.95rem;
+        opacity: 0.7;
+        margin-top: 0.2rem;
+        -webkit-text-fill-color: #ccc;
+    }
+    .premium-header .badge {
+        display: inline-block;
+        background: rgba(102,126,234,0.2);
+        padding: 0.2rem 1rem;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        border: 1px solid rgba(102,126,234,0.3);
+        margin-top: 0.3rem;
+        -webkit-text-fill-color: #a8b5ff;
+    }
+    .premium-header .top-right {
+        text-align: right;
+        font-size: 0.8rem;
+        opacity: 0.6;
+        -webkit-text-fill-color: #aaa;
     }
     
-    .stApp { background-color: var(--parchment); }
-    
-    .main-header {
-        background: linear-gradient(135deg, var(--rub-blue) 0%, var(--rub-red) 100%);
-        padding: 2.5rem; color: white; border-bottom: 5px solid var(--rub-gold);
-        text-align: center; margin: -4rem -4rem 2rem -4rem;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    /* Premium WAM Card */
+    .wam-premium {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 1.8rem;
+        border-radius: 16px;
+        text-align: center;
+        color: white;
+        box-shadow: 0 8px 32px rgba(102,126,234,0.35);
+        margin: 0.5rem 0;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        position: relative;
+        overflow: hidden;
+    }
+    .wam-premium::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+        animation: shimmer 8s infinite linear;
+    }
+    @keyframes shimmer {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    .wam-premium:hover { transform: scale(1.02); }
+    .wam-premium .number {
+        font-size: 3.8rem;
+        font-weight: 800;
+        line-height: 1.2;
+        position: relative;
+        z-index: 1;
+    }
+    .wam-premium .label {
+        font-size: 0.85rem;
+        opacity: 0.85;
+        position: relative;
+        z-index: 1;
     }
     
-    .section-head {
-        background: var(--rub-blue); color: var(--rub-gold);
-        padding: 10px 15px; border-radius: 4px; font-weight: 700; margin-bottom: 1rem;
-        font-family: 'Playfair Display', serif; border-left: 5px solid var(--rub-gold);
+    /* Premium Status Badge */
+    .status-premium {
+        display: inline-block;
+        padding: 0.4rem 1.8rem;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        letter-spacing: 0.5px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
-
-    .tutor-card-print {
-        background: white; border: 2px solid var(--rub-blue);
-        padding: 1rem; border-radius: 10px; margin-bottom: 1rem;
-        min-height: 240px; font-family: 'Inter', sans-serif;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    
+    /* Module Cards - Premium */
+    .module-premium {
+        background: white;
+        border-radius: 12px;
+        padding: 1rem 1.2rem;
+        margin: 0.4rem 0;
+        border-left: 4px solid #667eea;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        transition: all 0.3s ease;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
     }
-    .card-header {
-        background: var(--rub-blue); color: var(--rub-gold);
-        padding: 5px; text-align: center; font-weight: bold;
-        border-radius: 5px 5px 0 0; margin: -1rem -1rem 10px -1rem;
-        font-size: 0.8rem; letter-spacing: 1px;
+    .module-premium:hover {
+        box-shadow: 0 4px 20px rgba(102,126,234,0.15);
+        transform: translateX(4px);
     }
-    .card-label { color: var(--rub-red); font-weight: 700; font-size: 0.7rem; text-transform: uppercase; }
-    .card-value { color: var(--rub-blue); font-weight: 700; font-size: 1rem; line-height: 1.2; }
-
-    div.stButton > button {
-        background-color: var(--rub-blue); color: white; border-radius: 6px;
-        font-weight: 700; width: 100%; border: none; padding: 0.6rem;
+    .module-premium .code { font-weight: 700; color: #667eea; font-size: 1rem; }
+    .module-premium .name { font-size: 0.9rem; color: #333; }
+    .module-premium .details { font-size: 0.78rem; color: #888; margin-top: 0.1rem; }
+    .module-premium .hours {
+        background: #667eea;
+        color: white;
+        padding: 0.2rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+    
+    /* Stats Grid Premium */
+    .stats-premium {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.6rem;
+        background: white;
+        padding: 1rem;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        margin: 0.4rem 0;
+    }
+    .stats-premium .item { text-align: center; }
+    .stats-premium .value {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: #1a1a2e;
+    }
+    .stats-premium .label {
+        font-size: 0.65rem;
+        color: #888;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    /* Threshold Guide Premium */
+    .threshold-premium {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        flex-wrap: wrap;
+        background: white;
+        padding: 0.6rem 1.2rem;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        margin: 0.4rem 0;
+    }
+    .threshold-premium .item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+    .threshold-premium .dot {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        display: inline-block;
+        flex-shrink: 0;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    
+    /* Admin Zone Premium */
+    .admin-premium {
+        background: linear-gradient(135deg, #0f0c29 0%, #302b63 100%);
+        padding: 1.2rem 1.5rem;
+        border-radius: 12px;
+        border: 1px solid #daa520;
+        color: #daa520;
+        margin: 0.8rem 0;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+    .admin-premium .title {
+        font-size: 1.2rem;
+        font-weight: 700;
+    }
+    .admin-premium .sub {
+        font-size: 0.85rem;
+        opacity: 0.7;
+    }
+    
+    /* Buttons Premium */
+    .stButton > button {
+        border-radius: 10px;
+        font-weight: 600;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 0.4rem 1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102,126,234,0.25);
+        width: 100%;
+        font-size: 0.85rem;
+    }
+    .stButton > button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(102,126,234,0.35);
+    }
+    
+    /* Sidebar Premium */
+    .css-1d391kg {
+        background: linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%);
+        padding: 0.5rem !important;
+    }
+    
+    /* Progress Bar Premium */
+    .stProgress > div > div {
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        border-radius: 10px;
+    }
+    .stProgress > div {
+        background: #e9ecef;
+        border-radius: 10px;
+        height: 8px !important;
+    }
+    
+    /* Tabs Premium */
+    .stTabs [data-baseweb="tab-list"] { gap: 0.5rem; }
+    .stTabs [data-baseweb="tab"] {
+        padding: 0.5rem 1.2rem;
+        border-radius: 10px;
+        font-weight: 600;
         transition: all 0.3s;
     }
-    div.stButton > button:hover { background-color: var(--rub-gold); color: black; }
-
-    @media print { .no-print { display: none !important; } .stApp { background: white !important; } }
+    .stTabs [data-baseweb="tab"]:hover {
+        background: rgba(102,126,234,0.1);
+    }
+    .stTabs [aria-selected="true"] {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white !important;
+    }
+    
+    /* Mobile */
+    @media (max-width: 768px) {
+        .premium-header h1 { font-size: 1.5rem; }
+        .wam-premium .number { font-size: 2.8rem; }
+        .stats-premium { grid-template-columns: repeat(2, 1fr); }
+        .threshold-premium { flex-direction: column; align-items: center; gap: 0.3rem; }
+        .module-premium { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+    }
+    
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb { background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 10px; }
+    
+    /* Dataframe */
+    .stDataFrame { width: 100% !important; }
+    .stDataFrame table { font-size: 0.85rem; }
+    
+    /* Metrics */
+    .stMetric { 
+        background: white;
+        padding: 0.8rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .stMetric .label { font-size: 0.7rem !important; text-transform: uppercase; letter-spacing: 0.5px; }
 </style>
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 2. COMPLETE DATA INTEGRATION
+# 3. COMPLETE MODULE DATABASE (YOUR CORRECT DATA)
 # ==========================================
-FACULTY_LIST = sorted([
-    "Dr. Jas Raj Subba", "Mr. Sangay Wangchuk", "Mrs. Punam Mafchan", "Ms. Kuenzang Choki", 
-    "Ms. Sangay Yuden", "Mr. Tashi Dendup", "Shacha Thinley", "Nachiketa Homchaudhuri", 
-    "Mon Bahadur Ghalley", "Dr. Karma Tenzin", "Rit Wik Sharma", "Ugyen Dorji Tamang", 
-    "Karma Wangchuck", "Mohan Singh Rana", "Tshering Dekar", "Bimal Kumar Chetri", 
-    "Sonam Tobgay", "Dechen Lhendup", "S. Chitra", "DS-Y", "Paul Raj"
-])
-
 MODULE_DATABASE = {
+    # ===== OLD CHEMISTRY (3 Year) =====
     'Chemistry_Old': {
         'Year 1': {
-            'Semester I': [{'code': 'ACS101', 'name': 'Academic Skills', 'theory': 2, 'lab': 0}, {'code': 'FCH101', 'name': 'Fundamentals of Inorganic Chemistry', 'theory': 3, 'lab': 2}, {'code': 'FPH101', 'name': 'Foundations of Physics I', 'theory': 2, 'lab': 3}, {'code': 'FMT101', 'name': 'Foundations of Mathematics I', 'theory': 3, 'lab': 0}],
-            'Semester II': [{'code': 'FCH102', 'name': 'Fundamentals of Physical Chemistry', 'theory': 3, 'lab': 2}, {'code': 'FCH103', 'name': 'Fundamentals of Organic Chemistry', 'theory': 3, 'lab': 2}]
+            'Semester I': [
+                {'code': 'ACS101', 'name': 'Academic Skills', 'theory': 2, 'lab': 0},
+                {'code': 'FCH101', 'name': 'Fundamentals of Inorganic Chemistry', 'theory': 3, 'lab': 2},
+                {'code': 'FPH101', 'name': 'Foundations of Physics I', 'theory': 2, 'lab': 3},
+                {'code': 'FMT101', 'name': 'Foundations of Mathematics I', 'theory': 3, 'lab': 0},
+            ],
+            'Semester II': [
+                {'code': 'FCH102', 'name': 'Fundamentals of Physical Chemistry', 'theory': 3, 'lab': 2},
+                {'code': 'APC101', 'name': 'IT Skills', 'theory': 2, 'lab': 2},
+                {'code': 'FCH103', 'name': 'Fundamentals of Organic Chemistry', 'theory': 3, 'lab': 2},
+                {'code': 'FPH102', 'name': 'Foundations of Physics II', 'theory': 2, 'lab': 3},
+                {'code': 'FMT103', 'name': 'Foundations of Mathematics II', 'theory': 3, 'lab': 0},
+                {'code': 'DZG101', 'name': 'Dzongkha Communication', 'theory': 2, 'lab': 0},
+            ]
         },
         'Year 2': {
-            'Semester III': [{'code': 'ICH101', 'name': 'Inorganic Chemistry I', 'theory': 3, 'lab': 3}, {'code': 'PCH201', 'name': 'Physical Chemistry I', 'theory': 3, 'lab': 3}],
-            'Semester IV': [{'code': 'OCH202', 'name': 'Organic Chemistry II', 'theory': 3, 'lab': 3}, {'code': 'PCH202', 'name': 'Physical Chemistry II', 'theory': 3, 'lab': 3}]
+            'Semester III': [
+                {'code': 'ICH101', 'name': 'Inorganic Chemistry I', 'theory': 3, 'lab': 3},
+                {'code': 'PCH201', 'name': 'Physical Chemistry I', 'theory': 3, 'lab': 3},
+                {'code': 'FMT204', 'name': 'Foundations of Mathematics III', 'theory': 3, 'lab': 0},
+                {'code': 'RSM301', 'name': 'Research Methods', 'theory': 3, 'lab': 0},
+                {'code': 'OCH201', 'name': 'Organic Chemistry I', 'theory': 3, 'lab': 3},
+            ],
+            'Semester IV': [
+                {'code': 'OCH202', 'name': 'Organic Chemistry II', 'theory': 3, 'lab': 3},
+                {'code': 'PCH202', 'name': 'Physical Chemistry II', 'theory': 3, 'lab': 3},
+                {'code': 'AMT202', 'name': 'Foundations of Statistics', 'theory': 3, 'lab': 0},
+                {'code': 'ACH201', 'name': 'Introduction to Analytical Chemistry', 'theory': 3, 'lab': 2},
+                {'code': 'ICH202', 'name': 'Inorganic Chemistry II', 'theory': 3, 'lab': 3},
+            ]
         },
         'Year 3': {
-            'Semester V': [{'code': 'OCH303', 'name': 'Organic Chemistry III', 'theory': 3, 'lab': 3}, {'code': 'PCH303', 'name': 'Physical Chemistry III', 'theory': 3, 'lab': 3}]
+            'Semester V': [
+                {'code': 'OCH303', 'name': 'Organic Chemistry III', 'theory': 3, 'lab': 3},
+                {'code': 'PCH303', 'name': 'Physical Chemistry III', 'theory': 3, 'lab': 3},
+                {'code': 'OCH304', 'name': 'Spectroscopic Methods in Chemistry', 'theory': 4, 'lab': 0},
+                {'code': 'BCH301', 'name': 'Principles of Biochemistry I', 'theory': 3, 'lab': 3},
+                {'code': 'ICH203', 'name': 'Inorganic Chemistry III', 'theory': 3, 'lab': 3},
+            ],
+            'Semester VI': [
+                {'code': 'ECH301', 'name': 'Environmental Chemistry', 'theory': 3, 'lab': 3},
+                {'code': 'BAC301', 'name': 'Basic Applied Chemistry', 'theory': 3, 'lab': 2},
+                {'code': 'PCH304', 'name': 'Quantum Chemistry and Spectroscopy', 'theory': 4, 'lab': 0},
+                {'code': 'NCH301', 'name': 'Chemistry of Natural Product', 'theory': 3, 'lab': 3},
+                {'code': 'BCH302', 'name': 'Principles of Biochemistry II', 'theory': 3, 'lab': 3},
+            ]
         }
     },
+    # ===== OLD PHYSICS (3 Year) =====
     'Physics_Old': {
-        'Year 1': { 'Semester I': [{'code': 'ACS101', 'name': 'Academic Skills', 'theory': 2, 'lab': 0}, {'code': 'MEC101', 'name': 'Mechanics I', 'theory': 3, 'lab': 2}] },
-        'Year 3': { 'Semester V': [{'code': 'MPH303', 'name': 'Atomic Physics', 'theory': 3, 'lab': 3}, {'code': 'MPH304', 'name': 'Quantum Physics', 'theory': 4, 'lab': 0}] }
+        'Year 1': {
+            'Semester I': [
+                {'code': 'ACS101', 'name': 'Academic Skills', 'theory': 2, 'lab': 0},
+                {'code': 'MEC101', 'name': 'Mechanics I', 'theory': 3, 'lab': 2},
+                {'code': 'GCH101', 'name': 'General Chemistry I', 'theory': 3, 'lab': 2},
+                {'code': 'FMT101', 'name': 'Foundations of Mathematics I', 'theory': 3, 'lab': 0},
+                {'code': 'MPH101', 'name': 'Foundations of Practical Physics', 'theory': 2, 'lab': 3},
+            ],
+            'Semester II': [
+                {'code': 'FMT102', 'name': 'Mathematical Software', 'theory': 2, 'lab': 2},
+                {'code': 'MEC102', 'name': 'Waves and Oscillations', 'theory': 3, 'lab': 2},
+                {'code': 'GCH102', 'name': 'General Chemistry II', 'theory': 3, 'lab': 2},
+                {'code': 'FMT103', 'name': 'Foundations of Mathematics II', 'theory': 3, 'lab': 0},
+                {'code': 'DZG101', 'name': 'Dzongkha Communication', 'theory': 2, 'lab': 0},
+            ]
+        },
+        'Year 2': {
+            'Semester III': [
+                {'code': 'MEC203', 'name': 'Electromagnetism', 'theory': 3, 'lab': 3},
+                {'code': 'MEC204', 'name': 'Mechanics II', 'theory': 3, 'lab': 3},
+                {'code': 'FMT204', 'name': 'Foundations of Mathematics III', 'theory': 3, 'lab': 0},
+                {'code': 'PLT101', 'name': 'Programming Fundamentals', 'theory': 2, 'lab': 3},
+                {'code': 'MMP201', 'name': 'Mathematical Physics I', 'theory': 3, 'lab': 0},
+            ],
+            'Semester IV': [
+                {'code': 'MPH202', 'name': 'Foundations of Modern Physics', 'theory': 3, 'lab': 2},
+                {'code': 'OPH201', 'name': 'Optics', 'theory': 3, 'lab': 3},
+                {'code': 'AMT202', 'name': 'Foundations of Statistics', 'theory': 3, 'lab': 0},
+                {'code': 'TPH201', 'name': 'Thermal Physics', 'theory': 3, 'lab': 2},
+                {'code': 'ELE201', 'name': 'Electronic Circuits and Devices', 'theory': 3, 'lab': 3},
+            ]
+        },
+        'Year 3': {
+            'Semester V': [
+                {'code': 'MPH303', 'name': 'Atomic Physics', 'theory': 3, 'lab': 3},
+                {'code': 'MPH304', 'name': 'Quantum Physics', 'theory': 4, 'lab': 0},
+                {'code': 'MMP302', 'name': 'Computational Physics', 'theory': 3, 'lab': 3},
+                {'code': 'TPH302', 'name': 'Statistical Mechanics', 'theory': 4, 'lab': 0},
+                {'code': 'RSM301', 'name': 'Research Methods', 'theory': 3, 'lab': 0},
+            ],
+            'Semester VI': [
+                {'code': 'MMP303', 'name': 'Mathematical Physics II', 'theory': 3, 'lab': 0},
+                {'code': 'MPH305', 'name': 'Solid State Physics I', 'theory': 3, 'lab': 2},
+                {'code': 'MPH306', 'name': 'Nuclear Physics', 'theory': 3, 'lab': 2},
+                {'code': 'ELE302', 'name': 'Analogue and Digital Electronics', 'theory': 3, 'lab': 3},
+                {'code': 'MEC305', 'name': 'Electromagnetic Theory', 'theory': 4, 'lab': 0},
+            ]
+        }
     },
+    # ===== OLD LIFE SCIENCES (3 Year) =====
     'LifeSciences_Old': {
-        'Year 1': { 'Semester I': [{'code': 'BTZ101', 'name': 'Fundamentals of Life Science', 'theory': 3, 'lab': 4}] },
-        'Year 3': { 'Semester V': [{'code': 'BTS304', 'name': 'Fungi and Plant Pathology', 'theory': 3, 'lab': 3}, {'code': 'GRS301', 'name': 'GIS and Remote Sensing', 'theory': 2, 'lab': 3}, {'code': 'ZLS304', 'name': 'Anatomy and Physiology of Vertebrates', 'theory': 3, 'lab': 3}] }
+        'Year 1': {
+            'Semester I': [
+                {'code': 'BTZ101', 'name': 'Fundamentals of Life Science', 'theory': 3, 'lab': 4},
+                {'code': 'FCH101', 'name': 'Fundamentals of Chemistry', 'theory': 3, 'lab': 2},
+                {'code': 'FMT101', 'name': 'Fundamentals of Mathematics', 'theory': 3, 'lab': 0},
+                {'code': 'LAC101', 'name': 'རྫོང་ཁ་ཤེས་ཡྫོན་འབྲི་རྩལ།', 'theory': 2, 'lab': 0},
+                {'code': 'ACS101', 'name': 'Academic Skills', 'theory': 2, 'lab': 0},
+            ],
+            'Semester II': [
+                {'code': 'BTS101', 'name': 'Plant Diversity', 'theory': 3, 'lab': 3},
+                {'code': 'PLS101', 'name': 'Fundamentals of Physics for Life Sciences', 'theory': 2, 'lab': 2},
+                {'code': 'CSP101', 'name': 'Foundations of Python Programming', 'theory': 2, 'lab': 3},
+                {'code': 'LAC102', 'name': 'རྫོང་ཁ་རྩྫོམ་རིག།', 'theory': 2, 'lab': 0},
+            ]
+        },
+        'Year 2': {
+            'Semester III': [
+                {'code': 'BTS202', 'name': 'Plant Anatomy and Physiology', 'theory': 3, 'lab': 3},
+                {'code': 'BCH201', 'name': 'Biochemistry', 'theory': 3, 'lab': 4},
+                {'code': 'ZLS201', 'name': 'Invertebrate Biology and Parasitology', 'theory': 3, 'lab': 3},
+                {'code': 'DAT101', 'name': 'Statistical Computing I', 'theory': 2, 'lab': 3},
+                {'code': 'ZLS204', 'name': 'Developmental Biology', 'theory': 3, 'lab': 0},
+            ],
+            'Semester IV': [
+                {'code': 'BTS203', 'name': 'Embryology of Angiosperms', 'theory': 3, 'lab': 6},
+                {'code': 'BTZ202', 'name': 'Genetics', 'theory': 3, 'lab': 4},
+                {'code': 'ZLS202', 'name': 'Cell and Molecular Biology', 'theory': 3, 'lab': 4},
+                {'code': 'ZLS203', 'name': 'Chordate Biology', 'theory': 3, 'lab': 3},
+                {'code': 'BTZ202', 'name': 'Microbiology', 'theory': 3, 'lab': 6},
+            ]
+        },
+        'Year 3': {
+            'Semester V': [
+                {'code': 'BTS304', 'name': 'Fungi and Plant Pathology', 'theory': 3, 'lab': 3},
+                {'code': 'GRS301', 'name': 'GIS and Remote Sensing', 'theory': 2, 'lab': 3},
+                {'code': 'ZLS304', 'name': 'Anatomy and Physiology of Vertebrates', 'theory': 3, 'lab': 3},
+                {'code': 'ZLS305', 'name': 'Developmental Biology', 'theory': 3, 'lab': 3},
+                {'code': 'BTS306', 'name': 'Plant Breeding and Horticulture', 'theory': 3, 'lab': 6},
+            ],
+            'Semester VI': [
+                {'code': 'BTS305', 'name': 'Principles of Plant Systematics', 'theory': 3, 'lab': 3},
+                {'code': 'BTS306', 'name': 'Horticulture and Postharvest Management', 'theory': 3, 'lab': 3},
+                {'code': 'BTZ303', 'name': 'Microbiology', 'theory': 3, 'lab': 6},
+                {'code': 'BTZ304', 'name': 'Bioinformatics', 'theory': 2, 'lab': 4},
+                {'code': 'ZLS307', 'name': 'Freshwater Biology', 'theory': 3, 'lab': 6},
+                {'code': 'ZLS308', 'name': 'Animal Physiology', 'theory': 3, 'lab': 6},
+                {'code': 'BTS307', 'name': 'Economic Botany', 'theory': 3, 'lab': 6},
+                {'code': 'BTS308', 'name': 'Plant Biotechnology and Tissue Culture', 'theory': 3, 'lab': 3},
+            ]
+        }
     },
-    'Physics_New': { 'Year 1': { 'Semester I': [{'code': 'CME101', 'name': 'Newtonian Mechanics', 'theory': 3, 'lab': 2}] } },
-    'LifeSciences_New': { 'Year 1': { 'Semester I': [{'code': 'BTZ101', 'name': 'Fundamentals of Life Science', 'theory': 3, 'lab': 4}] } },
-    'Chemistry_New': { 'Year 1': { 'Semester I': [{'code': 'ACS101', 'name': 'Academic Skills', 'theory': 2, 'lab': 0}] } }
+    # ===== NEW PHYSICS (4 Year) =====
+    'Physics_New': {
+        'Year 1': {
+            'Semester I': [
+                {'code': 'CME101', 'name': 'Newtonian Mechanics', 'theory': 3, 'lab': 2},
+                {'code': 'CSP101', 'name': 'Foundations of Python Programming', 'theory': 2, 'lab': 3},
+                {'code': 'FMT101', 'name': 'Fundamentals of Mathematics', 'theory': 4, 'lab': 0},
+                {'code': 'LAC101', 'name': 'རྫོང་ཁ་ཤེས་ཡྫོན་འབྲི་རྩལ།', 'theory': 2, 'lab': 0},
+                {'code': 'ACS101', 'name': 'Academic Skills', 'theory': 2, 'lab': 0},
+            ],
+            'Semester II': [
+                {'code': 'PHW101', 'name': 'Oscillations and Waves', 'theory': 3, 'lab': 2},
+                {'code': 'DAT101', 'name': 'Statistical Computing I', 'theory': 2, 'lab': 3},
+                {'code': 'FCH101', 'name': 'Fundamentals of Chemistry', 'theory': 3, 'lab': 2},
+                {'code': 'LAC102', 'name': 'རྫོང་ཁ་རྩྫོམ་རིག།', 'theory': 2, 'lab': 0},
+                {'code': 'Elective I', 'name': 'Elective I', 'theory': 2, 'lab': 0},
+            ]
+        },
+        'Year 2': {
+            'Semester I': [
+                {'code': 'APH201', 'name': 'Physics of Space and Satellites', 'theory': 3, 'lab': 2},
+                {'code': 'EMT201', 'name': 'Electricity and Magnetism', 'theory': 3, 'lab': 3},
+                {'code': 'MMP201', 'name': 'Essential Mathematics for Physics', 'theory': 3, 'lab': 0},
+                {'code': 'APH202', 'name': 'Introduction to Electronic Systems', 'theory': 2, 'lab': 3},
+                {'code': 'Elective II', 'name': 'Elective II', 'theory': 2, 'lab': 0},
+            ],
+            'Semester II': [
+                {'code': 'MMP202', 'name': 'Mathematical Methods in Physics', 'theory': 3, 'lab': 0},
+                {'code': 'FMP201', 'name': 'Modern Physics', 'theory': 3, 'lab': 2},
+                {'code': 'PHW202', 'name': 'Optics', 'theory': 3, 'lab': 3},
+                {'code': 'TPH201', 'name': 'Thermal Physics', 'theory': 3, 'lab': 2},
+                {'code': 'Elective III', 'name': 'Elective III', 'theory': 2, 'lab': 0},
+            ]
+        },
+        'Year 3': {
+            'Semester I': [
+                {'code': 'APH303', 'name': 'Computational Physics', 'theory': 3, 'lab': 3},
+                {'code': 'APH304', 'name': 'Applied Integrated Circuits and Logic Design', 'theory': 3, 'lab': 3},
+                {'code': 'EPH301', 'name': 'Atmospheric Physics', 'theory': 3, 'lab': 2},
+                {'code': 'QME301', 'name': 'Quantum Mechanics', 'theory': 4, 'lab': 0},
+                {'code': 'Elective IV', 'name': 'Elective IV', 'theory': 2, 'lab': 0},
+            ],
+            'Semester II': [
+                {'code': 'ANP301', 'name': 'Atomic Physics', 'theory': 3, 'lab': 3},
+                {'code': 'ANP302', 'name': 'Nuclear Physics', 'theory': 3, 'lab': 2},
+                {'code': 'SSP301', 'name': 'Condensed Matter Physics', 'theory': 3, 'lab': 3},
+                {'code': 'APH305', 'name': 'Machine Learning for Physics', 'theory': 3, 'lab': 3},
+                {'code': 'Elective V', 'name': 'Elective V', 'theory': 2, 'lab': 0},
+            ]
+        },
+        'Year 4': {
+            'Semester I': [
+                {'code': 'THP402', 'name': 'Statistical Physics', 'theory': 4, 'lab': 0},
+                {'code': 'EMT402', 'name': 'Electromagnetic Theory', 'theory': 4, 'lab': 0},
+                {'code': 'SSP402', 'name': 'Advanced Condensed Matter Physics', 'theory': 3, 'lab': 3},
+                {'code': 'QME402', 'name': 'Advanced Quantum Mechanics', 'theory': 4, 'lab': 0},
+                {'code': 'CRD403', 'name': 'Capstone Project I', 'theory': 2, 'lab': 4},
+            ],
+            'Semester II': [
+                {'code': 'CME402', 'name': 'Lagrangian and Hamiltonian Mechanics', 'theory': 3, 'lab': 0},
+                {'code': 'EPH402', 'name': 'Physics of Renewable Energy', 'theory': 3, 'lab': 2},
+                {'code': 'CRD404', 'name': 'Capstone Project II', 'theory': 2, 'lab': 4},
+            ]
+        }
+    },
+    # ===== NEW LIFE SCIENCES (4 Year) =====
+    'LifeSciences_New': {
+        'Year 1': {
+            'Semester I': [
+                {'code': 'BTZ101', 'name': 'Fundamentals of Life Science', 'theory': 3, 'lab': 4},
+                {'code': 'FCH101', 'name': 'Fundamentals of Chemistry', 'theory': 3, 'lab': 2},
+                {'code': 'FMT101', 'name': 'Fundamentals of Mathematics', 'theory': 3, 'lab': 0},
+                {'code': 'LAC101', 'name': 'རྫོང་ཁ་ཤེས་ཡྫོན་འབྲི་རྩལ།', 'theory': 2, 'lab': 0},
+                {'code': 'ACS101', 'name': 'Academic Skills', 'theory': 2, 'lab': 0},
+            ],
+            'Semester II': [
+                {'code': 'BTS101', 'name': 'Plant Diversity', 'theory': 3, 'lab': 3},
+                {'code': 'PLS101', 'name': 'Fundamentals of Physics for Life Sciences', 'theory': 2, 'lab': 2},
+                {'code': 'CSP101', 'name': 'Foundations of Python Programming', 'theory': 2, 'lab': 3},
+                {'code': 'LAC102', 'name': 'རྫོང་ཁ་རྩྫོམ་རིག།', 'theory': 2, 'lab': 0},
+                {'code': 'Elective I', 'name': 'Elective I', 'theory': 2, 'lab': 0},
+            ]
+        },
+        'Year 2': {
+            'Semester I': [
+                {'code': 'BTS202', 'name': 'Plant Anatomy and Physiology', 'theory': 3, 'lab': 3},
+                {'code': 'BCH201', 'name': 'Biochemistry', 'theory': 3, 'lab': 4},
+                {'code': 'ZLS201', 'name': 'Invertebrate Biology and Parasitology', 'theory': 3, 'lab': 3},
+                {'code': 'DAT101', 'name': 'Statistical Computing I', 'theory': 2, 'lab': 3},
+                {'code': 'Elective II', 'name': 'Elective II', 'theory': 2, 'lab': 0},
+            ],
+            'Semester II': [
+                {'code': 'BTS203', 'name': 'Embryology of Angiosperms', 'theory': 3, 'lab': 6},
+                {'code': 'BTZ202', 'name': 'Genetics', 'theory': 3, 'lab': 4},
+                {'code': 'ZLS202', 'name': 'Cell and Molecular Biology', 'theory': 3, 'lab': 4},
+                {'code': 'ZLS203', 'name': 'Chordate Biology', 'theory': 3, 'lab': 3},
+                {'code': 'Elective III', 'name': 'Elective III', 'theory': 2, 'lab': 0},
+            ]
+        },
+        'Year 3': {
+            'Semester I': [
+                {'code': 'BTS304', 'name': 'Fungi and Plant Pathology', 'theory': 3, 'lab': 3},
+                {'code': 'GRS301', 'name': 'GIS and Remote Sensing', 'theory': 2, 'lab': 3},
+                {'code': 'ZLS304', 'name': 'Anatomy and Physiology of Vertebrates', 'theory': 3, 'lab': 3},
+                {'code': 'ZLS305', 'name': 'Developmental Biology', 'theory': 3, 'lab': 3},
+                {'code': 'Elective IV', 'name': 'Elective IV', 'theory': 2, 'lab': 0},
+            ],
+            'Semester II': [
+                {'code': 'BTS305', 'name': 'Principles of Plant Systematics', 'theory': 3, 'lab': 3},
+                {'code': 'BTS306', 'name': 'Horticulture and Postharvest Management', 'theory': 3, 'lab': 3},
+                {'code': 'BTZ303', 'name': 'Microbiology', 'theory': 3, 'lab': 6},
+                {'code': 'BTZ304', 'name': 'Bioinformatics', 'theory': 2, 'lab': 4},
+                {'code': 'Elective V', 'name': 'Elective V', 'theory': 2, 'lab': 0},
+            ]
+        },
+        'Year 4': {
+            'Semester I': [
+                {'code': 'BTS407', 'name': 'Ethnobotany and Phytochemistry', 'theory': 3, 'lab': 4},
+                {'code': 'BTZ405', 'name': 'Biotechnology and Tissue Culture', 'theory': 3, 'lab': 4},
+                {'code': 'BTZ406', 'name': 'Ecology and Biodiversity Conservation', 'theory': 3, 'lab': 3},
+                {'code': 'ZLS406', 'name': 'Freshwater Biology', 'theory': 3, 'lab': 3},
+                {'code': 'CRD403', 'name': 'Capstone Project I', 'theory': 2, 'lab': 4},
+            ],
+            'Semester II': [
+                {'code': 'ZLS407', 'name': 'Animal Behaviour', 'theory': 3, 'lab': 3},
+                {'code': 'BTZ407', 'name': 'Immunology and Forensic Biology', 'theory': 3, 'lab': 4},
+                {'code': 'CRD404', 'name': 'Capstone Project II', 'theory': 2, 'lab': 4},
+            ]
+        }
+    },
+    # ===== NEW CHEMISTRY (4 Year) =====
+    'Chemistry_New': {
+        'Year 1': {
+            'Semester I': [
+                {'code': 'ACS101', 'name': 'Academic Skills', 'theory': 2, 'lab': 0},
+                {'code': 'MEC101', 'name': 'Mechanics I', 'theory': 3, 'lab': 2},
+                {'code': 'GCH101', 'name': 'General Chemistry I', 'theory': 3, 'lab': 2},
+                {'code': 'FMT101', 'name': 'Foundations of Mathematics I', 'theory': 3, 'lab': 0},
+                {'code': 'MPH101', 'name': 'Foundations of Practical Physics', 'theory': 2, 'lab': 3},
+            ],
+            'Semester II': [
+                {'code': 'FMT102', 'name': 'Mathematical Software', 'theory': 2, 'lab': 2},
+                {'code': 'MEC102', 'name': 'Waves and Oscillations', 'theory': 3, 'lab': 2},
+                {'code': 'GCH102', 'name': 'General Chemistry II', 'theory': 3, 'lab': 2},
+                {'code': 'FMT103', 'name': 'Foundations of Mathematics II', 'theory': 3, 'lab': 0},
+                {'code': 'DZG101', 'name': 'Dzongkha Communication', 'theory': 2, 'lab': 0},
+            ]
+        },
+        'Year 2': {
+            'Semester III': [
+                {'code': 'MEC203', 'name': 'Electromagnetism', 'theory': 3, 'lab': 3},
+                {'code': 'MEC204', 'name': 'Mechanics II', 'theory': 3, 'lab': 3},
+                {'code': 'FMT204', 'name': 'Foundations of Mathematics III', 'theory': 3, 'lab': 0},
+                {'code': 'PLT101', 'name': 'Programming Fundamentals', 'theory': 2, 'lab': 3},
+                {'code': 'MMP201', 'name': 'Mathematical Physics I', 'theory': 3, 'lab': 0},
+            ],
+            'Semester IV': [
+                {'code': 'MPH202', 'name': 'Foundations of Modern Physics', 'theory': 3, 'lab': 2},
+                {'code': 'OPH201', 'name': 'Optics', 'theory': 3, 'lab': 3},
+                {'code': 'AMT202', 'name': 'Foundations of Statistics', 'theory': 3, 'lab': 0},
+                {'code': 'TPH201', 'name': 'Thermal Physics', 'theory': 3, 'lab': 2},
+                {'code': 'ELE201', 'name': 'Electronic Circuits and Devices', 'theory': 3, 'lab': 3},
+            ]
+        },
+        'Year 3': {
+            'Semester V': [
+                {'code': 'MPH303', 'name': 'Atomic Physics', 'theory': 3, 'lab': 3},
+                {'code': 'MPH304', 'name': 'Quantum Physics', 'theory': 4, 'lab': 0},
+                {'code': 'MMP302', 'name': 'Computational Physics', 'theory': 3, 'lab': 3},
+                {'code': 'TPH302', 'name': 'Statistical Mechanics', 'theory': 4, 'lab': 0},
+                {'code': 'RSM301', 'name': 'Research Methods', 'theory': 3, 'lab': 0},
+            ],
+            'Semester VI': [
+                {'code': 'MMP303', 'name': 'Mathematical Physics II', 'theory': 3, 'lab': 0},
+                {'code': 'MPH305', 'name': 'Solid State Physics I', 'theory': 3, 'lab': 2},
+                {'code': 'MPH306', 'name': 'Nuclear Physics', 'theory': 3, 'lab': 2},
+                {'code': 'ELE302', 'name': 'Analogue and Digital Electronics', 'theory': 3, 'lab': 3},
+                {'code': 'MEC305', 'name': 'Electromagnetic Theory', 'theory': 4, 'lab': 0},
+            ]
+        },
+        'Year 4': {
+            'Semester I': [
+                {'code': 'THP402', 'name': 'Statistical Physics', 'theory': 4, 'lab': 0},
+                {'code': 'EMT402', 'name': 'Electromagnetic Theory', 'theory': 4, 'lab': 0},
+                {'code': 'SSP402', 'name': 'Advanced Condensed Matter Physics', 'theory': 3, 'lab': 3},
+                {'code': 'QME402', 'name': 'Advanced Quantum Mechanics', 'theory': 4, 'lab': 0},
+                {'code': 'CRD403', 'name': 'Capstone Project I', 'theory': 2, 'lab': 4},
+            ],
+            'Semester II': [
+                {'code': 'CME402', 'name': 'Lagrangian and Hamiltonian Mechanics', 'theory': 3, 'lab': 0},
+                {'code': 'EPH402', 'name': 'Physics of Renewable Energy', 'theory': 3, 'lab': 2},
+                {'code': 'CRD404', 'name': 'Capstone Project II', 'theory': 2, 'lab': 4},
+            ]
+        }
+    }
 }
 
 # ==========================================
-# 3. CORE LOGIC & PERSISTENCE
+# 4. FACULTY DATABASE
 # ==========================================
-def commit_to_master(faculty, position, basket):
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    data = []
-    for m in basket:
-        data.append({
-            "Timestamp": timestamp, "Faculty": faculty, "Rank": position,
-            "Code": m['code'], "Module": m['name'], "Type": m['type'],
-            "Classroom": m['room'] if m['room'] else "Not Specified", 
-            "Theory": m['theory'], "Lab": m['lab'],
-            "Students": m['students'], 
-            "WAM": round((m['theory']*1.1 + m['lab']*0.8 + m['students']*0.045), 2)
-        })
-    df = pd.DataFrame(data)
-    if not os.path.isfile(MASTER_LOG):
-        df.to_csv(MASTER_LOG, index=False)
+FACULTY_LIST = [
+    "Dr. Jas Raj Subba", "Mr. Sangay Wangchuk", "Mrs. Punam Mafchan",
+    "Ms. Kuenzang Choki", "Ms. Sangay Yuden", "Mr. Tashi Dendup",
+    "Shacha Thinley", "Nachiketa Homchaudhuri", "Mon Bahadur Ghalley",
+    "Dr. Karma Tenzin", "Rit Wik Sharma", "Ugyen Dorji Tamang",
+    "Karma Wangchuck", "Mohan Singh Rana", "Tshering Dekar",
+    "Bimal Kumar Chetri", "Sonam Tobgay", "Dechen Lhendup",
+    "S. Chitra", "DS-Y", "Paul Raj"
+]
+
+# ==========================================
+# 5. CORE FUNCTIONS
+# ==========================================
+def calculate_wam(modules):
+    total = 0
+    for m in modules:
+        base = m['theory'] + m['lab']
+        student_load = (m.get('students', 25) * 4) * 0.04
+        total += base + student_load
+    return round(total, 1)
+
+def get_status(wam):
+    if wam == 0:
+        return 'No Load', '⚪', '#6c757d', 'Select modules to begin'
+    elif wam < 12:
+        return 'Light Load', '🟡', '#ffc107', 'You have capacity for more modules'
+    elif wam <= 16:
+        return 'Balanced', '🟢', '#28a745', 'Your workload is optimally balanced!'
     else:
-        df.to_csv(MASTER_LOG, mode='a', header=False, index=False)
+        return 'Heavy Load', '🔴', '#dc3545', 'Consider sharing modules with colleagues'
+
+def log_activity(name, modules, wam, status):
+    log_file = 'workload_logs.json'
+    logs = []
+    if os.path.exists(log_file):
+        try:
+            with open(log_file, 'r') as f:
+                logs = json.load(f)
+        except:
+            pass
+    logs.append({
+        'timestamp': datetime.now().isoformat(),
+        'faculty': name,
+        'modules': modules,
+        'wam': wam,
+        'status': status
+    })
+    with open(log_file, 'w') as f:
+        json.dump(logs, f, indent=2)
+
+def get_history(name):
+    log_file = 'workload_logs.json'
+    if not os.path.exists(log_file):
+        return []
+    try:
+        with open(log_file, 'r') as f:
+            logs = json.load(f)
+        return [l for l in logs if l['faculty'] == name]
+    except:
+        return []
 
 # ==========================================
-# 4. SIDEBAR IDENTITY
+# 6. SESSION STATE
 # ==========================================
-with st.sidebar:
-    st.markdown("### 🏛️ Faculty Identity")
-    user_name = st.selectbox("Your Identity", ["-- Select --", "➕ New Name..."] + FACULTY_LIST)
-    if user_name == "➕ New Name...": user_name = st.text_input("Enter Full Name")
-    
-    user_rank = st.selectbox("Position", ["Assistant Lecturer", "Associate Lecturer", "Lecturer", "Senior Lecturer", "Assistant Professor", "Associate Professor", "Dean", "HoD"])
-    
-    st.divider()
-    st.markdown("### 🔒 Administrative")
-    admin_pass = st.text_input("HoD PIN", type="password")
-    is_admin = (admin_pass == "DNS777")
+if 'modules' not in st.session_state:
+    st.session_state.modules = []
+if 'counts' not in st.session_state:
+    st.session_state.counts = {}
+if 'name' not in st.session_state:
+    st.session_state.name = ""
+if 'admin' not in st.session_state:
+    st.session_state.admin = False
 
 # ==========================================
-# 5. ADMIN COMMAND CENTER (HoD VIEW)
-# ==========================================
-if is_admin:
-    st.markdown("<div class='main-header'><h1>Department Audit Console</h1></div>", unsafe_allow_html=True)
-    if os.path.isfile(MASTER_LOG):
-        m_df = pd.read_csv(MASTER_LOG)
-        st.dataframe(m_df, use_container_width=True)
-        c1, c2 = st.columns(2)
-        with c1: st.download_button("📥 Export Master Log", m_df.to_csv(index=False), "DNS_MASTER.csv")
-        with c2: 
-            if st.button("🔥 PURGE ALL RECORDS"): 
-                if os.path.exists(MASTER_LOG): os.remove(MASTER_LOG)
-                st.success("Database Reset."); st.rerun()
-    else: st.info("Database empty.")
-    st.stop()
-
-# ==========================================
-# 6. TUTOR PORTAL
+# 7. PREMIUM HEADER
 # ==========================================
 st.markdown(f"""
-<div class="main-header">
-    <div style="font-size: 0.8rem; letter-spacing: 3px; color: var(--rub-gold); font-weight: 700;">ROYAL UNIVERSITY OF BHUTAN</div>
-    <h1>Department of Natural Sciences</h1>
-    <p>Academic Resource & Workload Portal — Autumn 2026</p>
+<div class="premium-header">
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; position:relative; z-index:1;">
+        <div>
+            <h1>🎓 DNS Workload Command Center</h1>
+            <div class="sub">Department of Natural Sciences • Royal University of Bhutan</div>
+            <span class="badge">📅 {datetime.now().strftime('%B %d, %Y')} • Autumn 2026</span>
+        </div>
+        <div class="top-right">
+            <div>⚡ Faculty Self-Service</div>
+            <div>📊 Real-time WAM</div>
+        </div>
+    </div>
 </div>
 """, unsafe_allow_html=True)
 
-if user_name == "-- Select --" or not user_name:
-    st.info("👋 Please select your identity in the sidebar to begin.")
+# ==========================================
+# 8. SIDEBAR - PREMIUM
+# ==========================================
+with st.sidebar:
+    st.markdown("### 👤 Your Profile")
+    
+    name_opt = st.radio("Choose", ["From List", "Enter Name"], index=0)
+    
+    if name_opt == "From List":
+        name = st.selectbox("Select", [""] + sorted(FACULTY_LIST))
+    else:
+        name = st.text_input("Your Name", value=st.session_state.name, placeholder="e.g., Dr. Jas Raj Subba")
+    
+    if name:
+        st.session_state.name = name
+        st.success(f"✅ Welcome, {name}!")
+    
+    st.selectbox("Designation", ["Professor", "Associate Professor", "Assistant Professor", "Senior Lecturer", "Lecturer"])
+    
+    st.divider()
+    st.markdown("### 📚 Module Selection")
+    
+    prog = st.selectbox("Program", ["Physics", "Chemistry", "Life Sciences"])
+    curr = st.selectbox("Curriculum", ["Old", "New"])
+    
+    prog_key = {"Physics":"Physics", "Chemistry":"Chemistry", "Life Sciences":"LifeSciences"}[prog]
+    key = f"{prog_key}_{curr}"
+    
+    year = st.selectbox("Year", ["Year 1", "Year 2", "Year 3", "Year 4"])
+    sem = st.selectbox("Semester", ["Semester I", "Semester II", "Semester III", "Semester IV", "Semester V", "Semester VI"])
+    
+    modules = []
+    try:
+        modules = MODULE_DATABASE[key][year][sem]
+    except:
+        st.warning("No modules found")
+    
+    if modules:
+        opts = [f"{m['code']} - {m['name']}" for m in modules]
+        sel = st.selectbox("Module", ["-- Select --"] + opts)
+        
+        if sel != "-- Select --":
+            code = sel.split(" - ")[0]
+            mod = next(m for m in modules if m['code'] == code)
+            
+            students = st.slider("Students", 25, 40, 30)
+            
+            c1, c2 = st.columns(2)
+            with c1:
+                if st.button("➕ Add", use_container_width=True):
+                    if not any(m['code'] == code for m in st.session_state.modules):
+                        st.session_state.modules.append(mod)
+                        st.session_state.counts[code] = students
+                        st.success(f"✅ Added {code}")
+                        st.rerun()
+                    else:
+                        st.warning("⚠️ Already added")
+            with c2:
+                if st.button("🗑️ Clear", use_container_width=True):
+                    st.session_state.modules = []
+                    st.session_state.counts = {}
+                    st.rerun()
+    
+    st.divider()
+    if st.session_state.modules:
+        st.metric("📦 Modules", len(st.session_state.modules))
+        st.metric("👨‍🎓 Students", sum(st.session_state.counts.values()))
+    
+    st.divider()
+    st.markdown("### 🔒 Admin")
+    pin = st.text_input("PIN", type="password")
+    if pin == "DNS777":
+        st.session_state.admin = True
+        st.success("🔓 Admin mode ON")
+
+# ==========================================
+# 9. MAIN CONTENT - PREMIUM
+# ==========================================
+if not st.session_state.name:
+    st.info("👈 Please select or enter your name in the sidebar to get started")
     st.stop()
 
-if 'basket' not in st.session_state: st.session_state.basket = []
+col1, col2 = st.columns([2, 1])
 
-tab_plan, tab_cards = st.tabs(["🎯 Workload Drafting", "📋 My Printable Cards"])
+with col1:
+    st.markdown("### 📋 Your Selected Modules")
+    
+    if not st.session_state.modules:
+        st.info("👈 Select modules from the sidebar")
+    else:
+        total_t, total_l = 0, 0
+        
+        for mod in st.session_state.modules:
+            students = st.session_state.counts.get(mod['code'], 25)
+            total_t += mod['theory']
+            total_l += mod['lab']
+            
+            w = calculate_wam([{**mod, 'students': students}])
+            
+            st.markdown(f"""
+            <div class="module-premium">
+                <div>
+                    <span class="code">{mod['code']}</span>
+                    <span class="name"> - {mod['name']}</span>
+                    <div class="details">📖 {mod['theory']}h Theory • 🧪 {mod['lab']}h Lab • 👨‍🎓 {students} students</div>
+                </div>
+                <div style="display:flex; align-items:center; gap:0.8rem; flex-wrap:wrap;">
+                    <span class="hours">{mod['theory'] + mod['lab']}h</span>
+                    <span style="font-weight:600; color:#764ba2;">WAM: {w:.1f}</span>
+                    <button onclick="removeModule('{mod['code']}')" style="background:none; border:none; color:#dc3545; font-size:1.2rem; cursor:pointer;">✖</button>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            if st.button(f"✖ Remove {mod['code']}", key=f"rm_{mod['code']}"):
+                st.session_state.modules.remove(mod)
+                del st.session_state.counts[mod['code']]
+                st.rerun()
+        
+        st.markdown(f"""
+        <div class="stats-premium">
+            <div class="item"><div class="value">{len(st.session_state.modules)}</div><div class="label">Modules</div></div>
+            <div class="item"><div class="value">{total_t}h</div><div class="label">Theory</div></div>
+            <div class="item"><div class="value">{total_l}h</div><div class="label">Lab</div></div>
+            <div class="item"><div class="value">{sum(st.session_state.counts.values())}</div><div class="label">Students</div></div>
+        </div>
+        """, unsafe_allow_html=True)
 
-with tab_plan:
-    c_in, c_pre = st.columns([1.1, 1.5])
-    with c_in:
-        st.markdown('<div class="section-head">🖊️ Selection Filters</div>', unsafe_allow_html=True)
-        # Fix Mapping for Life Sciences
-        prog_display = st.selectbox("Program Area", ["Physics", "Chemistry", "Life Sciences", "➕ New..."])
-        prog_map = {"Physics": "Physics", "Chemistry": "Chemistry", "Life Sciences": "LifeSciences"}
-        prog = prog_map.get(prog_display, prog_display)
+with col2:
+    st.markdown("### 📊 Your WAM Score")
+    
+    if st.session_state.modules:
+        wam = calculate_wam([
+            {**m, 'students': st.session_state.counts.get(m['code'], 25)}
+            for m in st.session_state.modules
+        ])
+        status, emoji, color, msg = get_status(wam)
         
-        curr = st.selectbox("Curriculum", ["New", "Old"])
-        yr = st.selectbox("Year", ["Year 1", "Year 2", "Year 3", "Year 4"])
-        sem = st.selectbox("Semester", ["Semester I", "Semester II", "Semester III", "Semester IV", "Semester V", "Semester VI"])
+        log_activity(st.session_state.name, [
+            {'code': m['code'], 'name': m['name'], 'students': st.session_state.counts.get(m['code'], 25)}
+            for m in st.session_state.modules
+        ], wam, status)
         
-        db_key = f"{prog}_{curr}"
-        m_code, m_name, d_th, d_lb = "", "", 3, 0
+        st.markdown(f"""
+        <div class="wam-premium">
+            <div class="number">{wam}</div>
+            <div class="label">Workload Allocation Model Score</div>
+        </div>
+        """, unsafe_allow_html=True)
         
-        if db_key in MODULE_DATABASE and yr in MODULE_DATABASE[db_key] and sem in MODULE_DATABASE[db_key][yr]:
-            mods = MODULE_DATABASE[db_key][yr][sem]
-            mod_names = [f"{m['code']} - {m['name']}" for m in mods]
-            sel_mod = st.selectbox("Select Module", mod_names + ["➕ Manual Entry"])
-            if sel_mod != "➕ Manual Entry":
-                entry = next(m for m in mods if f"{m['code']} - {m['name']}" == sel_mod)
-                m_code, m_name, d_th, d_lb = entry['code'], entry['name'], entry['theory'], entry['lab']
+        st.markdown(f"""
+        <div style="text-align:center;">
+            <span class="status-premium" style="background:{color};color:white;">{emoji} {status}</span>
+            <p style="font-size:0.85rem;color:#888;margin-top:0.3rem;">{msg}</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("### Workload Level")
+        progress = min(wam / 16, 1.0)
+        st.progress(progress)
+        st.caption("0" + " " * 50 + "16+")
+        
+        c1, c2, c3 = st.columns(3)
+        c1.metric("Theory", f"{total_t}h")
+        c2.metric("Lab", f"{total_l}h")
+        c3.metric("Total", f"{total_t + total_l}h")
+        
+        if len(st.session_state.modules) > 1:
+            data = []
+            for m in st.session_state.modules:
+                w = calculate_wam([{**m, 'students': st.session_state.counts.get(m['code'], 25)}])
+                data.append({'Module': m['code'], 'WAM': w})
+            df = pd.DataFrame(data)
+            fig = px.bar(df, x='Module', y='WAM', color='WAM', 
+                        color_continuous_scale='Viridis', height=250)
+            fig.update_layout(showlegend=False, margin=dict(l=0, r=0, t=20, b=0))
+            st.plotly_chart(fig, use_container_width=True)
+    else:
+        st.info("👈 Add modules to calculate")
+
+# ==========================================
+# 10. THRESHOLD GUIDE - PREMIUM
+# ==========================================
+st.markdown("""
+<div class="threshold-premium">
+    <div class="item"><span class="dot" style="background:#ffc107;"></span> Light (WAM &lt; 12)</div>
+    <div class="item"><span class="dot" style="background:#28a745;"></span> Balanced (12 - 16)</div>
+    <div class="item"><span class="dot" style="background:#dc3545;"></span> Heavy (WAM &gt; 16)</div>
+</div>
+""", unsafe_allow_html=True)
+
+# ==========================================
+# 11. DETAILED BREAKDOWN - PREMIUM
+# ==========================================
+if st.session_state.modules:
+    st.divider()
+    
+    tab1, tab2, tab3 = st.tabs(["📊 Detailed Breakdown", "📈 Analytics", "📜 Your History"])
+    
+    with tab1:
+        data = []
+        for m in st.session_state.modules:
+            students = st.session_state.counts.get(m['code'], 25)
+            w = calculate_wam([{**m, 'students': students}])
+            data.append({
+                'Code': m['code'],
+                'Module': m['name'],
+                'Theory': m['theory'],
+                'Lab': m['lab'],
+                'Students': students,
+                'WAM': w,
+                'Type': 'T+L' if m['lab'] > 0 else 'Theory'
+            })
+        df = pd.DataFrame(data)
+        st.dataframe(df, use_container_width=True, hide_index=True)
+        
+        csv = df.to_csv(index=False).encode('utf-8')
+        st.download_button("📥 Download CSV", csv, f"workload_{datetime.now().strftime('%Y%m%d')}.csv", "text/csv")
+    
+    with tab2:
+        c1, c2 = st.columns(2)
+        with c1:
+            fig = px.pie(values=[df['Theory'].sum(), df['Lab'].sum()], 
+                        names=['Theory', 'Lab'], title="Theory vs Lab Distribution")
+            fig.update_layout(height=300)
+            st.plotly_chart(fig, use_container_width=True)
+        with c2:
+            fig = px.bar(df, x='Code', y='WAM', title="WAM by Module", color='WAM',
+                        color_continuous_scale='Viridis', height=300)
+            fig.update_layout(showlegend=False)
+            st.plotly_chart(fig, use_container_width=True)
+        
+        st.subheader("📊 Summary Statistics")
+        c1, c2, c3, c4 = st.columns(4)
+        c1.metric("Avg WAM", f"{df['WAM'].mean():.1f}")
+        c2.metric("Max WAM", f"{df['WAM'].max():.1f}")
+        c3.metric("Min WAM", f"{df['WAM'].min():.1f}")
+        c4.metric("Total Students", df['Students'].sum())
+    
+    with tab3:
+        st.subheader("📜 Your Workload History")
+        history = get_history(st.session_state.name)
+        if history:
+            df = pd.DataFrame(history)
+            df['timestamp'] = pd.to_datetime(df['timestamp'])
+            df = df.sort_values('timestamp', ascending=False)
+            st.dataframe(df[['timestamp', 'wam', 'status']], use_container_width=True, hide_index=True)
         else:
-            st.warning("Filters not found in database. Manual entry enabled.")
-            sel_mod = "➕ Manual Entry"
-
-        st.markdown('<div class="section-head" style="background:#b21f1f;">📝 Specific Details</div>', unsafe_allow_html=True)
-        if sel_mod == "➕ Manual Entry":
-            m_code = st.text_input("Manual Code", placeholder="e.g. BIO101")
-            m_name = st.text_input("Manual Name", placeholder="e.g. Microbiology")
-        else: st.write(f"**Target:** {m_code} - {m_name}")
-        
-        m_type = st.selectbox("Component", ["Theory + Lab", "Theory Only", "Lab Only"])
-        m_room = st.text_input("Classroom / Venue")
-        c3, c4 = st.columns(2)
-        with c3: m_th = st.number_input("Theory Hours", 0, 12, d_th)
-        with c4: m_lb = st.number_input("Lab Hours", 0, 12, d_lb)
-        m_st = st.number_input("Enrollment", 1, 300, 30)
-
-        if st.button("➕ Add to My Draft", type="primary"):
-            st.session_state.basket.append({'code': m_code, 'name': m_name, 'type': m_type, 'room': m_room, 'theory': m_th, 'lab': m_lb, 'students': m_st})
-            st.rerun()
-
-    with c_pre:
-        st.markdown('<div class="section-head">📋 Drafting Canvas</div>', unsafe_allow_html=True)
-        if st.session_state.basket:
-            if st.button("🗑️ Clear Entire Draft"): st.session_state.basket = []; st.rerun()
-            for i, m in enumerate(st.session_state.basket):
-                st.markdown(f"✅ **{m['code']}**: {m['name']} ({m['room']})")
-                if st.button(f"Remove {m['code']}", key=f"r_{i}"): st.session_state.basket.pop(i); st.rerun()
-            st.divider()
-            if st.button("🚀 SUBMIT FINAL PLAN", type="primary"):
-                commit_to_master(user_name, user_rank, st.session_state.basket)
-                st.balloons(); st.session_state.basket = []; st.rerun()
-        else: st.info("Canvas is empty.")
+            st.info("No history found")
 
 # ==========================================
-# 7. PRINTABLE CARDS
+# 12. ADMIN - PREMIUM
 # ==========================================
-with tab_cards:
-    st.markdown('<div class="no-print"><h3>💳 Workload Reference Cards</h3></div>', unsafe_allow_html=True)
-    if os.path.isfile(MASTER_LOG):
-        all_data = pd.read_csv(MASTER_LOG)
-        # SAFE COLUMN CHECK
-        if 'Timestamp' in all_data.columns:
-            all_data = all_data.fillna("Not Specified")
-            my_data = all_data[all_data['Faculty'] == user_name]
-            if not my_data.empty:
-                latest = my_data['Timestamp'].max()
-                display_data = my_data[my_data['Timestamp'] == latest]
-                if st.button("🖨️ Print My Tutor Cards", type="primary"): components.html("<script>window.print();</script>", height=0)
-                grid = st.columns(3)
-                for idx, row in display_data.reset_index().iterrows():
-                    with grid[idx % 3]:
-                        st.markdown(f"""<div class="tutor-card-print"><div class="card-header">{row['Rank'].upper()} REFERENCE</div>
-                            <span class="card-label">Tutor</span><br><span class="card-value">{row['Faculty']}</span><br>
-                            <span class="card-label">Module</span><br><span class="card-value">{row['Code']} - {row['Module']}</span><br>
-                            <span class="card-label">Venue</span><br><span class="card-value" style="color:var(--rub-red);">{row['Classroom']}</span><br>
-                            <hr style="margin: 8px 0; border: 0.5px solid #eee;"><div style="display:flex; justify-content:space-between; font-size:0.8rem;">
-                            <div><b>{row['Type']}</b></div><div>{row['Theory']}T | {row['Lab']}L</div></div></div>""", unsafe_allow_html=True)
-            else: st.info("No submitted entries found.")
-        else: st.error("⚠️ Database format incompatible. Please HoD to 'Purge Records'.")
-    else: st.info("Database empty.")
+if st.session_state.admin:
+    st.divider()
+    st.markdown("""
+    <div class="admin-premium">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;">
+            <div>
+                <span class="title">🔐 ADMIN COMMAND CENTER</span>
+                <span class="sub"> • Master Workload Records</span>
+            </div>
+            <div style="font-size:0.8rem; opacity:0.6;">🔒 Secure Access</div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    log_file = 'workload_logs.json'
+    if os.path.exists(log_file):
+        try:
+            with open(log_file, 'r') as f:
+                logs = json.load(f)
+            if logs:
+                df = pd.DataFrame(logs)
+                df['timestamp'] = pd.to_datetime(df['timestamp'])
+                
+                c1, c2, c3, c4 = st.columns(4)
+                c1.metric("Total Submissions", len(df))
+                c2.metric("Unique Faculty", df['faculty'].nunique())
+                c3.metric("Avg WAM", round(df['wam'].mean(), 2))
+                c4.metric("Heavy Load", len(df[df['status'] == 'Heavy Load']))
+                
+                st.dataframe(df.sort_values('timestamp', ascending=False), use_container_width=True, hide_index=True)
+                
+                csv = df.to_csv(index=False).encode('utf-8')
+                st.download_button("📥 Download Full Report", csv, f"DNS_Report_{datetime.now().strftime('%Y%m%d')}.csv", "text/csv")
+                
+                if st.button("🗑️ Purge Database", use_container_width=True):
+                    os.remove(log_file)
+                    st.rerun()
+        except:
+            st.info("No data")
+
+# ==========================================
+# 13. FOOTER - PREMIUM
+# ==========================================
+st.divider()
+st.markdown("""
+<div style="text-align:center;color:#888;font-size:0.8rem;padding:0.5rem 0;">
+    Department of Natural Sciences • Royal University of Bhutan • Autumn 2026
+</div>
+""", unsafe_allow_html=True)
