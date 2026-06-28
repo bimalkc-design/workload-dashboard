@@ -997,20 +997,20 @@ if 'manual_room' not in st.session_state:
     st.session_state.manual_room = ""
 
 # ===== RESET STUDENT COUNTER SESSION STATES =====
-# Force reset to 30 with new range 20-70
+# Force reset to 30 with new range 20-60
 if 'student_count_from_list' not in st.session_state:
     st.session_state.student_count_from_list = 30
-elif st.session_state.student_count_from_list < 20:
+elif st.session_state.student_count_from_list < 20 or st.session_state.student_count_from_list > 60:
     st.session_state.student_count_from_list = 30
 
 if 'student_count_manual' not in st.session_state:
     st.session_state.student_count_manual = 30
-elif st.session_state.student_count_manual < 20:
+elif st.session_state.student_count_manual < 20 or st.session_state.student_count_manual > 60:
     st.session_state.student_count_manual = 30
 
 if 'student_count_no_modules' not in st.session_state:
     st.session_state.student_count_no_modules = 30
-elif st.session_state.student_count_no_modules < 20:
+elif st.session_state.student_count_no_modules < 20 or st.session_state.student_count_no_modules > 60:
     st.session_state.student_count_no_modules = 30
 
 # ==========================================
@@ -1066,6 +1066,7 @@ def student_counter(label, key, min_val=20, max_val=60, default=30):
     st.caption(f"Students {min_val}-{max_val}")
     
     return st.session_state[key]
+
 # ==========================================
 # 8. ACADEMIC HEADER
 # ==========================================
@@ -1245,7 +1246,7 @@ with st.sidebar:
                 students = student_counter(
                     label="Students",
                     key="student_count_from_list",
-                    min_val=25,
+                    min_val=20,
                     max_val=60,
                     default=30
                 )
@@ -1352,7 +1353,7 @@ with st.sidebar:
             students = student_counter(
                 label="Students",
                 key="student_count_manual",
-                min_val=25,
+                min_val=20,
                 max_val=60,
                 default=st.session_state.manual_students
             )
@@ -1482,7 +1483,7 @@ with st.sidebar:
         students = student_counter(
             label="Students",
             key="student_count_no_modules",
-            min_val=25,
+            min_val=20,
             max_val=60,
             default=st.session_state.manual_students
         )
@@ -1559,11 +1560,6 @@ with st.sidebar:
         st.session_state.admin = True
         st.success("Administrator access granted")
 
-# ==========================================
-# 10. MAIN CONTENT (SAME AS BEFORE)
-# ==========================================
-# [Rest of the code remains the same - main content, print section, tabs, admin section, footer]
-# ...
 # ==========================================
 # 10. THRESHOLD GUIDE
 # ==========================================
