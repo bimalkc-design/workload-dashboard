@@ -15,7 +15,7 @@ st.set_page_config(
 )
 
 # ==========================================
-# 2. PROFESSIONAL ACADEMIC STYLING
+# 2. PROFESSIONAL ACADEMIC STYLING WITH FIXES
 # ==========================================
 st.markdown("""
 <style>
@@ -24,6 +24,83 @@ st.markdown("""
     
     .main { padding: 0 0.5rem !important; }
     .block-container { padding: 0.5rem 0.5rem 1rem 0.5rem !important; max-width: 100% !important; }
+    
+    /* ===== SIDEBAR FIXES - PREVENT OVERFLOW ===== */
+    section[data-testid="stSidebar"] {
+        height: 100vh !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        position: sticky !important;
+        top: 0 !important;
+        background: #f8f9fa !important;
+        border-right: 1px solid #e8ecf0 !important;
+        z-index: 10 !important;
+    }
+    
+    section[data-testid="stSidebar"] > div {
+        height: 100% !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        padding-bottom: 3rem !important;
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
+    }
+    
+    /* Sidebar scrollbar styling */
+    section[data-testid="stSidebar"]::-webkit-scrollbar {
+        width: 4px;
+    }
+    
+    section[data-testid="stSidebar"]::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+    
+    section[data-testid="stSidebar"]::-webkit-scrollbar-thumb {
+        background: #c9a84c;
+        border-radius: 2px;
+    }
+    
+    section[data-testid="stSidebar"]::-webkit-scrollbar-thumb:hover {
+        background: #a88a3a;
+    }
+    
+    /* Fix selectbox dropdown positioning in sidebar */
+    .stSelectbox [role="listbox"] {
+        position: absolute !important;
+        max-height: 200px !important;
+        overflow-y: auto !important;
+        z-index: 9999 !important;
+        background: white !important;
+        border: 1px solid #ddd !important;
+        border-radius: 4px !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+        margin-top: 4px !important;
+        top: auto !important;
+        bottom: auto !important;
+    }
+    
+    /* Ensure dropdown options are visible */
+    div[data-baseweb="popover"] {
+        position: absolute !important;
+        z-index: 9999 !important;
+    }
+    
+    /* Fix for select container */
+    .stSelectbox {
+        position: relative !important;
+        z-index: 1 !important;
+    }
+    
+    .stSelectbox > div {
+        position: relative !important;
+    }
+    
+    /* Ensure all sidebar content stays within bounds */
+    .stSidebar .st-emotion-cache-1r6slb0 {
+        max-height: 100vh !important;
+        overflow-y: auto !important;
+        padding-bottom: 2rem !important;
+    }
     
     /* Academic Header */
     .academic-header {
@@ -229,12 +306,6 @@ st.markdown("""
     }
     .timetable-entry .label { font-weight: 600; color: #495057; }
     .timetable-entry .value { color: #212529; }
-    
-    /* Sidebar */
-    .css-1d391kg {
-        background: #f8f9fa;
-        padding: 0.5rem !important;
-    }
     
     /* Mobile */
     @media (max-width: 768px) {
@@ -659,7 +730,7 @@ FACULTY_LIST = [
     "Ms. Kuenzang Choki", "Ms. Sangay Yuden", "Mr. Tashi Dendup",
     "Shacha Thinley", "Nachiketa Homchaudhuri", "Mon B Ghalley",
     "Dr. Karma Tenzin", "Rit Wik Sharma", "Ugyen D Tamang",
-    "Karma Wangchuck", "Mohan S Rana", "Tshering Dekar",
+    "Asst. Prof. Karma Wangchuck", "Mohan S Rana", "Tshering Dekar",
     "Dr. Bimal K Chetri", "Sonam Tobgay", "Dechen Lhendup",
     "S. Chitra", "DS-Y", "Paul Raj"
 ]
@@ -779,7 +850,7 @@ with st.sidebar:
     
     st.selectbox(
         "Designation",
-        ["Assistant Professor", "Senior Lecturer", "Lecturer", "Associate Lecturer", "Assistant Lecturer"]
+        ["Professor", "Associate Professor", "Assistant Professor", "Senior Lecturer", "Lecturer"]
     )
     
     st.divider()
@@ -1165,28 +1236,44 @@ if st.session_state.modules:
         """, unsafe_allow_html=True)
 
 # ==========================================
-# 13. PRINT BUTTON - AT BOTTOM OF PAGE
+# 13. PRINT BUTTON - FIXED VERSION
 # ==========================================
 st.divider()
+
+# Inject JavaScript for print functionality
 st.markdown("""
-<div class="no-print" style="text-align:center; padding:0.5rem 0;">
-    <button onclick="window.print()" style="
-        background: #1a2a4a;
-        color: white;
-        border: none;
-        padding: 0.7rem 3rem;
-        border-radius: 6px;
-        font-weight: 600;
-        font-size: 1rem;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        box-shadow: 0 2px 8px rgba(26,42,74,0.2);
-    " onmouseover="this.style.background='#2a4a6a'; this.style.boxShadow='0 4px 12px rgba(26,42,74,0.3)';" 
-    onmouseout="this.style.background='#1a2a4a'; this.style.boxShadow='0 2px 8px rgba(26,42,74,0.2)';">
-        🖨️ Print Complete Report
-    </button>
-</div>
+<script>
+function printReport() {
+    window.print();
+}
+</script>
 """, unsafe_allow_html=True)
+
+# Create columns for centering
+col1, col2, col3 = st.columns([1, 2, 1])
+
+with col2:
+    # Custom button with onclick handler
+    st.markdown("""
+    <div class="no-print" style="text-align:center; padding:0.5rem 0;">
+        <button onclick="printReport()" style="
+            background: #1a2a4a;
+            color: white;
+            border: none;
+            padding: 0.7rem 3rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(26,42,74,0.2);
+            width: 100%;
+        " onmouseover="this.style.background='#2a4a6a'; this.style.boxShadow='0 4px 12px rgba(26,42,74,0.3)';" 
+        onmouseout="this.style.background='#1a2a4a'; this.style.boxShadow='0 2px 8px rgba(26,42,74,0.2)';">
+            🖨️ Print Complete Report
+        </button>
+    </div>
+    """, unsafe_allow_html=True)
 
 # ==========================================
 # 14. ADMIN SECTION
