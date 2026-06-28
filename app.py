@@ -5,6 +5,15 @@ from datetime import datetime
 import json
 import os
 
+# Add this line to handle rerun
+try:
+    from streamlit import rerun as st_rerun
+except ImportError:
+    # For older versions of Streamlit
+    def st_rerun():
+        st.experimental_rerun()
+import os
+
 # ==========================================
 # 1. PAGE CONFIGURATION
 # ==========================================
