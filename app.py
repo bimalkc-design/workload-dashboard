@@ -657,10 +657,10 @@ MODULE_DATABASE = {
 FACULTY_LIST = [
     "Dr. Jas Raj Subba", "Mr. Sangay Wangchuk", "Mrs. Punam Mafchan",
     "Ms. Kuenzang Choki", "Ms. Sangay Yuden", "Mr. Tashi Dendup",
-    "Shacha Thinley", "Nachiketa Homchaudhuri", "Mon Bahadur Ghalley",
-    "Dr. Karma Tenzin", "Rit Wik Sharma", "Ugyen Dorji Tamang",
-    "Karma Wangchuck", "Mohan Singh Rana", "Tshering Dekar",
-    "Bimal Kumar Chetri", "Sonam Tobgay", "Dechen Lhendup",
+    "Shacha Thinley", "Nachiketa Homchaudhuri", "Mon B Ghalley",
+    "Dr. Karma Tenzin", "Rit Wik Sharma", "Ugyen D Tamang",
+    "Asst. Prof. Karma Wangchuck", "Mohan S Rana", "Tshering Dekar",
+    "Dr. Bimal K Chetri", "Sonam Tobgay", "Dechen Lhendup",
     "S. Chitra", "DS-Y", "Paul Raj"
 ]
 
@@ -737,7 +737,7 @@ st.markdown(f"""
     <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap;">
         <div>
             <h1>Workload & Roaster System</h1>
-            <div class="subtitle">Department of Natural Sciences • Royal University of Bhutan</div>
+            <div class="subtitle">Department of Natural Sciences • Sherubtse College •Royal University of Bhutan</div>
             <div class="meta">
                 <span class="badge">📅 {datetime.now().strftime('%B %d, %Y')}</span>
                 <span class="badge" style="margin-left:0.5rem;">📚 Autumn 2026</span>
