@@ -870,6 +870,7 @@ st.markdown(f"""
                 <span class="badge" style="margin-left:0.5rem;">🏛️ Academic Year 2026-2027</span>
             </div>
         </div>
+        
         <div style="text-align:right; font-size:0.8rem; color:#8899b0;">
             <div>Faculty Self-Service Portal</div>
             <div>Workload Allocation Module</div>
