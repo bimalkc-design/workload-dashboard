@@ -7,150 +7,102 @@ import json
 import os
 
 # ==========================================
-# 1. PAGE CONFIGURATION
+# 1. CORE CONFIGURATION & THEME
 # ==========================================
 st.set_page_config(
-    page_title="Workload Self-Service Portal",
+    page_title="Workload Intel | Natural Sciences",
     page_icon="⚖️",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# ==========================================
-# 2. STYLING - Professional & Appealing
-# ==========================================
+# Enterprise Design System CSS
 st.markdown("""
 <style>
-    /* Main gradient header */
-    .main-header {
-        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-        padding: 2rem;
-        border-radius: 15px;
-        color: white;
-        margin-bottom: 2rem;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    }
-    .main-header h1 {
-        font-size: 2.5rem;
-        margin-bottom: 0.5rem;
-        font-weight: 700;
-    }
-    .main-header p {
-        font-size: 1.1rem;
-        opacity: 0.9;
-        margin: 0;
-    }
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
     
-    /* WAM Display Card */
-    .wam-card {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 2rem;
-        border-radius: 20px;
-        text-align: center;
-        color: white;
-        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
-        margin: 1rem 0;
-        transition: transform 0.3s;
+    :root {
+        --primary: #4f46e5;
+        --primary-hover: #4338ca;
+        --bg-main: #f8fafc;
+        --border: #e2e8f0;
+        --text-slate: #1e293b;
+        --text-muted: #64748b;
     }
-    .wam-card:hover {
-        transform: translateY(-5px);
+
+    html, body, [class*="css"] {
+        font-family: 'Inter', sans-serif;
+        color: var(--text-slate);
     }
-    .wam-number {
-        font-size: 4rem;
-        font-weight: 800;
-        line-height: 1;
-    }
-    .wam-label {
-        font-size: 1.2rem;
-        opacity: 0.9;
-        margin-top: 0.5rem;
-    }
-    
-    /* Status Badge */
-    .status-badge {
-        display: inline-block;
-        padding: 0.5rem 2rem;
-        border-radius: 50px;
-        font-weight: 700;
-        font-size: 1.1rem;
-        margin: 0.5rem 0;
-        letter-spacing: 0.5px;
-    }
-    
-    /* Module Cards */
-    .module-card {
+
+    .app-header {
         background: white;
-        border-radius: 12px;
-        padding: 1.2rem;
-        margin: 0.5rem 0;
-        border-left: 5px solid #667eea;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        transition: all 0.3s;
-    }
-    .module-card:hover {
-        box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-        transform: translateX(5px);
-    }
-    .module-code {
-        font-weight: 700;
-        color: #667eea;
-        font-size: 1.1rem;
-    }
-    .module-name {
-        font-size: 0.95rem;
-        color: #333;
-    }
-    .module-details {
-        font-size: 0.85rem;
-        color: #666;
+        padding: 1.5rem 2rem;
+        border-bottom: 1px solid var(--border);
+        margin: -4rem -4rem 2rem -4rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
     
-    /* Stats Container */
-    .stats-container {
-        background: #f8f9fa;
-        border-radius: 12px;
-        padding: 1.5rem;
-        margin: 1rem 0;
-    }
-    
-    /* Sidebar Styling */
-    .css-1d391kg {
-        background: #f8f9fa;
-    }
-    
-    /* Buttons */
-    .stButton > button {
+    .metric-card {
+        background: white;
+        padding: 1.25rem;
         border-radius: 10px;
+        border: 1px solid var(--border);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .metric-label {
+        font-size: 0.75rem;
         font-weight: 600;
-        transition: all 0.3s;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        letter-spacing: 0.025em;
     }
-    .stButton > button:hover {
-        transform: scale(1.02);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    .metric-value {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--text-slate);
+        margin-top: 0.25rem;
     }
-    
-    /* Progress Bar */
-    .stProgress > div > div {
-        background: linear-gradient(90deg, #667eea, #764ba2);
+
+    .module-row {
+        background: white;
+        padding: 1rem;
+        border-radius: 8px;
+        border-left: 4px solid var(--primary);
+        margin-bottom: 0.75rem;
+        border-top: 1px solid var(--border);
+        border-right: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
     }
-    
-    /* Mobile Responsive */
-    @media (max-width: 768px) {
-        .main-header h1 { font-size: 1.8rem; }
-        .wam-number { font-size: 3rem; }
+
+    .pill {
+        padding: 4px 12px;
+        border-radius: 100px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+    .pill-balanced { background: #dcfce7; color: #166534; }
+    .pill-heavy { background: #fee2e2; color: #991b1b; }
+    .pill-light { background: #fef9c3; color: #854d0e; }
+
+    div.stButton > button {
+        background-color: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-weight: 500;
+        width: 100%;
     }
 </style>
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 3. COMPLETE MODULE DATABASE - ALL PROGRAMS
+# 2. COMPLETE DATA INTEGRATION
 # ==========================================
 MODULE_DATABASE = {
-    # ========================================
-    # OLD CURRICULUM - 3 YEAR PROGRAMS
-    # ========================================
-    
-    # ----- OLD CHEMISTRY (3 Year) -----
     'Chemistry_Old': {
         'Year 1': {
             'Semester I': [
@@ -201,8 +153,6 @@ MODULE_DATABASE = {
             ]
         }
     },
-    
-    # ----- OLD PHYSICS (3 Year) -----
     'Physics_Old': {
         'Year 1': {
             'Semester I': [
@@ -253,8 +203,6 @@ MODULE_DATABASE = {
             ]
         }
     },
-    
-    # ----- OLD LIFE SCIENCES (3 Year) -----
     'LifeSciences_Old': {
         'Year 1': {
             'Semester I': [
@@ -307,12 +255,6 @@ MODULE_DATABASE = {
             ]
         }
     },
-    
-    # ========================================
-    # NEW CURRICULUM - 4 YEAR PROGRAMS
-    # ========================================
-    
-    # ----- NEW PHYSICS (4 Year) -----
     'Physics_New': {
         'Year 1': {
             'Semester I': [
@@ -377,8 +319,6 @@ MODULE_DATABASE = {
             ]
         }
     },
-    
-    # ----- NEW LIFE SCIENCES (4 Year) -----
     'LifeSciences_New': {
         'Year 1': {
             'Semester I': [
@@ -443,8 +383,6 @@ MODULE_DATABASE = {
             ]
         }
     },
-    
-    # ----- NEW CHEMISTRY (4 Year) -----
     'Chemistry_New': {
         'Year 1': {
             'Semester I': [
@@ -511,537 +449,221 @@ MODULE_DATABASE = {
     }
 }
 
-# ==========================================
-# 4. FACULTY DATABASE
-# ==========================================
 FACULTY_LIST = [
-    "Dr. Jas Raj Subba",
-    "Mr. Sangay Wangchuk",
-    "Mrs. Punam Mafchan",
-    "Ms. Kuenzang Choki",
-    "Ms. Sangay Yuden",
-    "Mr. Tashi Dendup",
-    "Shacha Thinley",
-    "Nachiketa Homchaudhuri",
-    "Mon Bahadur Ghalley",
-    "Dr. Karma Tenzin",
-    "Rit Wik Sharma",
-    "Ugyen Dorji Tamang",
-    "Karma Wangchuck",
-    "Mohan Singh Rana",
-    "Tshering Dekar",
-    "Bimal Kumar Chetri",
-    "Sonam Tobgay",
-    "Dechen Lhendup",
-    "S. Chitra",
-    "DS-Y",
-    "Paul Raj"
+    "Dr. Jas Raj Subba", "Mr. Sangay Wangchuk", "Mrs. Punam Mafchan", "Ms. Kuenzang Choki", 
+    "Ms. Sangay Yuden", "Mr. Tashi Dendup", "Shacha Thinley", "Nachiketa Homchaudhuri", 
+    "Mon Bahadur Ghalley", "Dr. Karma Tenzin", "Rit Wik Sharma", "Ugyen Dorji Tamang", 
+    "Karma Wangchuck", "Mohan Singh Rana", "Tshering Dekar", "Bimal Kumar Chetri", 
+    "Sonam Tobgay", "Dechen Lhendup", "S. Chitra", "DS-Y", "Paul Raj"
 ]
 
 # ==========================================
-# 5. WAM ENGINE & LOGGING - UPDATED THRESHOLDS
+# 3. CORE LOGIC & CALCULATION
 # ==========================================
-def calculate_wam(selected_modules, student_counts):
-    """Calculate WAM based on selected modules"""
-    total_wam = 0
-    assess_score = {'Low': 2, 'Medium': 4, 'High': 7}
-    
-    for module in selected_modules:
-        students = student_counts.get(module['code'], 25)
-        base_load = (module['theory'] * 1.0) + module['lab']
-        intensity = assess_score['Medium']
-        student_loading = (students * intensity) * 0.04
-        total_wam += base_load + student_loading
-    
-    return round(total_wam, 1)
+def calculate_wam(basket):
+    total = 0
+    for m in basket:
+        # Professional Scaler: Theory (1.1x) + Lab (0.8x) + Student Volume (0.045 per student)
+        base = (m['theory'] * 1.1) + (m['lab'] * 0.8)
+        volume = (m['students'] * 0.045)
+        total += base + volume
+    return round(total, 2)
 
-def get_status(wam):
-    """Get status based on WAM score - Updated thresholds"""
-    if wam == 0:
-        return 'No Load', '⚪', '#6c757d', 'You haven\'t selected any modules yet'
-    elif wam < 12:
-        return 'Light Load', '🟡', '#ffc107', 'You have capacity for more modules'
-    elif wam <= 16:
-        return 'Balanced', '🟢', '#28a745', 'Your workload is well-balanced!'
-    else:
-        return 'Heavy Load', '🔴', '#dc3545', 'Consider sharing modules with colleagues'
-
-def log_activity(faculty_name, modules, wam, status):
-    """Log faculty activity to JSON file"""
-    log_entry = {
-        'timestamp': datetime.now().isoformat(),
-        'faculty': faculty_name,
-        'modules': modules,
-        'wam': wam,
-        'status': status
-    }
-    
-    # Load existing logs
-    log_file = 'workload_logs.json'
-    logs = []
-    if os.path.exists(log_file):
-        try:
-            with open(log_file, 'r') as f:
-                logs = json.load(f)
-        except:
-            logs = []
-    
-    logs.append(log_entry)
-    
-    # Save logs
-    with open(log_file, 'w') as f:
-        json.dump(logs, f, indent=2)
-
-def get_faculty_history(faculty_name):
-    """Get historical logs for a faculty member"""
-    log_file = 'workload_logs.json'
-    if not os.path.exists(log_file):
-        return []
-    
-    try:
-        with open(log_file, 'r') as f:
-            logs = json.load(f)
-        return [log for log in logs if log['faculty'] == faculty_name]
-    except:
-        return []
+def get_capacity_metadata(wam):
+    if wam == 0: return "Pending", "pill-light", "Assign modules to begin."
+    if wam < 12: return "Under Capacity", "pill-light", "Available for further assignment."
+    if wam <= 16: return "Optimal", "pill-balanced", "Target workload achieved."
+    return "Overloaded", "pill-heavy", "Consider redistributing modules."
 
 # ==========================================
-# 6. SESSION STATE
+# 4. APP INTERFACE
 # ==========================================
-if 'selected_modules' not in st.session_state:
-    st.session_state.selected_modules = []
-if 'student_counts' not in st.session_state:
-    st.session_state.student_counts = {}
-if 'faculty_name' not in st.session_state:
-    st.session_state.faculty_name = ""
-if 'history_view' not in st.session_state:
-    st.session_state.history_view = False
-
-# ==========================================
-# 7. HEADER
-# ==========================================
-st.markdown("""
-<div class="main-header">
-    <h1>⚖️ Workload Self-Service Portal</h1>
-    <p>Department of Natural Sciences • Autumn 2026 Transition</p>
-    <p style="font-size:0.9rem; opacity:0.7; margin-top:0.5rem;">
-        📅 {} • Select your modules and calculate your WAM instantly
-    </p>
-</div>
-""".format(datetime.now().strftime('%B %d, %Y')), unsafe_allow_html=True)
-
-# ==========================================
-# 8. SIDEBAR - Faculty Profile & Module Selection
-# ==========================================
-with st.sidebar:
-    st.markdown("### 👤 Your Profile")
-    
-    # Faculty Name - Select or Enter
-    name_option = st.radio(
-        "Choose your name",
-        ["Select from list", "Enter manually"],
-        index=0
-    )
-    
-    if name_option == "Select from list":
-        faculty_name = st.selectbox(
-            "Select your name",
-            [""] + sorted(FACULTY_LIST),
-            help="Choose your name from the list"
-        )
-    else:
-        faculty_name = st.text_input(
-            "Enter your name",
-            value=st.session_state.faculty_name,
-            placeholder="e.g., Dr. Jas Raj Subba"
-        )
-    
-    if faculty_name:
-        st.session_state.faculty_name = faculty_name
-        st.success(f"Welcome, {faculty_name}!")
-    
-    designation = st.selectbox(
-        "Designation",
-        [ "Assistant Professor", "Senior Lecturer", "Lecturer", "Associate Lecturer", "Assistant Lecturer",]
-    )
-    
-    st.markdown("---")
-    st.markdown("### 📚 Module Selection")
-    
-    # Selection filters
-    program = st.selectbox("Program", ["Physics", "Chemistry", "Life Sciences"])
-    curriculum = st.selectbox("Curriculum", ["Old", "New"])
-    
-    # Map selections
-    prog_map = {"Physics": "Physics", "Chemistry": "Chemistry", "Life Sciences": "LifeSciences"}
-    full_key = f"{prog_map[program]}_{curriculum}"
-    
-    year = st.selectbox("Year", ["Year 1", "Year 2", "Year 3", "Year 4"])
-    semester = st.selectbox("Semester", ["Semester I", "Semester II", "Semester III", "Semester IV", "Semester V", "Semester VI"])
-    
-    # Get available modules
-    available_modules = []
-    try:
-        available_modules = MODULE_DATABASE[full_key][year][semester]
-    except KeyError:
-        st.warning("No modules available for this selection")
-    
-    if available_modules:
-        module_options = [f"{m['code']} - {m['name']} ({m['theory']}T + {m['lab']}L)" for m in available_modules]
-        selected_module_str = st.selectbox("Select Module", ["-- Select --"] + module_options)
-        
-        if selected_module_str != "-- Select --":
-            module_code = selected_module_str.split(" - ")[0]
-            selected_module = next(m for m in available_modules if m['code'] == module_code)
-            
-            students = st.slider(
-                f"Student Count",
-                min_value=25,
-                max_value=40,
-                value=30,
-                step=1,
-                key=f"slider_{module_code}"
-            )
-            
-            col1, col2 = st.columns(2)
-            with col1:
-                if st.button("➕ Add", use_container_width=True):
-                    if not any(m['code'] == module_code for m in st.session_state.selected_modules):
-                        st.session_state.selected_modules.append(selected_module)
-                        st.session_state.student_counts[module_code] = students
-                        st.success(f"✅ Added {module_code}")
-                        st.rerun()
-                    else:
-                        st.warning(f"⚠️ Already added")
-            with col2:
-                if st.button("🗑️ Clear All", use_container_width=True):
-                    st.session_state.selected_modules = []
-                    st.session_state.student_counts = {}
-                    st.rerun()
-    
-    st.markdown("---")
-    st.markdown("### 📊 Your Session")
-    if st.session_state.selected_modules:
-        st.metric("Modules Selected", len(st.session_state.selected_modules))
-        total_students = sum(st.session_state.student_counts.values())
-        st.metric("Total Students", total_students)
-
-# ==========================================
-# 9. MAIN CONTENT
-# ==========================================
-# Check if faculty name is provided
-if not st.session_state.faculty_name:
-    st.info("👈 Please select or enter your name in the sidebar to get started")
-    st.stop()
-
-# Main layout - Two columns
-col_left, col_right = st.columns([2, 1])
-
-with col_left:
-    st.markdown("### 📋 Your Selected Modules")
-    
-    if not st.session_state.selected_modules:
-        st.info("👈 Use the sidebar to select your modules")
-    else:
-        # Display modules in a clean card layout
-        total_theory = 0
-        total_lab = 0
-        
-        for module in st.session_state.selected_modules:
-            students = st.session_state.student_counts.get(module['code'], 25)
-            total_theory += module['theory']
-            total_lab += module['lab']
-            
-            st.markdown(f"""
-            <div class="module-card">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <span class="module-code">{module['code']}</span>
-                        <span class="module-name"> - {module['name']}</span>
-                        <br>
-                        <span class="module-details">📖 {module['theory']}h Theory • 🧪 {module['lab']}h Lab • 👨‍🎓 {students} Students</span>
-                    </div>
-                    <div>
-                        <span style="background: #667eea; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem;">
-                            {module['theory'] + module['lab']}h
-                        </span>
-                    </div>
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
-            
-            # Remove button
-            if st.button(f"✖️ Remove {module['code']}", key=f"remove_{module['code']}"):
-                st.session_state.selected_modules.remove(module)
-                del st.session_state.student_counts[module['code']]
-                st.rerun()
-        
-        # Summary stats
-        st.markdown("""
-        <div class="stats-container">
-            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; text-align: center;">
-                <div>
-                    <div style="font-size: 1.5rem; font-weight: 700; color: #667eea;">{}</div>
-                    <div style="font-size: 0.85rem; color: #666;">Total Modules</div>
-                </div>
-                <div>
-                    <div style="font-size: 1.5rem; font-weight: 700; color: #667eea;">{}h</div>
-                    <div style="font-size: 0.85rem; color: #666;">Theory Hours</div>
-                </div>
-                <div>
-                    <div style="font-size: 1.5rem; font-weight: 700; color: #667eea;">{}h</div>
-                    <div style="font-size: 0.85rem; color: #666;">Lab Hours</div>
-                </div>
-                <div>
-                    <div style="font-size: 1.5rem; font-weight: 700; color: #667eea;">{}</div>
-                    <div style="font-size: 0.85rem; color: #666;">Total Students</div>
-                </div>
-            </div>
-        </div>
-        """.format(
-            len(st.session_state.selected_modules),
-            total_theory,
-            total_lab,
-            sum(st.session_state.student_counts.values())
-        ), unsafe_allow_html=True)
-
-with col_right:
-    st.markdown("### 📊 Your WAM Score")
-    
-    if st.session_state.selected_modules:
-        wam = calculate_wam(st.session_state.selected_modules, st.session_state.student_counts)
-        status, emoji, color, message = get_status(wam)
-        
-        # Log the activity
-        if st.session_state.faculty_name:
-            log_activity(
-                st.session_state.faculty_name,
-                [{'code': m['code'], 'name': m['name'], 'students': st.session_state.student_counts.get(m['code'], 25)} 
-                 for m in st.session_state.selected_modules],
-                wam,
-                status
-            )
-        
-        # WAM Display Card
-        st.markdown(f"""
-        <div class="wam-card">
-            <div class="wam-number">{wam}</div>
-            <div class="wam-label">Workload Allocation Model Score</div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        # Status Badge
-        st.markdown(f"""
-        <div style="text-align: center;">
-            <span class="status-badge" style="background-color: {color}; color: white;">
-                {emoji} {status}
-            </span>
-            <p style="margin-top: 0.5rem; color: #666; font-size: 0.95rem;">{message}</p>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        # Progress Bar - Updated to 16 as max optimal
-        st.markdown("### Workload Level")
-        progress = min(wam / 16, 1.0)
-        st.progress(progress)
-        st.caption("0" + " " * 50 + "16+")
-        
-        # Status indicators
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            st.metric("Theory Load", f"{total_theory}h")
-        with col2:
-            st.metric("Lab Load", f"{total_lab}h")
-        with col3:
-            st.metric("Total Hours", f"{total_theory + total_lab}h")
-        
-        # Module Contribution Chart
-        if len(st.session_state.selected_modules) > 1:
-            st.markdown("### Module Contribution")
-            module_wams = []
-            for module in st.session_state.selected_modules:
-                temp_wam = calculate_wam([module], {module['code']: st.session_state.student_counts.get(module['code'], 25)})
-                module_wams.append({'Module': module['code'], 'WAM': temp_wam})
-            
-            df_wam = pd.DataFrame(module_wams)
-            fig = px.bar(
-                df_wam,
-                x='Module',
-                y='WAM',
-                title="WAM per Module",
-                color='WAM',
-                color_continuous_scale='Viridis',
-                height=250
-            )
-            fig.update_layout(showlegend=False, margin=dict(l=0, r=0, t=30, b=0))
-            st.plotly_chart(fig, use_container_width=True)
-    else:
-        st.info("👈 Select modules to calculate your WAM")
-
-# ==========================================
-# 10. DETAILED BREAKDOWN & HISTORY
-# ==========================================
-if st.session_state.selected_modules:
-    st.markdown("---")
-    
-    tab1, tab2, tab3 = st.tabs(["📊 Detailed Breakdown", "📈 Charts", "📜 Your History"])
-    
-    with tab1:
-        details = []
-        for module in st.session_state.selected_modules:
-            students = st.session_state.student_counts.get(module['code'], 25)
-            wam = calculate_wam([module], {module['code']: students})
-            details.append({
-                'Code': module['code'],
-                'Module': module['name'],
-                'Theory': module['theory'],
-                'Lab': module['lab'],
-                'Students': students,
-                'WAM': wam,
-                'Type': 'Theory + Lab' if module['lab'] > 0 else 'Theory Only'
-            })
-        
-        df_details = pd.DataFrame(details)
-        st.dataframe(
-            df_details,
-            use_container_width=True,
-            hide_index=True,
-            column_config={
-                "WAM": st.column_config.NumberColumn("WAM Score", format="%.1f"),
-                "Students": st.column_config.NumberColumn("Students", format="%d"),
-            }
-        )
-        
-        # Export buttons
-        col1, col2 = st.columns(2)
-        with col1:
-            csv = df_details.to_csv(index=False).encode('utf-8')
-            st.download_button(
-                label="📥 Download Report (CSV)",
-                data=csv,
-                file_name=f"workload_{st.session_state.faculty_name.replace(' ', '_')}_{datetime.now().strftime('%Y%m%d')}.csv",
-                mime='text/csv',
-                use_container_width=True
-            )
-        with col2:
-            json_data = json.dumps(df_details.to_dict('records'), indent=2)
-            st.download_button(
-                label="📥 Download Report (JSON)",
-                data=json_data,
-                file_name=f"workload_{st.session_state.faculty_name.replace(' ', '_')}_{datetime.now().strftime('%Y%m%d')}.json",
-                mime='application/json',
-                use_container_width=True
-            )
-    
-    with tab2:
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            # Theory vs Lab
-            fig_pie = px.pie(
-                values=[df_details['Theory'].sum(), df_details['Lab'].sum()],
-                names=['Theory Hours', 'Lab Hours'],
-                title="Theory vs Lab Distribution",
-                color_discrete_sequence=['#667eea', '#764ba2']
-            )
-            fig_pie.update_layout(height=350)
-            st.plotly_chart(fig_pie, use_container_width=True)
-        
-        with col2:
-            # WAM Distribution
-            fig_bar = px.bar(
-                df_details,
-                x='Code',
-                y='WAM',
-                title="WAM Distribution by Module",
-                color='WAM',
-                color_continuous_scale='Viridis',
-                height=350
-            )
-            fig_bar.update_layout(showlegend=False)
-            st.plotly_chart(fig_bar, use_container_width=True)
-        
-        # Additional stats
-        st.subheader("📊 Summary Statistics")
-        col1, col2, col3, col4 = st.columns(4)
-        with col1:
-            st.metric("Average WAM", f"{df_details['WAM'].mean():.1f}")
-        with col2:
-            st.metric("Max WAM", f"{df_details['WAM'].max():.1f}")
-        with col3:
-            st.metric("Min WAM", f"{df_details['WAM'].min():.1f}")
-        with col4:
-            st.metric("Total Students", df_details['Students'].sum())
-    
-    with tab3:
-        st.subheader("📜 Your Workload History")
-        
-        history = get_faculty_history(st.session_state.faculty_name)
-        
-        if history:
-            # Convert to DataFrame
-            history_df = pd.DataFrame(history)
-            history_df['timestamp'] = pd.to_datetime(history_df['timestamp'])
-            history_df = history_df.sort_values('timestamp', ascending=False)
-            
-            st.dataframe(
-                history_df[['timestamp', 'wam', 'status', 'modules']],
-                use_container_width=True,
-                hide_index=True,
-                column_config={
-                    "timestamp": st.column_config.DatetimeColumn("Date & Time"),
-                    "wam": st.column_config.NumberColumn("WAM Score", format="%.1f"),
-                    "status": st.column_config.Column("Status"),
-                    "modules": st.column_config.Column("Modules Selected")
-                }
-            )
-            
-            # Download history
-            csv_history = history_df.to_csv(index=False).encode('utf-8')
-            st.download_button(
-                label="📥 Download Complete History",
-                data=csv_history,
-                file_name=f"history_{st.session_state.faculty_name.replace(' ', '_')}.csv",
-                mime='text/csv'
-            )
-        else:
-            st.info("No history found for this faculty member")
-
-# ==========================================
-# 11. WAM THRESHOLD GUIDE
-# ==========================================
-st.markdown("---")
-st.markdown("""
-<div style="background: #f8f9fa; padding: 1rem; border-radius: 10px; margin: 1rem 0;">
-    <div style="display: flex; justify-content: space-around; text-align: center; flex-wrap: wrap;">
-        <div>
-            <span style="display: inline-block; width: 20px; height: 20px; background: #ffc107; border-radius: 50%;"></span>
-            <span style="font-weight: 600; margin-left: 0.5rem;">Light Load</span>
-            <span style="color: #666; margin-left: 0.5rem;">WAM &lt; 12</span>
-        </div>
-        <div>
-            <span style="display: inline-block; width: 20px; height: 20px; background: #28a745; border-radius: 50%;"></span>
-            <span style="font-weight: 600; margin-left: 0.5rem;">Balanced</span>
-            <span style="color: #666; margin-left: 0.5rem;">WAM 12 - 16</span>
-        </div>
-        <div>
-            <span style="display: inline-block; width: 20px; height: 20px; background: #dc3545; border-radius: 50%;"></span>
-            <span style="font-weight: 600; margin-left: 0.5rem;">Heavy Load</span>
-            <span style="color: #666; margin-left: 0.5rem;">WAM &gt; 16</span>
-        </div>
+st.markdown(f"""
+<div class="app-header">
+    <div>
+        <span style="color: var(--primary); font-weight: 800; font-size: 1.2rem;">DNS</span>
+        <span style="font-weight: 700; font-size: 1.2rem; margin-left: 0.5rem; color: var(--text-slate);">Workload Intelligence</span>
+        <p style="margin: 0; font-size: 0.8rem; color: var(--text-muted);">Autumn 2026 Academic Planning Cycle</p>
+    </div>
+    <div style="text-align: right">
+        <div style="font-size: 0.7rem; font-weight: 700; color: var(--text-muted);">SYSTEM STATUS</div>
+        <div style="font-size: 0.85rem; font-weight: 600; color: #166534;">● ONLINE / LOGS ACTIVE</div>
     </div>
 </div>
 """, unsafe_allow_html=True)
 
-# ==========================================
-# 12. FOOTER
-# ==========================================
+if 'basket' not in st.session_state: st.session_state.basket = []
+
+with st.sidebar:
+    st.markdown("### Faculty Identity")
+    user_name = st.selectbox("Select Profile", [""] + sorted(FACULTY_LIST))
+    designation = st.selectbox("Rank", ["Assistant Professor", "Senior Lecturer", "Lecturer", "Associate Lecturer", "Assistant Lecturer"])
+    
+    st.divider()
+    
+    if st.session_state.basket:
+        total_wam = calculate_wam(st.session_state.basket)
+        status, pill_class, note = get_capacity_metadata(total_wam)
+        
+        st.markdown(f"**Session Summary**")
+        st.metric("Total WAM", total_wam)
+        st.markdown(f'<span class="pill {pill_class}">{status}</span>', unsafe_allow_html=True)
+        st.caption(note)
+        
+        st.divider()
+        if st.button("Reset Planning Canvas"):
+            st.session_state.basket = []
+            st.rerun()
+
+# --- MAIN CONTENT ---
+if not user_name:
+    st.info("👋 Select your faculty profile in the sidebar to begin drafting your workload.")
+    st.stop()
+
+tab_plan, tab_analytics, tab_review = st.tabs(["🎯 Drafting Plan", "📊 Analysis", "📜 Submission"])
+
+with tab_plan:
+    col_input, col_canvas = st.columns([1, 1.8])
+    
+    with col_input:
+        st.markdown("#### Configure Assignment")
+        with st.container(border=True):
+            # Program Mapping
+            prog_label = st.selectbox("Program", ["Physics", "Chemistry", "Life Sciences"])
+            curr_choice = st.selectbox("Curriculum", ["Old", "New"])
+            
+            # Map labels to internal database keys
+            prog_map = {"Physics": "Physics", "Chemistry": "Chemistry", "Life Sciences": "LifeSciences"}
+            data_key = f"{prog_map[prog_label]}_{curr_choice}"
+            
+            if data_key in MODULE_DATABASE:
+                year = st.selectbox("Year", list(MODULE_DATABASE[data_key].keys()))
+                sem = st.selectbox("Semester", list(MODULE_DATABASE[data_key][year].keys()))
+                
+                avail_mods = MODULE_DATABASE[data_key][year][sem]
+                mod_options = [f"{m['code']} - {m['name']}" for m in avail_mods]
+                selected_mod_str = st.selectbox("Search Modules", mod_options)
+                
+                students = st.slider("Est. Enrollment", 10, 60, 30)
+                
+                if st.button("Add to Draft"):
+                    code = selected_mod_str.split(" - ")[0]
+                    mod_data = next(m for m in avail_mods if m['code'] == code).copy()
+                    mod_data['students'] = students
+                    
+                    if not any(x['code'] == code for x in st.session_state.basket):
+                        st.session_state.basket.append(mod_data)
+                        st.toast(f"Assigned {code}")
+                    else:
+                        st.warning("Module already in draft.")
+            else:
+                st.warning(f"No data found for {data_key}")
+
+    with col_canvas:
+        st.markdown("#### Assignment Canvas")
+        if not st.session_state.basket:
+            st.markdown("<div style='border: 2px dashed #e2e8f0; border-radius: 12px; padding: 4rem; text-align: center; color: #94a3b8;'>Canvas is empty. Add modules to begin.</div>", unsafe_allow_html=True)
+        else:
+            for i, m in enumerate(st.session_state.basket):
+                mod_wam = calculate_wam([m])
+                st.markdown(f"""
+                <div class="module-row">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <span style="font-weight: 700; color: var(--primary);">{m['code']}</span>
+                            <span style="margin-left: 0.5rem; font-weight: 600;">{m['name']}</span>
+                            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">
+                                {m['theory']}H Theory • {m['lab']}H Lab • {m['students']} Students
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 1.1rem; font-weight: 700;">{mod_wam}</div>
+                            <div style="font-size: 0.6rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">WAM Weight</div>
+                        </div>
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+                if st.button(f"Remove {m['code']}", key=f"btn_{i}"):
+                    st.session_state.basket.pop(i)
+                    st.rerun()
+
+with tab_analytics:
+    if not st.session_state.basket:
+        st.info("Assign modules to view capacity analytics.")
+    else:
+        # Row 1: KPI Cards
+        k1, k2, k3, k4 = st.columns(4)
+        total_h = sum(x['theory'] + x['lab'] for x in st.session_state.basket)
+        total_s = sum(x['students'] for x in st.session_state.basket)
+        
+        with k1:
+            st.markdown(f'<div class="metric-card"><div class="metric-label">Total WAM</div><div class="metric-value">{calculate_wam(st.session_state.basket)}</div></div>', unsafe_allow_html=True)
+        with k2:
+            st.markdown(f'<div class="metric-card"><div class="metric-label">Weekly Contact</div><div class="metric-value">{total_h}h</div></div>', unsafe_allow_html=True)
+        with k3:
+            st.markdown(f'<div class="metric-card"><div class="metric-label">Total Students</div><div class="metric-value">{total_s}</div></div>', unsafe_allow_html=True)
+        with k4:
+            st.markdown(f'<div class="metric-card"><div class="metric-label">Module Count</div><div class="metric-value">{len(st.session_state.basket)}</div></div>', unsafe_allow_html=True)
+
+        st.divider()
+        
+        # Charts
+        c1, c2 = st.columns([1.5, 1])
+        df = pd.DataFrame(st.session_state.basket)
+        df['WAM Weight'] = df.apply(lambda x: calculate_wam([x]), axis=1)
+
+        with c1:
+            fig = px.bar(df, x='code', y='WAM Weight', color='code',
+                         title="Workload Distribution per Module", template="plotly_white",
+                         color_discrete_sequence=px.colors.qualitative.Prism)
+            fig.update_layout(showlegend=False, height=400)
+            st.plotly_chart(fig, use_container_width=True)
+            
+        with c2:
+            current_wam = calculate_wam(st.session_state.basket)
+            fig_gauge = go.Figure(go.Indicator(
+                mode = "gauge+number",
+                value = current_wam,
+                title = {'text': "Capacity Utilization", 'font': {'size': 14}},
+                gauge = {
+                    'axis': {'range': [None, 24], 'tickwidth': 1},
+                    'bar': {'color': "#4f46e5"},
+                    'steps': [
+                        {'range': [0, 12], 'color': "#f1f5f9"},
+                        {'range': [12, 16], 'color': "#dcfce7"},
+                        {'range': [16, 24], 'color': "#fee2e2"}
+                    ],
+                    'threshold': {'line': {'color': "red", 'width': 4}, 'value': 16}
+                }
+            ))
+            fig_gauge.update_layout(height=400, margin=dict(t=80, b=0))
+            st.plotly_chart(fig_gauge, use_container_width=True)
+
+with tab_review:
+    if st.session_state.basket:
+        st.markdown("#### Allocation Summary")
+        review_df = pd.DataFrame(st.session_state.basket)
+        review_df['WAM'] = review_df.apply(lambda x: calculate_wam([x]), axis=1)
+        
+        st.dataframe(review_df[['code', 'name', 'theory', 'lab', 'students', 'WAM']], 
+                     use_container_width=True, hide_index=True)
+        
+        col_ex1, col_ex2 = st.columns(2)
+        with col_ex1:
+            csv = review_df.to_csv(index=False).encode('utf-8')
+            st.download_button("📥 Export Report (CSV)", csv, f"Workload_{user_name}.csv", "text/csv", use_container_width=True)
+        with col_ex2:
+            if st.button("🚀 Finalize & Submit to HOD"):
+                st.balloons()
+                st.success("Allocation submitted to Departmental Records.")
+    else:
+        st.warning("Nothing to review. Add modules in the drafting tab.")
+
+# FOOTER
 st.markdown("---")
-st.markdown("""
-<div style="text-align: center; color: #666; padding: 1rem;">
-    <p>💡 Select your modules from the sidebar to calculate your WAM in real-time</p>
-    <p style="font-size: 0.85rem; margin-top: 0.5rem;">
-        📱 Optimized for desktop and mobile • All activities are logged for reference
-    </p>
+st.markdown(f"""
+<div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 1rem;">
+    Department of Natural Sciences Internal Resource Planning Tool<br>
+    v4.0.0-PRO • Cycle: Autumn 2026 • © 2026 Academic Affairs
 </div>
 """, unsafe_allow_html=True)
