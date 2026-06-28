@@ -4,7 +4,7 @@ import plotly.express as px
 from datetime import datetime
 import json
 import os
-
+Student Enrolment
 # ==========================================
 # 1. PAGE CONFIGURATION
 # ==========================================
@@ -1114,7 +1114,7 @@ with st.sidebar:
                         lab = 0
                         st.info("Lab hours: 0 (Theory Only module)")
                 
-                students = st.slider("Student Enrolment", 25, 60, 30)
+                students = st.slider("Student Enrolment", 20, 60, 30)
                 
                 room = st.text_input(
                     "Room / Laboratory",
