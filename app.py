@@ -1000,13 +1000,25 @@ if 'manual_room' not in st.session_state:
 # 7. STUDENT COUNTER FUNCTION
 # ==========================================
 def student_counter(label, key, min_val=20, max_val=70, default=30):
-    """Create a student counter with +/- buttons"""
+    """
+    Create a student counter with +/- buttons.
+    
+    Args:
+        label: Display label for the counter
+        key: Unique session state key
+        min_val: Minimum value (default: 20)
+        max_val: Maximum value (default: 70)
+        default: Default value (default: 30)
+    
+    Returns:
+        int: Current counter value
+    """
     
     # Initialize session state if not exists
     if key not in st.session_state:
         st.session_state[key] = default
     
-    # Use columns for layout
+    # Create layout
     col1, col2, col3 = st.columns([1, 2, 1])
     
     # Decrease button
@@ -1015,7 +1027,7 @@ def student_counter(label, key, min_val=20, max_val=70, default=30):
             if st.session_state[key] > min_val:
                 st.session_state[key] -= 1
     
-    # Display value
+    # Display current value
     with col2:
         st.markdown(f"""
         <div style="text-align:center; font-size:1.2rem; font-weight:700; color:#1a2a4a; padding:0.2rem 0;">
@@ -1033,7 +1045,6 @@ def student_counter(label, key, min_val=20, max_val=70, default=30):
     st.caption(f"Students {min_val}-{max_val}")
     
     return st.session_state[key]
-
 # ==========================================
 # 8. ACADEMIC HEADER
 # ==========================================
