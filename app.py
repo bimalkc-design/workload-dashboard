@@ -906,7 +906,7 @@ with st.sidebar:
     
     st.selectbox(
         "Designation",
-        ["Professor", "Associate Professor", "Assistant Professor", "Senior Lecturer", "Lecturer"]
+        ["Assistant Professor", "Senior Lecturer", "Lecturer", "Associate Lecturer", "Assistant Lecturer"]
     )
     
     st.divider()
