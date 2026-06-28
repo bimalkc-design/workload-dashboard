@@ -539,7 +539,7 @@ FACULTY_LIST = [
 ]
 
 # ==========================================
-# 5. WAM ENGINE & LOGGING
+# 5. WAM ENGINE & LOGGING - UPDATED THRESHOLDS
 # ==========================================
 def calculate_wam(selected_modules, student_counts):
     """Calculate WAM based on selected modules"""
@@ -556,13 +556,13 @@ def calculate_wam(selected_modules, student_counts):
     return round(total_wam, 1)
 
 def get_status(wam):
-    """Get status based on WAM score"""
+    """Get status based on WAM score - Updated thresholds"""
     if wam == 0:
         return 'No Load', '⚪', '#6c757d', 'You haven\'t selected any modules yet'
-    elif wam < 10:
+    elif wam < 12:
         return 'Light Load', '🟡', '#ffc107', 'You have capacity for more modules'
-    elif wam <= 19:
-        return 'Optimal', '🟢', '#28a745', 'Your workload is well-balanced!'
+    elif wam <= 16:
+        return 'Balanced', '🟢', '#28a745', 'Your workload is well-balanced!'
     else:
         return 'Heavy Load', '🔴', '#dc3545', 'Consider sharing modules with colleagues'
 
@@ -840,11 +840,11 @@ with col_right:
         </div>
         """, unsafe_allow_html=True)
         
-        # Progress Bar
+        # Progress Bar - Updated to 16 as max optimal
         st.markdown("### Workload Level")
-        progress = min(wam / 25, 1.0)
+        progress = min(wam / 16, 1.0)
         st.progress(progress)
-        st.caption("0" + " " * 50 + "25+")
+        st.caption("0" + " " * 50 + "16+")
         
         # Status indicators
         col1, col2, col3 = st.columns(3)
@@ -1008,7 +1008,33 @@ if st.session_state.selected_modules:
             st.info("No history found for this faculty member")
 
 # ==========================================
-# 11. FOOTER
+# 11. WAM THRESHOLD GUIDE
+# ==========================================
+st.markdown("---")
+st.markdown("""
+<div style="background: #f8f9fa; padding: 1rem; border-radius: 10px; margin: 1rem 0;">
+    <div style="display: flex; justify-content: space-around; text-align: center; flex-wrap: wrap;">
+        <div>
+            <span style="display: inline-block; width: 20px; height: 20px; background: #ffc107; border-radius: 50%;"></span>
+            <span style="font-weight: 600; margin-left: 0.5rem;">Light Load</span>
+            <span style="color: #666; margin-left: 0.5rem;">WAM &lt; 12</span>
+        </div>
+        <div>
+            <span style="display: inline-block; width: 20px; height: 20px; background: #28a745; border-radius: 50%;"></span>
+            <span style="font-weight: 600; margin-left: 0.5rem;">Balanced</span>
+            <span style="color: #666; margin-left: 0.5rem;">WAM 12 - 16</span>
+        </div>
+        <div>
+            <span style="display: inline-block; width: 20px; height: 20px; background: #dc3545; border-radius: 50%;"></span>
+            <span style="font-weight: 600; margin-left: 0.5rem;">Heavy Load</span>
+            <span style="color: #666; margin-left: 0.5rem;">WAM &gt; 16</span>
+        </div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
+
+# ==========================================
+# 12. FOOTER
 # ==========================================
 st.markdown("---")
 st.markdown("""
