@@ -659,7 +659,7 @@ FACULTY_LIST = [
     "Ms. Kuenzang Choki", "Ms. Sangay Yuden", "Mr. Tashi Dendup",
     "Shacha Thinley", "Nachiketa Homchaudhuri", "Mon B Ghalley",
     "Dr. Karma Tenzin", "Rit Wik Sharma", "Ugyen D Tamang",
-    "Asst. Prof. Karma Wangchuck", "Mohan S Rana", "Tshering Dekar",
+    "Karma Wangchuck", "Mohan S Rana", "Tshering Dekar",
     "Dr. Bimal K Chetri", "Sonam Tobgay", "Dechen Lhendup",
     "S. Chitra", "DS-Y", "Paul Raj"
 ]
@@ -779,7 +779,7 @@ with st.sidebar:
     
     st.selectbox(
         "Designation",
-        ["Professor", "Associate Professor", "Assistant Professor", "Senior Lecturer", "Lecturer"]
+        ["Assistant Professor", "Senior Lecturer", "Lecturer", "Associate Lecturer", "Assistant Lecturer"]
     )
     
     st.divider()
