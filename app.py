@@ -996,6 +996,23 @@ if 'manual_students' not in st.session_state:
 if 'manual_room' not in st.session_state:
     st.session_state.manual_room = ""
 
+# ===== RESET STUDENT COUNTER SESSION STATES =====
+# Force reset to 30 with new range 20-70
+if 'student_count_from_list' not in st.session_state:
+    st.session_state.student_count_from_list = 30
+elif st.session_state.student_count_from_list < 20:
+    st.session_state.student_count_from_list = 30
+
+if 'student_count_manual' not in st.session_state:
+    st.session_state.student_count_manual = 30
+elif st.session_state.student_count_manual < 20:
+    st.session_state.student_count_manual = 30
+
+if 'student_count_no_modules' not in st.session_state:
+    st.session_state.student_count_no_modules = 30
+elif st.session_state.student_count_no_modules < 20:
+    st.session_state.student_count_no_modules = 30
+
 # ==========================================
 # 7. STUDENT COUNTER FUNCTION
 # ==========================================
@@ -1014,9 +1031,13 @@ def student_counter(label, key, min_val=20, max_val=70, default=30):
         int: Current counter value
     """
     
-    # Initialize session state if not exists
+    # Initialize session state if not exists OR if value is out of range
     if key not in st.session_state:
         st.session_state[key] = default
+    elif st.session_state[key] < min_val:
+        st.session_state[key] = min_val
+    elif st.session_state[key] > max_val:
+        st.session_state[key] = max_val
     
     # Create layout
     col1, col2, col3 = st.columns([1, 2, 1])
