@@ -871,7 +871,7 @@ st.markdown(f"""
             </div>
         </div>
                </div> 
-        <div style="text-align:right; font-size:0.8rem; color:#8899b0;">
+        <div style="text-align:right; font-size:0.9rem; color: #ffffff;">
             <div>Faculty Self-Service Portal</div>
             <div>Workload Allocation Module</div>
         </div>
