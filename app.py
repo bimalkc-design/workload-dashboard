@@ -818,56 +818,56 @@ MODULE_DATABASE = {
             ]
         }
     },
+    # ========================================
+    # NEW LIFE SCIENCES - CORRECTED (4 Year)
+    # ========================================
     'LifeSciences_New': {
         'Year 1': {
             'Semester I': [
-                {'code': 'ACS101', 'name': 'Academic Skills', 'theory': 2, 'lab': 0},
-                {'code': 'BTZ101', 'name': 'Fundamentals of Life Science', 'theory': 3, 'lab': 4},
-                {'code': 'FCH101', 'name': 'Fundamentals of Chemistry', 'theory': 3, 'lab': 2},
-                {'code': 'FMT101', 'name': 'Fundamentals of Mathematics', 'theory': 3, 'lab': 0},
-                {'code': 'LAC101', 'name': 'རྫོང་ཁ་ཤེས་ཡྫོན་འབྲི་རྩལ།', 'theory': 2, 'lab': 0},
+                {'code': 'BTS101', 'name': 'Algae & Fungi', 'theory': 3, 'lab': 3},
+                {'code': 'ZLS101', 'name': 'Protistans & Invertebrate Biology', 'theory': 3, 'lab': 3},
+                {'code': 'CCH101', 'name': 'Concise Chemistry', 'theory': 3, 'lab': 2},
+                {'code': 'BTZ101', 'name': 'Evolution & Biogeography', 'theory': 3, 'lab': 0},
+                {'code': 'APC101', 'name': 'IT Skills', 'theory': 2, 'lab': 2},
             ],
             'Semester II': [
-                {'code': 'BTS101', 'name': 'Plant Diversity', 'theory': 3, 'lab': 3},
-                {'code': 'PLS101', 'name': 'Fundamentals of Physics for Life Sciences', 'theory': 2, 'lab': 2},
-                {'code': 'CSP101', 'name': 'Foundations of Python Programming', 'theory': 2, 'lab': 3},
-                {'code': 'LAC102', 'name': 'རྫོང་ཁ་རྩྫོམ་རིག།', 'theory': 2, 'lab': 0},
-                {'code': 'DAT101', 'name': 'Statistical Computing I', 'theory': 2, 'lab': 3},
+                {'code': 'ZLS102', 'name': 'Chordate Biology', 'theory': 3, 'lab': 3},
+                {'code': 'BTS102', 'name': 'Bryophyte & Pteridophyte', 'theory': 3, 'lab': 3},
+                {'code': 'ZLS103', 'name': 'Cell Biology', 'theory': 3, 'lab': 3},
+                {'code': 'BTS103', 'name': 'Gymnosperm & Plant Anatomy', 'theory': 3, 'lab': 3},
+                {'code': 'ACS101', 'name': 'Academic Skills', 'theory': 2, 'lab': 0},
             ]
         },
         'Year 2': {
             'Semester III': [
-                {'code': 'BTS202', 'name': 'Plant Anatomy and Physiology', 'theory': 3, 'lab': 3},
-                {'code': 'BCH201', 'name': 'Biochemistry', 'theory': 3, 'lab': 4},
-                {'code': 'ZLS201', 'name': 'Invertebrate Biology and Parasitology', 'theory': 3, 'lab': 3},
-                {'code': 'ZLS204', 'name': 'Developmental Biology', 'theory': 3, 'lab': 0},
-                {'code': 'BTZ201', 'name': 'Cell Biology', 'theory': 3, 'lab': 3},
+                {'code': 'ZLS204', 'name': 'Developmental Biology', 'theory': 3, 'lab': 3},
+                {'code': 'BTS204', 'name': 'Embryology of Angiosperms', 'theory': 3, 'lab': 6},
+                {'code': 'ZLS205', 'name': 'Biochemistry', 'theory': 3, 'lab': 4},
+                {'code': 'BTZ202', 'name': 'Microbiology', 'theory': 3, 'lab': 6},
+                {'code': 'AMT202', 'name': 'Foundations of Statistics', 'theory': 3, 'lab': 0},
             ],
             'Semester IV': [
-                {'code': 'BTS203', 'name': 'Embryology of Angiosperms', 'theory': 3, 'lab': 6},
-                {'code': 'BTZ202', 'name': 'Genetics', 'theory': 3, 'lab': 4},
-                {'code': 'ZLS202', 'name': 'Molecular Biology', 'theory': 3, 'lab': 4},
-                {'code': 'ZLS203', 'name': 'Chordate Biology', 'theory': 3, 'lab': 3},
-                {'code': 'BTZ203', 'name': 'Microbiology', 'theory': 3, 'lab': 6},
+                {'code': 'ZLS206', 'name': 'Parasitology', 'theory': 3, 'lab': 3},
+                {'code': 'RSM301', 'name': 'Research Methods', 'theory': 3, 'lab': 0},
+                {'code': 'BTS205', 'name': 'Principles of Plant Systematics', 'theory': 3, 'lab': 3},
+                {'code': 'BTZ203', 'name': 'Genetics & Genomics', 'theory': 3, 'lab': 4},
+                {'code': 'DZG101', 'name': 'Dzongkha Communication', 'theory': 2, 'lab': 0},
             ]
         },
         'Year 3': {
             'Semester V': [
-                {'code': 'BTS304', 'name': 'Fungi and Plant Pathology', 'theory': 3, 'lab': 3},
-                {'code': 'GRS301', 'name': 'GIS and Remote Sensing', 'theory': 2, 'lab': 3},
-                {'code': 'ZLS304', 'name': 'Anatomy and Physiology of Vertebrates', 'theory': 3, 'lab': 3},
-                {'code': 'ZLS305', 'name': 'Developmental Biology', 'theory': 3, 'lab': 3},
-                {'code': 'BTS306', 'name': 'Plant Breeding and Horticulture', 'theory': 3, 'lab': 6},
+                {'code': 'BTS306', 'name': 'Plant Breeding & Horticulture', 'theory': 3, 'lab': 6},
+                {'code': 'ZLS307', 'name': 'Freshwater Biology', 'theory': 3, 'lab': 6},
+                {'code': 'BTS307', 'name': 'Economic Botany', 'theory': 3, 'lab': 6},
+                {'code': 'ZLS308', 'name': 'Animal Physiology', 'theory': 3, 'lab': 6},
+                {'code': 'BTS308', 'name': 'Plant Biotechnology & Tissue Culture', 'theory': 3, 'lab': 3},
             ],
             'Semester VI': [
-                {'code': 'BTS305', 'name': 'Principles of Plant Systematics', 'theory': 3, 'lab': 3},
-                {'code': 'BTS307', 'name': 'Horticulture and Postharvest Management', 'theory': 3, 'lab': 3},
-                {'code': 'BTZ303', 'name': 'Microbiology', 'theory': 3, 'lab': 6},
-                {'code': 'BTZ304', 'name': 'Bioinformatics', 'theory': 2, 'lab': 4},
-                {'code': 'ZLS307', 'name': 'Freshwater Biology', 'theory': 3, 'lab': 6},
-                {'code': 'ZLS308', 'name': 'Animal Physiology', 'theory': 3, 'lab': 6},
-                {'code': 'BTS308', 'name': 'Economic Botany', 'theory': 3, 'lab': 6},
-                {'code': 'BTS309', 'name': 'Plant Biotechnology and Tissue Culture', 'theory': 3, 'lab': 3},
+                {'code': 'BTS309', 'name': 'Physiology & Ecophysiology of Plant', 'theory': 3, 'lab': 3},
+                {'code': 'ZLS309', 'name': 'Animal Biotechnology', 'theory': 3, 'lab': 3},
+                {'code': 'BTS310', 'name': 'Plant Ecology & Conservation', 'theory': 3, 'lab': 3},
+                {'code': 'BTZ304', 'name': 'Environmental Biotechnology', 'theory': 3, 'lab': 4},
+                {'code': 'ZLS310', 'name': 'Animal Behavior', 'theory': 3, 'lab': 3},
             ]
         },
         'Year 4': {
@@ -876,13 +876,12 @@ MODULE_DATABASE = {
                 {'code': 'BTZ405', 'name': 'Biotechnology and Tissue Culture', 'theory': 3, 'lab': 4},
                 {'code': 'BTZ406', 'name': 'Ecology and Biodiversity Conservation', 'theory': 3, 'lab': 3},
                 {'code': 'ZLS406', 'name': 'Freshwater Biology', 'theory': 3, 'lab': 3},
-                {'code': 'CRD401', 'name': 'Capstone Project I', 'theory': 2, 'lab': 4},
+                {'code': 'CRD403', 'name': 'Capstone Project I', 'theory': 2, 'lab': 4},
             ],
             'Semester VIII': [
                 {'code': 'ZLS407', 'name': 'Animal Behaviour', 'theory': 3, 'lab': 3},
                 {'code': 'BTZ407', 'name': 'Immunology and Forensic Biology', 'theory': 3, 'lab': 4},
-                {'code': 'BTS408', 'name': 'Conservation Biology', 'theory': 3, 'lab': 3},
-                {'code': 'CRD402', 'name': 'Capstone Project II', 'theory': 2, 'lab': 4},
+                {'code': 'CRD404', 'name': 'Capstone Project II', 'theory': 2, 'lab': 4},
             ]
         }
     }
@@ -1361,3 +1360,437 @@ with st.sidebar:
                             st.success(f"✅ Added: {mod_code}")
                             # Reset manual fields
                             st.session_state.manual_module_code = ""
+                            st.session_state.manual_module_name = ""
+                            st.session_state.manual_room = ""
+                            st.rerun()
+                        else:
+                            st.warning("⚠️ Module already in list")
+                    else:
+                        st.error("Please enter Module Code and Name")
+            
+            with col_b:
+                if st.button("🗑️ Clear All", use_container_width=True):
+                    st.session_state.modules = []
+                    st.session_state.counts = {}
+                    st.session_state.rooms = {}
+                    st.rerun()
+    
+    else:
+        # ===== NO MODULES FOUND - ONLY MANUAL ENTRY =====
+        st.info("No modules found for the selected parameters. Enter manually below.")
+        
+        st.markdown("### 📝 Enter Module Details")
+        
+        # Module Code and Name
+        mod_code = st.text_input(
+            "Module Code", 
+            value=st.session_state.manual_module_code, 
+            placeholder="e.g., ENV101"
+        )
+        mod_name = st.text_input(
+            "Module Name", 
+            value=st.session_state.manual_module_name, 
+            placeholder="e.g., Environmental Science"
+        )
+        
+        # Module Type Selection
+        st.markdown("**Module Type**")
+        mod_type = st.radio(
+            "Select Module Type",
+            ["Theory Only", "Lab Only", "Theory + Lab"],
+            index=["Theory Only", "Lab Only", "Theory + Lab"].index(st.session_state.manual_module_type) 
+                if st.session_state.manual_module_type in ["Theory Only", "Lab Only", "Theory + Lab"] else 0,
+            horizontal=True,
+            key="mod_type_no_modules"
+        )
+        st.session_state.manual_module_type = mod_type
+        
+        # Hours based on type
+        col_t, col_l = st.columns(2)
+        with col_t:
+            if mod_type in ["Theory Only", "Theory + Lab"]:
+                theory = st.number_input(
+                    "Theory Hours", 
+                    min_value=0, 
+                    max_value=6, 
+                    value=st.session_state.manual_theory if st.session_state.manual_theory > 0 else 3, 
+                    step=1,
+                    key="theory_no_modules"
+                )
+            else:
+                theory = 0
+                st.info("Theory hours: 0 (Lab Only module)")
+        
+        with col_l:
+            if mod_type in ["Lab Only", "Theory + Lab"]:
+                lab = st.number_input(
+                    "Lab Hours", 
+                    min_value=0, 
+                    max_value=6, 
+                    value=st.session_state.manual_lab if st.session_state.manual_lab > 0 else 3, 
+                    step=1,
+                    key="lab_no_modules"
+                )
+            else:
+                lab = 0
+                st.info("Lab hours: 0 (Theory Only module)")
+        
+        # ===== STUDENT COUNTER WITH +/- BUTTONS =====
+        st.markdown("**Student Enrolment**")
+        students = student_counter(
+            label="Students",
+            key="student_count_no_modules",
+            min_val=25,
+            max_val=60,
+            default=st.session_state.manual_students
+        )
+        st.session_state.manual_students = students
+        
+        # Room / Laboratory
+        room = st.text_input(
+            "Room / Laboratory", 
+            value=st.session_state.manual_room,
+            placeholder="e.g., Science Hall 1, Lab 203"
+        )
+        st.session_state.manual_room = room
+        
+        # Summary of module
+        st.markdown(f"""
+        <div class="module-detail-box">
+            <strong>📋 Module Summary:</strong><br>
+            Code: {mod_code if mod_code else '(Not Set)'} • Name: {mod_name if mod_name else '(Not Set)'}<br>
+            Type: {mod_type} • Theory: {theory}h • Lab: {lab}h • Total: {theory + lab}h • Students: {students}<br>
+            Room: {room if room else 'Not Assigned'}
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Save to session state
+        if mod_code:
+            st.session_state.manual_module_code = mod_code
+        if mod_name:
+            st.session_state.manual_module_name = mod_name
+        st.session_state.manual_theory = theory
+        st.session_state.manual_lab = lab
+        
+        col_a, col_b = st.columns(2)
+        with col_a:
+            if st.button("➕ Add Module", use_container_width=True):
+                if mod_code and mod_name:
+                    if not any(m['code'] == mod_code for m in st.session_state.modules):
+                        new_mod = {
+                            'code': mod_code,
+                            'name': mod_name,
+                            'theory': theory,
+                            'lab': lab
+                        }
+                        st.session_state.modules.append(new_mod)
+                        st.session_state.counts[mod_code] = students
+                        if room:
+                            st.session_state.rooms[mod_code] = room
+                        st.success(f"✅ Added: {mod_code}")
+                        # Reset manual fields
+                        st.session_state.manual_module_code = ""
+                        st.session_state.manual_module_name = ""
+                        st.session_state.manual_room = ""
+                        st.rerun()
+                    else:
+                        st.warning("⚠️ Module already in list")
+                else:
+                    st.error("Please enter Module Code and Name")
+        
+        with col_b:
+            if st.button("🗑️ Clear All", use_container_width=True):
+                st.session_state.modules = []
+                st.session_state.counts = {}
+                st.session_state.rooms = {}
+                st.rerun()
+    
+    st.divider()
+    if st.session_state.modules:
+        st.metric("Modules Selected", len(st.session_state.modules))
+        st.metric("Total Students", sum(st.session_state.counts.values()))
+    
+    st.divider()
+    st.markdown("### Administrative Access")
+    pin = st.text_input("PIN", type="password")
+    if pin == "DNS777":
+        st.session_state.admin = True
+        st.success("Administrator access granted")
+
+# ==========================================
+# 10. MAIN CONTENT (SAME AS BEFORE)
+# ==========================================
+# [Rest of the code remains the same - main content, print section, tabs, admin section, footer]
+# ...
+# ==========================================
+# 10. THRESHOLD GUIDE
+# ==========================================
+st.markdown("""
+<div class="threshold-academic">
+    <div class="item"><span class="dot" style="background:#ffc107;"></span> Light (WAM &lt; 12)</div>
+    <div class="item"><span class="dot" style="background:#28a745;"></span> Balanced (12 - 16)</div>
+    <div class="item"><span class="dot" style="background:#dc3545;"></span> Heavy (WAM &gt; 16)</div>
+</div>
+""", unsafe_allow_html=True)
+
+# ==========================================
+# 11. PRINTABLE CONTENT
+# ==========================================
+st.markdown('<div class="print-content">', unsafe_allow_html=True)
+
+st.markdown(f"""
+<div style="text-align:center; padding:0.4rem 0; border-bottom:3px solid #1a2a4a; margin-bottom:0.5rem;">
+    <h1 style="color:#1a2a4a; font-size:1.4rem; margin:0;">Workload & Roaster Report</h1>
+    <p style="color:#495057; margin:0.1rem 0; font-size:0.75rem;">Department of Natural Sciences • Royal University of Bhutan</p>
+    <p style="color:#7f8c8d; font-size:0.7rem; margin:0;">{datetime.now().strftime('%B %d, %Y')} • Autumn 2026</p>
+</div>
+""", unsafe_allow_html=True)
+
+st.markdown(f"""
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:0.3rem; margin-bottom:0.5rem; padding:0.4rem; background:#f8f9fa; border-radius:4px; font-size:0.7rem;">
+    <div><strong>Faculty:</strong> {st.session_state.name}</div>
+    <div><strong>Designation:</strong> {designation if 'designation' in locals() else 'Not Specified'}</div>
+    <div><strong>Programme:</strong> {prog if 'prog' in locals() else 'Not Specified'}</div>
+    <div><strong>Semester:</strong> Autumn 2026</div>
+</div>
+""", unsafe_allow_html=True)
+
+if st.session_state.modules:
+    st.markdown("### Teaching Assignment")
+    
+    data = []
+    for m in st.session_state.modules:
+        students = st.session_state.counts.get(m['code'], 25)
+        room = st.session_state.rooms.get(m['code'], "Not Assigned")
+        w = calculate_wam([{**m, 'students': students}])
+        data.append({
+            'Code': m['code'],
+            'Module': m['name'],
+            'Theory': m['theory'],
+            'Lab': m['lab'],
+            'Total': m['theory'] + m['lab'],
+            'Students': students,
+            'Room': room,
+            'WAM': w
+        })
+    df_print = pd.DataFrame(data)
+    
+    st.table(df_print)
+    
+    st.markdown(f"""
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:0.2rem; margin-top:0.3rem; padding:0.4rem; background:#f8f9fa; border-radius:4px; text-align:center; font-size:0.7rem;">
+        <div><strong>Modules</strong><br>{len(st.session_state.modules)}</div>
+        <div><strong>Theory</strong><br>{df_print['Theory'].sum()}h</div>
+        <div><strong>Lab</strong><br>{df_print['Lab'].sum()}h</div>
+        <div><strong>Students</strong><br>{df_print['Students'].sum()}</div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    wam_total = calculate_wam([
+        {**m, 'students': st.session_state.counts.get(m['code'], 25)}
+        for m in st.session_state.modules
+    ])
+    status, emoji, color, msg = get_status(wam_total)
+    
+    st.markdown(f"""
+    <div style="background:#1a2a4a; color:white; padding:0.5rem; border-radius:4px; margin-top:0.5rem; text-align:center;">
+        <div style="font-size:1.2rem; font-weight:700;">{wam_total}</div>
+        <div style="font-size:0.65rem; opacity:0.8;">Workload Allocation Model Score</div>
+        <div style="margin-top:0.2rem; background:{color}; display:inline-block; padding:0.1rem 0.8rem; border-radius:3px; color:white; font-weight:600; font-size:0.7rem;">{emoji} {status}</div>
+    </div>
+    """, unsafe_allow_html=True)
+else:
+    st.info("No modules selected")
+
+st.markdown("""
+<div style="text-align:center; margin-top:0.8rem; padding-top:0.4rem; border-top:2px solid #e8ecf0; color:#7f8c8d; font-size:0.6rem;">
+    Generated by Workload & Roaster System • Royal University of Bhutan
+</div>
+""", unsafe_allow_html=True)
+
+st.markdown('</div>', unsafe_allow_html=True)
+
+# ==========================================
+# 12. DETAILED SECTIONS
+# ==========================================
+if st.session_state.modules:
+    st.divider()
+    
+    tab1, tab2, tab3, tab4 = st.tabs(["Detailed Breakdown", "Analytics", "History", "Timetable"])
+    
+    with tab1:
+        data = []
+        for m in st.session_state.modules:
+            students = st.session_state.counts.get(m['code'], 25)
+            room = st.session_state.rooms.get(m['code'], "Not Assigned")
+            w = calculate_wam([{**m, 'students': students}])
+            data.append({
+                'Code': m['code'],
+                'Module': m['name'],
+                'Theory': m['theory'],
+                'Lab': m['lab'],
+                'Students': students,
+                'Room': room,
+                'WAM': w,
+                'Type': 'Theory + Lab' if m['lab'] > 0 and m['theory'] > 0 else 'Theory Only' if m['theory'] > 0 else 'Lab Only'
+            })
+        df = pd.DataFrame(data)
+        st.dataframe(df, use_container_width=True, hide_index=True)
+        
+        csv = df.to_csv(index=False).encode('utf-8')
+        st.download_button("Download CSV", csv, f"workload_{datetime.now().strftime('%Y%m%d')}.csv", "text/csv")
+    
+    with tab2:
+        c1, c2 = st.columns(2)
+        with c1:
+            fig = px.pie(values=[df['Theory'].sum(), df['Lab'].sum()], 
+                        names=['Theory Hours', 'Lab Hours'], 
+                        title="Theory vs Laboratory Distribution",
+                        color_discrete_sequence=['#1a2a4a', '#c9a84c'])
+            fig.update_layout(height=300)
+            st.plotly_chart(fig, use_container_width=True)
+        with c2:
+            fig = px.bar(df, x='Code', y='WAM', title="WAM Distribution by Module", 
+                        color='WAM', color_continuous_scale='Blues', height=300)
+            fig.update_layout(showlegend=False)
+            st.plotly_chart(fig, use_container_width=True)
+        
+        st.subheader("Summary Statistics")
+        c1, c2, c3, c4 = st.columns(4)
+        c1.metric("Average WAM", f"{df['WAM'].mean():.1f}")
+        c2.metric("Maximum WAM", f"{df['WAM'].max():.1f}")
+        c3.metric("Minimum WAM", f"{df['WAM'].min():.1f}")
+        c4.metric("Total Students", df['Students'].sum())
+    
+    with tab3:
+        st.subheader("Workload History")
+        history = get_history(st.session_state.name)
+        if history:
+            df_h = pd.DataFrame(history)
+            df_h['timestamp'] = pd.to_datetime(df_h['timestamp'])
+            df_h = df_h.sort_values('timestamp', ascending=False)
+            st.dataframe(df_h[['timestamp', 'wam', 'status']], use_container_width=True, hide_index=True)
+        else:
+            st.info("No historical records found")
+    
+    with tab4:
+        st.subheader("Timetable View")
+        st.caption("Academic schedule with room allocations")
+        
+        st.markdown(f"""
+        <div class="timetable-academic">
+            <div class="header">
+                Teaching Timetable
+                <span style="font-size:0.8rem; font-weight:400; color:#7f8c8d; float:right;">
+                    {st.session_state.name} • {datetime.now().strftime('%B %d, %Y')}
+                </span>
+            </div>
+        """, unsafe_allow_html=True)
+        
+        for i, row in df.iterrows():
+            st.markdown(f"""
+            <div class="timetable-entry">
+                <div><span class="label">Module:</span> <span class="value">{row['Code']}</span></div>
+                <div><span class="label">Title:</span> <span class="value">{row['Module']}</span></div>
+                <div><span class="label">Hours:</span> <span class="value">{row['Theory']}T + {row['Lab']}L</span></div>
+                <div><span class="label">Students:</span> <span class="value">{row['Students']}</span></div>
+                <div><span class="label">Room:</span> <span class="value" style="color:#1a2a4a; font-weight:600;">{row['Room']}</span></div>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        st.markdown("""
+            <div style="margin-top:1rem; padding-top:0.5rem; border-top:2px solid #e8ecf0; text-align:center; font-size:0.75rem; color:#7f8c8d;">
+                Generated by Workload & Roaster System • Royal University of Bhutan
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+# ==========================================
+# 13. PRINT BUTTON
+# ==========================================
+st.divider()
+
+st.markdown("""
+<script>
+function printReport() {
+    window.print();
+}
+</script>
+""", unsafe_allow_html=True)
+
+col1, col2, col3 = st.columns([1, 2, 1])
+
+with col2:
+    st.markdown("""
+    <div class="no-print" style="text-align:center; padding:0.5rem 0;">
+        <button onclick="printReport()" style="
+            background: #1a2a4a;
+            color: white;
+            border: none;
+            padding: 0.7rem 3rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(26,42,74,0.2);
+            width: 100%;
+        " onmouseover="this.style.background='#2a4a6a'; this.style.boxShadow='0 4px 12px rgba(26,42,74,0.3)';" 
+        onmouseout="this.style.background='#1a2a4a'; this.style.boxShadow='0 2px 8px rgba(26,42,74,0.2)';">
+            🖨️ Print Complete Report
+        </button>
+    </div>
+    """, unsafe_allow_html=True)
+
+# ==========================================
+# 14. ADMIN SECTION
+# ==========================================
+if st.session_state.admin:
+    st.divider()
+    st.markdown("""
+    <div class="admin-academic">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;">
+            <div>
+                <span class="title">🔐 Administrative Dashboard</span>
+                <span class="sub"> • Master Workload Records</span>
+            </div>
+            <div style="font-size:0.8rem; opacity:0.6;">Secure Access</div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    log_file = 'workload_logs.json'
+    if os.path.exists(log_file):
+        try:
+            with open(log_file, 'r') as f:
+                logs = json.load(f)
+            if logs:
+                df_a = pd.DataFrame(logs)
+                df_a['timestamp'] = pd.to_datetime(df_a['timestamp'])
+                
+                c1, c2, c3, c4 = st.columns(4)
+                c1.metric("Total Submissions", len(df_a))
+                c2.metric("Unique Faculty", df_a['faculty'].nunique())
+                c3.metric("Average WAM", round(df_a['wam'].mean(), 2))
+                c4.metric("Heavy Load Cases", len(df_a[df_a['status'] == 'Heavy Load']))
+                
+                st.dataframe(df_a.sort_values('timestamp', ascending=False), use_container_width=True, hide_index=True)
+                
+                csv_a = df_a.to_csv(index=False).encode('utf-8')
+                st.download_button("Download Full Report", csv_a, f"DNS_Report_{datetime.now().strftime('%Y%m%d')}.csv", "text/csv")
+                
+                if st.button("Purge Database", use_container_width=True):
+                    os.remove(log_file)
+                    st.rerun()
+        except:
+            st.info("No data available")
+
+# ==========================================
+# 15. FOOTER
+# ==========================================
+st.divider()
+st.markdown("""
+<div style="text-align:center; color:#7f8c8d; font-size:0.75rem; padding:0.5rem 0;">
+    Department of Natural Sciences • Royal University of Bhutan • Autumn 2026
+</div>
+""", unsafe_allow_html=True)
