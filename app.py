@@ -26,10 +26,10 @@ st.markdown("""
     .block-container { padding: 0.5rem 0.5rem 1rem 0.5rem !important; max-width: 100% !important; }
     
     /* ===== SIDEBAR FIXES - PREVENT OVERFLOW ===== */
+    /* Main sidebar container */
     section[data-testid="stSidebar"] {
         height: 100vh !important;
-        overflow-y: auto !important;
-        overflow-x: hidden !important;
+        overflow: hidden !important;
         position: sticky !important;
         top: 0 !important;
         background: #f8f9fa !important;
@@ -37,55 +37,26 @@ st.markdown("""
         z-index: 10 !important;
     }
     
-    section[data-testid="stSidebar"] > div {
+    /* Sidebar content wrapper - make it scrollable */
+    section[data-testid="stSidebar"] > div:first-child {
         height: 100% !important;
         overflow-y: auto !important;
         overflow-x: hidden !important;
         padding-bottom: 3rem !important;
         padding-left: 0.5rem !important;
         padding-right: 0.5rem !important;
+        scroll-behavior: smooth !important;
     }
     
-    /* Sidebar scrollbar styling */
-    section[data-testid="stSidebar"]::-webkit-scrollbar {
-        width: 4px;
-    }
-    
-    section[data-testid="stSidebar"]::-webkit-scrollbar-track {
-        background: #f1f1f1;
-    }
-    
-    section[data-testid="stSidebar"]::-webkit-scrollbar-thumb {
-        background: #c9a84c;
-        border-radius: 2px;
-    }
-    
-    section[data-testid="stSidebar"]::-webkit-scrollbar-thumb:hover {
-        background: #a88a3a;
-    }
-    
-    /* Fix selectbox dropdown positioning in sidebar */
-    .stSelectbox [role="listbox"] {
-        position: absolute !important;
-        max-height: 200px !important;
+    /* Fix for Streamlit's sidebar content */
+    .stSidebar .st-emotion-cache-1r6slb0 {
+        max-height: 100vh !important;
         overflow-y: auto !important;
-        z-index: 9999 !important;
-        background: white !important;
-        border: 1px solid #ddd !important;
-        border-radius: 4px !important;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
-        margin-top: 4px !important;
-        top: auto !important;
-        bottom: auto !important;
+        padding-bottom: 2rem !important;
     }
     
-    /* Ensure dropdown options are visible */
-    div[data-baseweb="popover"] {
-        position: absolute !important;
-        z-index: 9999 !important;
-    }
-    
-    /* Fix for select container */
+    /* ===== SELECTBOX DROPDOWN FIXES ===== */
+    /* Ensure selectbox container is positioned properly */
     .stSelectbox {
         position: relative !important;
         z-index: 1 !important;
@@ -95,13 +66,97 @@ st.markdown("""
         position: relative !important;
     }
     
-    /* Ensure all sidebar content stays within bounds */
-    .stSidebar .st-emotion-cache-1r6slb0 {
-        max-height: 100vh !important;
-        overflow-y: auto !important;
-        padding-bottom: 2rem !important;
+    /* Fix for the dropdown menu - force it to appear within sidebar */
+    div[data-baseweb="select"] {
+        position: relative !important;
     }
     
+    /* The actual dropdown popup */
+    div[data-baseweb="popover"] {
+        position: fixed !important;
+        z-index: 99999 !important;
+        max-height: 200px !important;
+        overflow-y: auto !important;
+        width: auto !important;
+        min-width: 200px !important;
+        max-width: 300px !important;
+        background: white !important;
+        border: 1px solid #ddd !important;
+        border-radius: 4px !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
+    }
+    
+    /* Dropdown listbox */
+    .stSelectbox [role="listbox"] {
+        max-height: 200px !important;
+        overflow-y: auto !important;
+        background: white !important;
+        border: none !important;
+        padding: 4px 0 !important;
+    }
+    
+    /* Dropdown options */
+    .stSelectbox [role="option"] {
+        padding: 6px 12px !important;
+        font-size: 0.9rem !important;
+    }
+    
+    .stSelectbox [role="option"]:hover {
+        background: #f0f2f6 !important;
+    }
+    
+    /* Fix for the select input field */
+    .stSelectbox .st-emotion-cache-1whx7kd {
+        position: relative !important;
+        z-index: 2 !important;
+    }
+    
+    /* ===== SIDEBAR SCROLLBAR ===== */
+    section[data-testid="stSidebar"] > div:first-child::-webkit-scrollbar {
+        width: 4px;
+    }
+    
+    section[data-testid="stSidebar"] > div:first-child::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+    
+    section[data-testid="stSidebar"] > div:first-child::-webkit-scrollbar-thumb {
+        background: #c9a84c;
+        border-radius: 2px;
+    }
+    
+    section[data-testid="stSidebar"] > div:first-child::-webkit-scrollbar-thumb:hover {
+        background: #a88a3a;
+    }
+    
+    /* ===== ADDITIONAL SIDEBAR FIXES ===== */
+    /* Ensure sidebar content doesn't overflow horizontally */
+    .stSidebar .st-emotion-cache-1r6slb0 {
+        padding-right: 0.5rem !important;
+        padding-left: 0.5rem !important;
+    }
+    
+    /* Fix for radio buttons in sidebar */
+    .stSidebar .stRadio {
+        margin-bottom: 0.5rem !important;
+    }
+    
+    /* Fix for text inputs in sidebar */
+    .stSidebar .stTextInput {
+        margin-bottom: 0.5rem !important;
+    }
+    
+    /* Fix for sliders in sidebar */
+    .stSidebar .stSlider {
+        margin-bottom: 0.5rem !important;
+    }
+    
+    /* Fix for buttons in sidebar */
+    .stSidebar .stButton {
+        margin-bottom: 0.5rem !important;
+    }
+    
+    /* Rest of your existing CSS... */
     /* Academic Header */
     .academic-header {
         background: #1a2a4a;
