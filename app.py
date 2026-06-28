@@ -4,6 +4,7 @@ import plotly.express as px
 from datetime import datetime
 import json
 import os
+import re
 
 # ==========================================
 # 1. PAGE CONFIGURATION
@@ -25,7 +26,7 @@ st.markdown("""
     .main { padding: 0 0.5rem !important; }
     .block-container { padding: 0.5rem 0.5rem 1rem 0.5rem !important; max-width: 100% !important; }
     
-    /* ===== SIDEBAR FIXES - PREVENT OVERFLOW ===== */
+    /* ===== SIDEBAR FIXES ===== */
     section[data-testid="stSidebar"] {
         height: 100vh !important;
         overflow: hidden !important;
@@ -100,6 +101,30 @@ st.markdown("""
     .stSelectbox .st-emotion-cache-1whx7kd {
         position: relative !important;
         z-index: 2 !important;
+    }
+    
+    /* Search box styling */
+    .search-box {
+        margin-bottom: 0.3rem;
+    }
+    .search-box input {
+        width: 100%;
+        padding: 0.4rem 0.8rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        background: white;
+    }
+    .search-box input:focus {
+        border-color: #1a2a4a;
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(26,42,74,0.1);
+    }
+    .search-results-count {
+        font-size: 0.7rem;
+        color: #7f8c8d;
+        margin-top: -0.2rem;
+        margin-bottom: 0.3rem;
     }
     
     /* ===== SIDEBAR SCROLLBAR ===== */
@@ -339,6 +364,13 @@ st.markdown("""
     .timetable-entry .label { font-weight: 600; color: #495057; }
     .timetable-entry .value { color: #212529; }
     
+    /* ===== SEARCH HIGHLIGHT ===== */
+    .highlight {
+        background: #fff3cd;
+        padding: 0 2px;
+        border-radius: 2px;
+    }
+    
     /* Mobile */
     @media (max-width: 768px) {
         .academic-header h1 { font-size: 1.4rem; }
@@ -348,9 +380,8 @@ st.markdown("""
         .timetable-entry { grid-template-columns: 1fr; gap: 0.1rem; padding: 0.6rem 0; }
     }
     
-    /* ===== PRINT STYLES - SINGLE PAGE COMPACT ===== */
+    /* ===== PRINT STYLES ===== */
     @media print {
-        /* Hide all Streamlit UI elements */
         .stApp { background: white !important; }
         .stSidebar { display: none !important; }
         .stButton { display: none !important; }
@@ -373,12 +404,11 @@ st.markdown("""
         .stPlotlyChart { display: none !important; }
         .stDownloadButton { display: none !important; }
         .stMarkdown div[style*="margin-top:"] { display: none !important; }
+        .search-box { display: none !important; }
         
-        /* Show print content only */
         .print-content { display: block !important; }
         .print-content * { display: revert !important; }
         
-        /* Compact print styling */
         .academic-header { 
             background: #1a2a4a !important; 
             -webkit-print-color-adjust: exact !important; 
@@ -436,7 +466,6 @@ st.markdown("""
             gap: 0.3rem !important;
         }
         
-        /* Compact tables */
         .print-content table {
             font-size: 0.7rem !important;
             border-collapse: collapse !important;
@@ -453,7 +482,6 @@ st.markdown("""
             print-color-adjust: exact !important;
         }
         
-        /* Compact summary */
         .print-content [style*="display:grid"] {
             padding: 0.4rem !important;
             margin-top: 0.3rem !important;
@@ -463,7 +491,6 @@ st.markdown("""
             font-size: 0.7rem !important;
         }
         
-        /* WAM score box compact */
         .print-content [style*="background:#1a2a4a"] {
             padding: 0.5rem !important;
             margin-top: 0.5rem !important;
@@ -475,14 +502,12 @@ st.markdown("""
             font-size: 0.7rem !important;
         }
         
-        /* Footer compact */
         .print-content [style*="margin-top:2rem"] {
             margin-top: 0.8rem !important;
             padding-top: 0.5rem !important;
             font-size: 0.6rem !important;
         }
         
-        /* Faculty info compact */
         .print-content [style*="display:grid; grid-template-columns:1fr 1fr"] {
             padding: 0.4rem !important;
             margin-bottom: 0.5rem !important;
@@ -503,7 +528,6 @@ st.markdown("""
             font-size: 0.7rem !important;
         }
         
-        /* Page setup - single page */
         @page {
             size: A4 portrait;
             margin: 0.8cm 0.8cm 0.8cm 0.8cm !important;
@@ -898,7 +922,69 @@ FACULTY_LIST = [
 ]
 
 # ==========================================
-# 5. CORE FUNCTIONS
+# 5. HELPER FUNCTIONS FOR SEARCH
+# ==========================================
+def filter_list_by_search(items, search_term, search_fields=None):
+    """Filter a list of items based on search term"""
+    if not search_term:
+        return items
+    
+    search_lower = search_term.lower()
+    filtered = []
+    
+    for item in items:
+        if isinstance(item, dict):
+            # For dict items, search in specified fields or all string fields
+            if search_fields:
+                found = False
+                for field in search_fields:
+                    if field in item and search_lower in str(item[field]).lower():
+                        found = True
+                        break
+                if found:
+                    filtered.append(item)
+            else:
+                # Search in all string fields
+                found = False
+                for key, value in item.items():
+                    if isinstance(value, str) and search_lower in value.lower():
+                        found = True
+                        break
+                if found:
+                    filtered.append(item)
+        elif isinstance(item, str):
+            # For string items
+            if search_lower in item.lower():
+                filtered.append(item)
+        else:
+            # For other types, convert to string
+            if search_lower in str(item).lower():
+                filtered.append(item)
+    
+    return filtered
+
+def get_all_modules():
+    """Get all modules from database with their program/curriculum/year/semester info"""
+    all_modules = []
+    for db_key, programs in MODULE_DATABASE.items():
+        prog, curr = db_key.split('_')
+        for year, semesters in programs.items():
+            for sem, modules in semesters.items():
+                for mod in modules:
+                    all_modules.append({
+                        'programme': prog,
+                        'curriculum': curr,
+                        'year': year,
+                        'semester': sem,
+                        'code': mod['code'],
+                        'name': mod['name'],
+                        'theory': mod['theory'],
+                        'lab': mod['lab']
+                    })
+    return all_modules
+
+# ==========================================
+# 6. CORE FUNCTIONS
 # ==========================================
 def calculate_wam(modules):
     total = 0
@@ -949,7 +1035,7 @@ def get_history(name):
         return []
 
 # ==========================================
-# 6. SESSION STATE
+# 7. SESSION STATE
 # ==========================================
 if 'modules' not in st.session_state:
     st.session_state.modules = []
@@ -977,9 +1063,21 @@ if 'manual_theory' not in st.session_state:
     st.session_state.manual_theory = 3
 if 'manual_lab' not in st.session_state:
     st.session_state.manual_lab = 0
+if 'search_faculty' not in st.session_state:
+    st.session_state.search_faculty = ""
+if 'search_programme' not in st.session_state:
+    st.session_state.search_programme = ""
+if 'search_curriculum' not in st.session_state:
+    st.session_state.search_curriculum = ""
+if 'search_year' not in st.session_state:
+    st.session_state.search_year = ""
+if 'search_semester' not in st.session_state:
+    st.session_state.search_semester = ""
+if 'search_module' not in st.session_state:
+    st.session_state.search_module = ""
 
 # ==========================================
-# 7. ACADEMIC HEADER
+# 8. ACADEMIC HEADER
 # ==========================================
 st.markdown(f"""
 <div class="academic-header">
@@ -993,7 +1091,6 @@ st.markdown(f"""
                 <span class="badge" style="margin-left:0.5rem;">🏛️ Academic Year 2026-2027</span>
             </div>
         </div>
-         </div>
         <div style="text-align:right; font-size:0.9rem; color: #ffffff;">
             <div>Faculty Self-Service Portal</div>
             <div>Workload Allocation Module</div>
@@ -1003,7 +1100,7 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 8. SIDEBAR
+# 9. SIDEBAR
 # ==========================================
 with st.sidebar:
     st.markdown("### Faculty Profile")
@@ -1011,11 +1108,30 @@ with st.sidebar:
     name_opt = st.radio("Select Option", ["From Directory", "Enter Manually"], index=0)
     
     if name_opt == "From Directory":
-        name = st.selectbox(
-            "Select Faculty Name",
-            [""] + sorted(FACULTY_LIST),
-            help="Select your name from the directory"
+        # Searchable faculty list
+        st.markdown('<div class="search-box">', unsafe_allow_html=True)
+        search_faculty = st.text_input(
+            "🔍 Search Faculty",
+            value=st.session_state.search_faculty,
+            placeholder="Type to filter names...",
+            label_visibility="collapsed"
         )
+        st.session_state.search_faculty = search_faculty
+        st.markdown('</div>', unsafe_allow_html=True)
+        
+        # Filter faculty list
+        filtered_faculty = filter_list_by_search([""] + sorted(FACULTY_LIST), search_faculty)
+        
+        if filtered_faculty:
+            st.caption(f"Showing {len(filtered_faculty)-1} of {len(FACULTY_LIST)} faculty members")
+            name = st.selectbox(
+                "Select Faculty Name",
+                filtered_faculty,
+                help="Select your name from the directory"
+            )
+        else:
+            st.warning("No faculty found matching your search")
+            name = ""
     else:
         name = st.text_input(
             "Enter Full Name",
@@ -1035,48 +1151,124 @@ with st.sidebar:
     st.divider()
     st.markdown("### Module Selection")
     
-    # ===== PROGRAMME SELECTION WITH MANUAL ENTRY =====
+    # ===== PROGRAMME SELECTION WITH SEARCH =====
     st.markdown("**Programme**")
     prog_option = st.radio("Select Programme", ["From List", "Enter Manually"], key="prog_radio", horizontal=True)
     
     if prog_option == "From List":
-        prog = st.selectbox("Programme", ["Physics", "Chemistry", "Life Sciences"])
+        # Searchable programme list
+        st.markdown('<div class="search-box">', unsafe_allow_html=True)
+        search_prog = st.text_input(
+            "🔍 Search Programme",
+            value=st.session_state.search_programme,
+            placeholder="Type to filter...",
+            label_visibility="collapsed",
+            key="search_prog_input"
+        )
+        st.session_state.search_programme = search_prog
+        st.markdown('</div>', unsafe_allow_html=True)
+        
+        prog_list = ["Physics", "Chemistry", "Life Sciences"]
+        filtered_prog = filter_list_by_search(prog_list, search_prog)
+        
+        if filtered_prog:
+            prog = st.selectbox("Programme", filtered_prog)
+        else:
+            st.warning("No programme found matching your search")
+            prog = "Physics"
         st.session_state.manual_programme = ""
     else:
         prog = st.text_input("Enter Programme", value=st.session_state.manual_programme, placeholder="e.g., Environmental Science")
         if prog:
             st.session_state.manual_programme = prog
     
-    # ===== CURRICULUM SELECTION WITH MANUAL ENTRY =====
+    # ===== CURRICULUM SELECTION WITH SEARCH =====
     st.markdown("**Curriculum**")
     curr_option = st.radio("Select Curriculum", ["From List", "Enter Manually"], key="curr_radio", horizontal=True)
     
     if curr_option == "From List":
-        curr = st.selectbox("Curriculum", ["Old (3-Year)", "New (4-Year)"])
+        # Searchable curriculum list
+        st.markdown('<div class="search-box">', unsafe_allow_html=True)
+        search_curr = st.text_input(
+            "🔍 Search Curriculum",
+            value=st.session_state.search_curriculum,
+            placeholder="Type to filter...",
+            label_visibility="collapsed",
+            key="search_curr_input"
+        )
+        st.session_state.search_curriculum = search_curr
+        st.markdown('</div>', unsafe_allow_html=True)
+        
+        curr_list = ["Old (3-Year)", "New (4-Year)"]
+        filtered_curr = filter_list_by_search(curr_list, search_curr)
+        
+        if filtered_curr:
+            curr = st.selectbox("Curriculum", filtered_curr)
+        else:
+            st.warning("No curriculum found matching your search")
+            curr = "Old (3-Year)"
         st.session_state.manual_curriculum = ""
     else:
         curr = st.text_input("Enter Curriculum", value=st.session_state.manual_curriculum, placeholder="e.g., New (4-Year)")
         if curr:
             st.session_state.manual_curriculum = curr
     
-    # ===== YEAR SELECTION WITH MANUAL ENTRY =====
+    # ===== YEAR SELECTION WITH SEARCH =====
     st.markdown("**Year**")
     year_option = st.radio("Select Year", ["From List", "Enter Manually"], key="year_radio", horizontal=True)
     
     if year_option == "From List":
-        year = st.selectbox("Year", ["Year 1", "Year 2", "Year 3", "Year 4"])
+        # Searchable year list
+        st.markdown('<div class="search-box">', unsafe_allow_html=True)
+        search_year = st.text_input(
+            "🔍 Search Year",
+            value=st.session_state.search_year,
+            placeholder="Type to filter...",
+            label_visibility="collapsed",
+            key="search_year_input"
+        )
+        st.session_state.search_year = search_year
+        st.markdown('</div>', unsafe_allow_html=True)
+        
+        year_list = ["Year 1", "Year 2", "Year 3", "Year 4"]
+        filtered_year = filter_list_by_search(year_list, search_year)
+        
+        if filtered_year:
+            year = st.selectbox("Year", filtered_year)
+        else:
+            st.warning("No year found matching your search")
+            year = "Year 1"
         st.session_state.manual_year = ""
     else:
         year = st.text_input("Enter Year", value=st.session_state.manual_year, placeholder="e.g., Year 1")
         if year:
             st.session_state.manual_year = year
     
-    # ===== SEMESTER SELECTION WITH MANUAL ENTRY =====
+    # ===== SEMESTER SELECTION WITH SEARCH =====
     st.markdown("**Semester**")
     sem_option = st.radio("Select Semester", ["From List", "Enter Manually"], key="sem_radio", horizontal=True)
     
     if sem_option == "From List":
-        sem = st.selectbox("Semester", ["Semester I", "Semester II", "Semester III", "Semester IV", "Semester V", "Semester VI", "Semester VII", "Semester VIII"])
+        # Searchable semester list
+        st.markdown('<div class="search-box">', unsafe_allow_html=True)
+        search_sem = st.text_input(
+            "🔍 Search Semester",
+            value=st.session_state.search_semester,
+            placeholder="Type to filter...",
+            label_visibility="collapsed",
+            key="search_sem_input"
+        )
+        st.session_state.search_semester = search_sem
+        st.markdown('</div>', unsafe_allow_html=True)
+        
+        sem_list = ["Semester I", "Semester II", "Semester III", "Semester IV", "Semester V", "Semester VI", "Semester VII", "Semester VIII"]
+        filtered_sem = filter_list_by_search(sem_list, search_sem)
+        
+        if filtered_sem:
+            sem = st.selectbox("Semester", filtered_sem)
+        else:
+            st.warning("No semester found matching your search")
+            sem = "Semester I"
         st.session_state.manual_semester = ""
     else:
         sem = st.text_input("Enter Semester", value=st.session_state.manual_semester, placeholder="e.g., Semester I")
@@ -1086,7 +1278,6 @@ with st.sidebar:
     # ===== GET MODULES =====
     modules = []
     try:
-        # Try to get from database
         prog_key = {"Physics":"Physics", "Chemistry":"Chemistry", "Life Sciences":"LifeSciences"}.get(prog, prog)
         curr_key = "Old" if curr == "Old (3-Year)" else "New" if curr == "New (4-Year)" else curr
         key = f"{prog_key}_{curr_key}"
@@ -1094,7 +1285,6 @@ with st.sidebar:
         if key in MODULE_DATABASE and year in MODULE_DATABASE[key] and sem in MODULE_DATABASE[key][year]:
             modules = MODULE_DATABASE[key][year][sem]
         else:
-            # Try with manual entries as keys
             for p in ["Physics", "Chemistry", "LifeSciences"]:
                 for c in ["Old", "New"]:
                     test_key = f"{p}_{c}"
@@ -1108,15 +1298,45 @@ with st.sidebar:
         pass
     
     if modules:
-        # ===== MODULE SELECTION WITH MANUAL ENTRY =====
+        # ===== MODULE SELECTION WITH SEARCH =====
         st.markdown("**Module**")
         mod_option = st.radio("Select Module", ["From List", "Enter Manually"], key="mod_radio", horizontal=True)
         
         if mod_option == "From List":
-            opts = [f"{m['code']} - {m['name']}" for m in modules]
-            sel = st.selectbox("Select Module", ["-- Select --"] + opts)
+            # Searchable module list
+            st.markdown('<div class="search-box">', unsafe_allow_html=True)
+            search_mod = st.text_input(
+                "🔍 Search Module (code or name)",
+                value=st.session_state.search_module,
+                placeholder="Type to filter modules...",
+                label_visibility="collapsed",
+                key="search_mod_input"
+            )
+            st.session_state.search_module = search_mod
+            st.markdown('</div>', unsafe_allow_html=True)
             
-            if sel != "-- Select --":
+            # Create options with code and name
+            opts = [f"{m['code']} - {m['name']}" for m in modules]
+            
+            # Filter modules by search
+            if search_mod:
+                filtered_modules = []
+                for m in modules:
+                    if (search_mod.lower() in m['code'].lower() or 
+                        search_mod.lower() in m['name'].lower()):
+                        filtered_modules.append(m)
+                filtered_opts = [f"{m['code']} - {m['name']}" for m in filtered_modules]
+                st.caption(f"Showing {len(filtered_opts)} of {len(modules)} modules")
+            else:
+                filtered_opts = ["-- Select --"] + opts
+            
+            if filtered_opts:
+                sel = st.selectbox("Select Module", filtered_opts)
+            else:
+                st.warning("No modules found matching your search")
+                sel = "-- Select --"
+            
+            if sel != "-- Select --" and sel:
                 code = sel.split(" - ")[0]
                 mod = next(m for m in modules if m['code'] == code)
                 
@@ -1250,7 +1470,7 @@ with st.sidebar:
         st.success("Administrator access granted")
 
 # ==========================================
-# 9. MAIN CONTENT
+# 10. MAIN CONTENT
 # ==========================================
 if not st.session_state.name:
     st.info("👈 Please select or enter your name in the sidebar to proceed")
@@ -1376,7 +1596,7 @@ with col_wam:
         st.info("Add modules to calculate your workload score")
 
 # ==========================================
-# 10. THRESHOLD GUIDE
+# 11. THRESHOLD GUIDE
 # ==========================================
 st.markdown("""
 <div class="threshold-academic">
@@ -1387,11 +1607,10 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 11. PRINTABLE CONTENT - COMPACT SINGLE PAGE
+# 12. PRINTABLE CONTENT - COMPACT SINGLE PAGE
 # ==========================================
 st.markdown('<div class="print-content">', unsafe_allow_html=True)
 
-# Print Header - Compact
 st.markdown(f"""
 <div style="text-align:center; padding:0.4rem 0; border-bottom:3px solid #1a2a4a; margin-bottom:0.5rem;">
     <h1 style="color:#1a2a4a; font-size:1.4rem; margin:0;">Workload & Roaster Report</h1>
@@ -1400,7 +1619,6 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-# Faculty Info - Compact
 st.markdown(f"""
 <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.3rem; margin-bottom:0.5rem; padding:0.4rem; background:#f8f9fa; border-radius:4px; font-size:0.7rem;">
     <div><strong>Faculty:</strong> {st.session_state.name}</div>
@@ -1410,7 +1628,6 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-# Modules Table - Compact
 if st.session_state.modules:
     st.markdown("### Teaching Assignment")
     
@@ -1430,10 +1647,8 @@ if st.session_state.modules:
         })
     df_print = pd.DataFrame(data)
     
-    # Display as compact table
     st.table(df_print)
     
-    # Summary - Compact
     st.markdown(f"""
     <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:0.2rem; margin-top:0.3rem; padding:0.4rem; background:#f8f9fa; border-radius:4px; text-align:center; font-size:0.7rem;">
         <div><strong>Modules</strong><br>{len(st.session_state.modules)}</div>
@@ -1443,7 +1658,6 @@ if st.session_state.modules:
     </div>
     """, unsafe_allow_html=True)
     
-    # WAM Score - Compact
     wam_total = calculate_wam([
         {**m, 'students': st.session_state.counts.get(m['code'], 25)}
         for m in st.session_state.modules
@@ -1460,17 +1674,16 @@ if st.session_state.modules:
 else:
     st.info("No modules selected")
 
-# Footer - Compact
 st.markdown("""
 <div style="text-align:center; margin-top:0.8rem; padding-top:0.4rem; border-top:2px solid #e8ecf0; color:#7f8c8d; font-size:0.6rem;">
     Generated by Workload & Roaster System • Royal University of Bhutan
 </div>
 """, unsafe_allow_html=True)
 
-st.markdown('</div>', unsafe_allow_html=True)  # End print-content
+st.markdown('</div>', unsafe_allow_html=True)
 
 # ==========================================
-# 12. DETAILED SECTIONS (Non-printable)
+# 13. DETAILED SECTIONS (Non-printable)
 # ==========================================
 if st.session_state.modules:
     st.divider()
@@ -1565,7 +1778,7 @@ if st.session_state.modules:
         """, unsafe_allow_html=True)
 
 # ==========================================
-# 13. PRINT BUTTON
+# 14. PRINT BUTTON
 # ==========================================
 st.divider()
 
@@ -1602,7 +1815,7 @@ with col2:
     """, unsafe_allow_html=True)
 
 # ==========================================
-# 14. ADMIN SECTION
+# 15. ADMIN SECTION
 # ==========================================
 if st.session_state.admin:
     st.divider()
@@ -1645,7 +1858,7 @@ if st.session_state.admin:
             st.info("No data available")
 
 # ==========================================
-# 15. FOOTER
+# 16. FOOTER
 # ==========================================
 st.divider()
 st.markdown("""
