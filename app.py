@@ -428,9 +428,14 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 3. COMPLETE MODULE DATABASE
+# 3. COMPLETE MODULE DATABASE - ALL PROGRAMS
 # ==========================================
 MODULE_DATABASE = {
+    # ========================================
+    # OLD CURRICULUM - 3 YEAR PROGRAMS
+    # ========================================
+    
+    # ----- OLD CHEMISTRY (3 Year) -----
     'Chemistry_Old': {
         'Year 1': {
             'Semester I': [
@@ -476,11 +481,13 @@ MODULE_DATABASE = {
                 {'code': 'ECH301', 'name': 'Environmental Chemistry', 'theory': 3, 'lab': 3},
                 {'code': 'BAC301', 'name': 'Basic Applied Chemistry', 'theory': 3, 'lab': 2},
                 {'code': 'PCH304', 'name': 'Quantum Chemistry and Spectroscopy', 'theory': 4, 'lab': 0},
-                {'code': 'NCH301', 'name': 'Chemistry of Natural Product', 'theory': 3, 'lab': 3},
+                {'code': 'NCH301', 'name': 'Chemistry of Natural Products', 'theory': 3, 'lab': 3},
                 {'code': 'BCH302', 'name': 'Principles of Biochemistry II', 'theory': 3, 'lab': 3},
             ]
         }
     },
+    
+    # ----- OLD PHYSICS (3 Year) -----
     'Physics_Old': {
         'Year 1': {
             'Semester I': [
@@ -531,6 +538,8 @@ MODULE_DATABASE = {
             ]
         }
     },
+    
+    # ----- OLD LIFE SCIENCES (3 Year) -----
     'LifeSciences_Old': {
         'Year 1': {
             'Semester I': [
@@ -560,7 +569,7 @@ MODULE_DATABASE = {
                 {'code': 'BTZ202', 'name': 'Genetics', 'theory': 3, 'lab': 4},
                 {'code': 'ZLS202', 'name': 'Cell and Molecular Biology', 'theory': 3, 'lab': 4},
                 {'code': 'ZLS203', 'name': 'Chordate Biology', 'theory': 3, 'lab': 3},
-                {'code': 'BTZ202', 'name': 'Microbiology', 'theory': 3, 'lab': 6},
+                {'code': 'BTZ203', 'name': 'Microbiology', 'theory': 3, 'lab': 6},
             ]
         },
         'Year 3': {
@@ -573,210 +582,226 @@ MODULE_DATABASE = {
             ],
             'Semester VI': [
                 {'code': 'BTS305', 'name': 'Principles of Plant Systematics', 'theory': 3, 'lab': 3},
-                {'code': 'BTS306', 'name': 'Horticulture and Postharvest Management', 'theory': 3, 'lab': 3},
+                {'code': 'BTS307', 'name': 'Horticulture and Postharvest Management', 'theory': 3, 'lab': 3},
                 {'code': 'BTZ303', 'name': 'Microbiology', 'theory': 3, 'lab': 6},
                 {'code': 'BTZ304', 'name': 'Bioinformatics', 'theory': 2, 'lab': 4},
                 {'code': 'ZLS307', 'name': 'Freshwater Biology', 'theory': 3, 'lab': 6},
                 {'code': 'ZLS308', 'name': 'Animal Physiology', 'theory': 3, 'lab': 6},
-                {'code': 'BTS307', 'name': 'Economic Botany', 'theory': 3, 'lab': 6},
-                {'code': 'BTS308', 'name': 'Plant Biotechnology and Tissue Culture', 'theory': 3, 'lab': 3},
+                {'code': 'BTS308', 'name': 'Economic Botany', 'theory': 3, 'lab': 6},
+                {'code': 'BTS309', 'name': 'Plant Biotechnology and Tissue Culture', 'theory': 3, 'lab': 3},
             ]
         }
     },
+    
+    # ========================================
+    # NEW CURRICULUM - 4 YEAR PROGRAMS
+    # ========================================
+    
+    # ----- NEW CHEMISTRY (4 Year) -----
+    'Chemistry_New': {
+        'Year 1': {
+            'Semester I': [
+                {'code': 'ACS101', 'name': 'Academic Skills', 'theory': 2, 'lab': 0},
+                {'code': 'GCH101', 'name': 'General Chemistry I', 'theory': 3, 'lab': 2},
+                {'code': 'FMT101', 'name': 'Foundations of Mathematics I', 'theory': 3, 'lab': 0},
+                {'code': 'LAC101', 'name': 'རྫོང་ཁ་ཤེས་ཡྫོན་འབྲི་རྩལ།', 'theory': 2, 'lab': 0},
+                {'code': 'CSP101', 'name': 'Foundations of Python Programming', 'theory': 2, 'lab': 3},
+            ],
+            'Semester II': [
+                {'code': 'GCH102', 'name': 'General Chemistry II', 'theory': 3, 'lab': 2},
+                {'code': 'FCH101', 'name': 'Fundamentals of Inorganic Chemistry', 'theory': 3, 'lab': 2},
+                {'code': 'FMT102', 'name': 'Mathematical Software', 'theory': 2, 'lab': 2},
+                {'code': 'LAC102', 'name': 'རྫོང་ཁ་རྩྫོམ་རིག།', 'theory': 2, 'lab': 0},
+                {'code': 'PLS101', 'name': 'Fundamentals of Physics for Life Sciences', 'theory': 2, 'lab': 2},
+            ]
+        },
+        'Year 2': {
+            'Semester III': [
+                {'code': 'ICH101', 'name': 'Inorganic Chemistry I', 'theory': 3, 'lab': 3},
+                {'code': 'PCH201', 'name': 'Physical Chemistry I', 'theory': 3, 'lab': 3},
+                {'code': 'FMT204', 'name': 'Foundations of Mathematics III', 'theory': 3, 'lab': 0},
+                {'code': 'DAT101', 'name': 'Statistical Computing I', 'theory': 2, 'lab': 3},
+                {'code': 'OCH201', 'name': 'Organic Chemistry I', 'theory': 3, 'lab': 3},
+            ],
+            'Semester IV': [
+                {'code': 'OCH202', 'name': 'Organic Chemistry II', 'theory': 3, 'lab': 3},
+                {'code': 'PCH202', 'name': 'Physical Chemistry II', 'theory': 3, 'lab': 3},
+                {'code': 'AMT202', 'name': 'Foundations of Statistics', 'theory': 3, 'lab': 0},
+                {'code': 'ACH201', 'name': 'Introduction to Analytical Chemistry', 'theory': 3, 'lab': 2},
+                {'code': 'ICH202', 'name': 'Inorganic Chemistry II', 'theory': 3, 'lab': 3},
+            ]
+        },
+        'Year 3': {
+            'Semester V': [
+                {'code': 'OCH303', 'name': 'Organic Chemistry III', 'theory': 3, 'lab': 3},
+                {'code': 'PCH303', 'name': 'Physical Chemistry III', 'theory': 3, 'lab': 3},
+                {'code': 'OCH304', 'name': 'Spectroscopic Methods in Chemistry', 'theory': 4, 'lab': 0},
+                {'code': 'BCH301', 'name': 'Principles of Biochemistry I', 'theory': 3, 'lab': 3},
+                {'code': 'ICH203', 'name': 'Inorganic Chemistry III', 'theory': 3, 'lab': 3},
+            ],
+            'Semester VI': [
+                {'code': 'ECH301', 'name': 'Environmental Chemistry', 'theory': 3, 'lab': 3},
+                {'code': 'BAC301', 'name': 'Basic Applied Chemistry', 'theory': 3, 'lab': 2},
+                {'code': 'PCH304', 'name': 'Quantum Chemistry and Spectroscopy', 'theory': 4, 'lab': 0},
+                {'code': 'NCH301', 'name': 'Chemistry of Natural Products', 'theory': 3, 'lab': 3},
+                {'code': 'BCH302', 'name': 'Principles of Biochemistry II', 'theory': 3, 'lab': 3},
+                {'code': 'RSM301', 'name': 'Research Methods', 'theory': 3, 'lab': 0},
+            ]
+        },
+        'Year 4': {
+            'Semester VII': [
+                {'code': 'ACH402', 'name': 'Advanced Analytical Chemistry', 'theory': 3, 'lab': 3},
+                {'code': 'ICH404', 'name': 'Advanced Inorganic Chemistry', 'theory': 3, 'lab': 3},
+                {'code': 'OCH405', 'name': 'Advanced Organic Chemistry', 'theory': 3, 'lab': 3},
+                {'code': 'PCH405', 'name': 'Advanced Physical Chemistry', 'theory': 3, 'lab': 3},
+                {'code': 'CRD401', 'name': 'Capstone Project I', 'theory': 2, 'lab': 4},
+            ],
+            'Semester VIII': [
+                {'code': 'MCH401', 'name': 'Medicinal Chemistry', 'theory': 3, 'lab': 2},
+                {'code': 'PCH406', 'name': 'Polymer Chemistry', 'theory': 3, 'lab': 2},
+                {'code': 'NCH402', 'name': 'Nanomaterials Chemistry', 'theory': 3, 'lab': 2},
+                {'code': 'CRD402', 'name': 'Capstone Project II', 'theory': 2, 'lab': 4},
+            ]
+        }
+    },
+    
+    # ----- NEW PHYSICS (4 Year) -----
     'Physics_New': {
         'Year 1': {
             'Semester I': [
+                {'code': 'ACS101', 'name': 'Academic Skills', 'theory': 2, 'lab': 0},
                 {'code': 'CME101', 'name': 'Newtonian Mechanics', 'theory': 3, 'lab': 2},
                 {'code': 'CSP101', 'name': 'Foundations of Python Programming', 'theory': 2, 'lab': 3},
-                {'code': 'FMT101', 'name': 'Fundamentals of Mathematics', 'theory': 4, 'lab': 0},
+                {'code': 'FMT101', 'name': 'Fundamentals of Mathematics I', 'theory': 4, 'lab': 0},
                 {'code': 'LAC101', 'name': 'རྫོང་ཁ་ཤེས་ཡྫོན་འབྲི་རྩལ།', 'theory': 2, 'lab': 0},
-                {'code': 'ACS101', 'name': 'Academic Skills', 'theory': 2, 'lab': 0},
             ],
             'Semester II': [
                 {'code': 'PHW101', 'name': 'Oscillations and Waves', 'theory': 3, 'lab': 2},
                 {'code': 'DAT101', 'name': 'Statistical Computing I', 'theory': 2, 'lab': 3},
                 {'code': 'FCH101', 'name': 'Fundamentals of Chemistry', 'theory': 3, 'lab': 2},
                 {'code': 'LAC102', 'name': 'རྫོང་ཁ་རྩྫོམ་རིག།', 'theory': 2, 'lab': 0},
-                {'code': 'Elective I', 'name': 'Elective I', 'theory': 2, 'lab': 0},
+                {'code': 'FMT102', 'name': 'Fundamentals of Mathematics II', 'theory': 3, 'lab': 0},
             ]
         },
         'Year 2': {
-            'Semester I': [
+            'Semester III': [
                 {'code': 'APH201', 'name': 'Physics of Space and Satellites', 'theory': 3, 'lab': 2},
                 {'code': 'EMT201', 'name': 'Electricity and Magnetism', 'theory': 3, 'lab': 3},
                 {'code': 'MMP201', 'name': 'Essential Mathematics for Physics', 'theory': 3, 'lab': 0},
                 {'code': 'APH202', 'name': 'Introduction to Electronic Systems', 'theory': 2, 'lab': 3},
-                {'code': 'Elective II', 'name': 'Elective II', 'theory': 2, 'lab': 0},
+                {'code': 'MEC201', 'name': 'Mechanics II', 'theory': 3, 'lab': 2},
             ],
-            'Semester II': [
+            'Semester IV': [
                 {'code': 'MMP202', 'name': 'Mathematical Methods in Physics', 'theory': 3, 'lab': 0},
                 {'code': 'FMP201', 'name': 'Modern Physics', 'theory': 3, 'lab': 2},
                 {'code': 'PHW202', 'name': 'Optics', 'theory': 3, 'lab': 3},
                 {'code': 'TPH201', 'name': 'Thermal Physics', 'theory': 3, 'lab': 2},
-                {'code': 'Elective III', 'name': 'Elective III', 'theory': 2, 'lab': 0},
+                {'code': 'DAT102', 'name': 'Statistical Computing II', 'theory': 2, 'lab': 3},
             ]
         },
         'Year 3': {
-            'Semester I': [
+            'Semester V': [
                 {'code': 'APH303', 'name': 'Computational Physics', 'theory': 3, 'lab': 3},
                 {'code': 'APH304', 'name': 'Applied Integrated Circuits and Logic Design', 'theory': 3, 'lab': 3},
                 {'code': 'EPH301', 'name': 'Atmospheric Physics', 'theory': 3, 'lab': 2},
-                {'code': 'QME301', 'name': 'Quantum Mechanics', 'theory': 4, 'lab': 0},
-                {'code': 'Elective IV', 'name': 'Elective IV', 'theory': 2, 'lab': 0},
+                {'code': 'QME301', 'name': 'Quantum Mechanics I', 'theory': 4, 'lab': 0},
+                {'code': 'RSM301', 'name': 'Research Methods', 'theory': 3, 'lab': 0},
             ],
-            'Semester II': [
+            'Semester VI': [
                 {'code': 'ANP301', 'name': 'Atomic Physics', 'theory': 3, 'lab': 3},
                 {'code': 'ANP302', 'name': 'Nuclear Physics', 'theory': 3, 'lab': 2},
                 {'code': 'SSP301', 'name': 'Condensed Matter Physics', 'theory': 3, 'lab': 3},
                 {'code': 'APH305', 'name': 'Machine Learning for Physics', 'theory': 3, 'lab': 3},
-                {'code': 'Elective V', 'name': 'Elective V', 'theory': 2, 'lab': 0},
+                {'code': 'QME302', 'name': 'Quantum Mechanics II', 'theory': 3, 'lab': 0},
             ]
         },
         'Year 4': {
-            'Semester I': [
+            'Semester VII': [
                 {'code': 'THP402', 'name': 'Statistical Physics', 'theory': 4, 'lab': 0},
                 {'code': 'EMT402', 'name': 'Electromagnetic Theory', 'theory': 4, 'lab': 0},
                 {'code': 'SSP402', 'name': 'Advanced Condensed Matter Physics', 'theory': 3, 'lab': 3},
-                {'code': 'QME402', 'name': 'Advanced Quantum Mechanics', 'theory': 4, 'lab': 0},
-                {'code': 'CRD403', 'name': 'Capstone Project I', 'theory': 2, 'lab': 4},
+                {'code': 'QME403', 'name': 'Advanced Quantum Mechanics', 'theory': 4, 'lab': 0},
+                {'code': 'CRD401', 'name': 'Capstone Project I', 'theory': 2, 'lab': 4},
             ],
-            'Semester II': [
+            'Semester VIII': [
                 {'code': 'CME402', 'name': 'Lagrangian and Hamiltonian Mechanics', 'theory': 3, 'lab': 0},
                 {'code': 'EPH402', 'name': 'Physics of Renewable Energy', 'theory': 3, 'lab': 2},
-                {'code': 'CRD404', 'name': 'Capstone Project II', 'theory': 2, 'lab': 4},
+                {'code': 'APH406', 'name': 'Astrophysics', 'theory': 3, 'lab': 2},
+                {'code': 'CRD402', 'name': 'Capstone Project II', 'theory': 2, 'lab': 4},
             ]
         }
     },
+    
+    # ----- NEW LIFE SCIENCES (4 Year) -----
     'LifeSciences_New': {
         'Year 1': {
             'Semester I': [
+                {'code': 'ACS101', 'name': 'Academic Skills', 'theory': 2, 'lab': 0},
                 {'code': 'BTZ101', 'name': 'Fundamentals of Life Science', 'theory': 3, 'lab': 4},
                 {'code': 'FCH101', 'name': 'Fundamentals of Chemistry', 'theory': 3, 'lab': 2},
                 {'code': 'FMT101', 'name': 'Fundamentals of Mathematics', 'theory': 3, 'lab': 0},
                 {'code': 'LAC101', 'name': 'རྫོང་ཁ་ཤེས་ཡྫོན་འབྲི་རྩལ།', 'theory': 2, 'lab': 0},
-                {'code': 'ACS101', 'name': 'Academic Skills', 'theory': 2, 'lab': 0},
             ],
             'Semester II': [
                 {'code': 'BTS101', 'name': 'Plant Diversity', 'theory': 3, 'lab': 3},
                 {'code': 'PLS101', 'name': 'Fundamentals of Physics for Life Sciences', 'theory': 2, 'lab': 2},
                 {'code': 'CSP101', 'name': 'Foundations of Python Programming', 'theory': 2, 'lab': 3},
                 {'code': 'LAC102', 'name': 'རྫོང་ཁ་རྩྫོམ་རིག།', 'theory': 2, 'lab': 0},
-                {'code': 'Elective I', 'name': 'Elective I', 'theory': 2, 'lab': 0},
-            ]
-        },
-        'Year 2': {
-            'Semester I': [
-                {'code': 'BTS202', 'name': 'Plant Anatomy and Physiology', 'theory': 3, 'lab': 3},
-                {'code': 'BCH201', 'name': 'Biochemistry', 'theory': 3, 'lab': 4},
-                {'code': 'ZLS201', 'name': 'Invertebrate Biology and Parasitology', 'theory': 3, 'lab': 3},
                 {'code': 'DAT101', 'name': 'Statistical Computing I', 'theory': 2, 'lab': 3},
-                {'code': 'Elective II', 'name': 'Elective II', 'theory': 2, 'lab': 0},
-            ],
-            'Semester II': [
-                {'code': 'BTS203', 'name': 'Embryology of Angiosperms', 'theory': 3, 'lab': 6},
-                {'code': 'BTZ202', 'name': 'Genetics', 'theory': 3, 'lab': 4},
-                {'code': 'ZLS202', 'name': 'Cell and Molecular Biology', 'theory': 3, 'lab': 4},
-                {'code': 'ZLS203', 'name': 'Chordate Biology', 'theory': 3, 'lab': 3},
-                {'code': 'Elective III', 'name': 'Elective III', 'theory': 2, 'lab': 0},
-            ]
-        },
-        'Year 3': {
-            'Semester I': [
-                {'code': 'BTS304', 'name': 'Fungi and Plant Pathology', 'theory': 3, 'lab': 3},
-                {'code': 'GRS301', 'name': 'GIS and Remote Sensing', 'theory': 2, 'lab': 3},
-                {'code': 'ZLS304', 'name': 'Anatomy and Physiology of Vertebrates', 'theory': 3, 'lab': 3},
-                {'code': 'ZLS305', 'name': 'Developmental Biology', 'theory': 3, 'lab': 3},
-                {'code': 'Elective IV', 'name': 'Elective IV', 'theory': 2, 'lab': 0},
-            ],
-            'Semester II': [
-                {'code': 'BTS305', 'name': 'Principles of Plant Systematics', 'theory': 3, 'lab': 3},
-                {'code': 'BTS306', 'name': 'Horticulture and Postharvest Management', 'theory': 3, 'lab': 3},
-                {'code': 'BTZ303', 'name': 'Microbiology', 'theory': 3, 'lab': 6},
-                {'code': 'BTZ304', 'name': 'Bioinformatics', 'theory': 2, 'lab': 4},
-                {'code': 'Elective V', 'name': 'Elective V', 'theory': 2, 'lab': 0},
-            ]
-        },
-        'Year 4': {
-            'Semester I': [
-                {'code': 'BTS407', 'name': 'Ethnobotany and Phytochemistry', 'theory': 3, 'lab': 4},
-                {'code': 'BTZ405', 'name': 'Biotechnology and Tissue Culture', 'theory': 3, 'lab': 4},
-                {'code': 'BTZ406', 'name': 'Ecology and Biodiversity Conservation', 'theory': 3, 'lab': 3},
-                {'code': 'ZLS406', 'name': 'Freshwater Biology', 'theory': 3, 'lab': 3},
-                {'code': 'CRD403', 'name': 'Capstone Project I', 'theory': 2, 'lab': 4},
-            ],
-            'Semester II': [
-                {'code': 'ZLS407', 'name': 'Animal Behaviour', 'theory': 3, 'lab': 3},
-                {'code': 'BTZ407', 'name': 'Immunology and Forensic Biology', 'theory': 3, 'lab': 4},
-                {'code': 'CRD404', 'name': 'Capstone Project II', 'theory': 2, 'lab': 4},
-            ]
-        }
-    },
-    'Chemistry_New': {
-        'Year 1': {
-            'Semester I': [
-                {'code': 'ACS101', 'name': 'Academic Skills', 'theory': 2, 'lab': 0},
-                {'code': 'MEC101', 'name': 'Mechanics I', 'theory': 3, 'lab': 2},
-                {'code': 'GCH101', 'name': 'General Chemistry I', 'theory': 3, 'lab': 2},
-                {'code': 'FMT101', 'name': 'Foundations of Mathematics I', 'theory': 3, 'lab': 0},
-                {'code': 'MPH101', 'name': 'Foundations of Practical Physics', 'theory': 2, 'lab': 3},
-            ],
-            'Semester II': [
-                {'code': 'FMT102', 'name': 'Mathematical Software', 'theory': 2, 'lab': 2},
-                {'code': 'MEC102', 'name': 'Waves and Oscillations', 'theory': 3, 'lab': 2},
-                {'code': 'GCH102', 'name': 'General Chemistry II', 'theory': 3, 'lab': 2},
-                {'code': 'FMT103', 'name': 'Foundations of Mathematics II', 'theory': 3, 'lab': 0},
-                {'code': 'DZG101', 'name': 'Dzongkha Communication', 'theory': 2, 'lab': 0},
             ]
         },
         'Year 2': {
             'Semester III': [
-                {'code': 'MEC203', 'name': 'Electromagnetism', 'theory': 3, 'lab': 3},
-                {'code': 'MEC204', 'name': 'Mechanics II', 'theory': 3, 'lab': 3},
-                {'code': 'FMT204', 'name': 'Foundations of Mathematics III', 'theory': 3, 'lab': 0},
-                {'code': 'PLT101', 'name': 'Programming Fundamentals', 'theory': 2, 'lab': 3},
-                {'code': 'MMP201', 'name': 'Mathematical Physics I', 'theory': 3, 'lab': 0},
+                {'code': 'BTS202', 'name': 'Plant Anatomy and Physiology', 'theory': 3, 'lab': 3},
+                {'code': 'BCH201', 'name': 'Biochemistry', 'theory': 3, 'lab': 4},
+                {'code': 'ZLS201', 'name': 'Invertebrate Biology and Parasitology', 'theory': 3, 'lab': 3},
+                {'code': 'ZLS204', 'name': 'Developmental Biology', 'theory': 3, 'lab': 0},
+                {'code': 'BTZ201', 'name': 'Cell Biology', 'theory': 3, 'lab': 3},
             ],
             'Semester IV': [
-                {'code': 'MPH202', 'name': 'Foundations of Modern Physics', 'theory': 3, 'lab': 2},
-                {'code': 'OPH201', 'name': 'Optics', 'theory': 3, 'lab': 3},
-                {'code': 'AMT202', 'name': 'Foundations of Statistics', 'theory': 3, 'lab': 0},
-                {'code': 'TPH201', 'name': 'Thermal Physics', 'theory': 3, 'lab': 2},
-                {'code': 'ELE201', 'name': 'Electronic Circuits and Devices', 'theory': 3, 'lab': 3},
+                {'code': 'BTS203', 'name': 'Embryology of Angiosperms', 'theory': 3, 'lab': 6},
+                {'code': 'BTZ202', 'name': 'Genetics', 'theory': 3, 'lab': 4},
+                {'code': 'ZLS202', 'name': 'Molecular Biology', 'theory': 3, 'lab': 4},
+                {'code': 'ZLS203', 'name': 'Chordate Biology', 'theory': 3, 'lab': 3},
+                {'code': 'BTZ203', 'name': 'Microbiology', 'theory': 3, 'lab': 6},
             ]
         },
         'Year 3': {
             'Semester V': [
-                {'code': 'MPH303', 'name': 'Atomic Physics', 'theory': 3, 'lab': 3},
-                {'code': 'MPH304', 'name': 'Quantum Physics', 'theory': 4, 'lab': 0},
-                {'code': 'MMP302', 'name': 'Computational Physics', 'theory': 3, 'lab': 3},
-                {'code': 'TPH302', 'name': 'Statistical Mechanics', 'theory': 4, 'lab': 0},
-                {'code': 'RSM301', 'name': 'Research Methods', 'theory': 3, 'lab': 0},
+                {'code': 'BTS304', 'name': 'Fungi and Plant Pathology', 'theory': 3, 'lab': 3},
+                {'code': 'GRS301', 'name': 'GIS and Remote Sensing', 'theory': 2, 'lab': 3},
+                {'code': 'ZLS304', 'name': 'Anatomy and Physiology of Vertebrates', 'theory': 3, 'lab': 3},
+                {'code': 'ZLS305', 'name': 'Developmental Biology', 'theory': 3, 'lab': 3},
+                {'code': 'BTS306', 'name': 'Plant Breeding and Horticulture', 'theory': 3, 'lab': 6},
             ],
             'Semester VI': [
-                {'code': 'MMP303', 'name': 'Mathematical Physics II', 'theory': 3, 'lab': 0},
-                {'code': 'MPH305', 'name': 'Solid State Physics I', 'theory': 3, 'lab': 2},
-                {'code': 'MPH306', 'name': 'Nuclear Physics', 'theory': 3, 'lab': 2},
-                {'code': 'ELE302', 'name': 'Analogue and Digital Electronics', 'theory': 3, 'lab': 3},
-                {'code': 'MEC305', 'name': 'Electromagnetic Theory', 'theory': 4, 'lab': 0},
+                {'code': 'BTS305', 'name': 'Principles of Plant Systematics', 'theory': 3, 'lab': 3},
+                {'code': 'BTS307', 'name': 'Horticulture and Postharvest Management', 'theory': 3, 'lab': 3},
+                {'code': 'BTZ303', 'name': 'Microbiology', 'theory': 3, 'lab': 6},
+                {'code': 'BTZ304', 'name': 'Bioinformatics', 'theory': 2, 'lab': 4},
+                {'code': 'ZLS307', 'name': 'Freshwater Biology', 'theory': 3, 'lab': 6},
+                {'code': 'ZLS308', 'name': 'Animal Physiology', 'theory': 3, 'lab': 6},
+                {'code': 'BTS308', 'name': 'Economic Botany', 'theory': 3, 'lab': 6},
+                {'code': 'BTS309', 'name': 'Plant Biotechnology and Tissue Culture', 'theory': 3, 'lab': 3},
             ]
         },
         'Year 4': {
-            'Semester I': [
-                {'code': 'THP402', 'name': 'Statistical Physics', 'theory': 4, 'lab': 0},
-                {'code': 'EMT402', 'name': 'Electromagnetic Theory', 'theory': 4, 'lab': 0},
-                {'code': 'SSP402', 'name': 'Advanced Condensed Matter Physics', 'theory': 3, 'lab': 3},
-                {'code': 'QME402', 'name': 'Advanced Quantum Mechanics', 'theory': 4, 'lab': 0},
-                {'code': 'CRD403', 'name': 'Capstone Project I', 'theory': 2, 'lab': 4},
+            'Semester VII': [
+                {'code': 'BTS407', 'name': 'Ethnobotany and Phytochemistry', 'theory': 3, 'lab': 4},
+                {'code': 'BTZ405', 'name': 'Biotechnology and Tissue Culture', 'theory': 3, 'lab': 4},
+                {'code': 'BTZ406', 'name': 'Ecology and Biodiversity Conservation', 'theory': 3, 'lab': 3},
+                {'code': 'ZLS406', 'name': 'Freshwater Biology', 'theory': 3, 'lab': 3},
+                {'code': 'CRD401', 'name': 'Capstone Project I', 'theory': 2, 'lab': 4},
             ],
-            'Semester II': [
-                {'code': 'CME402', 'name': 'Lagrangian and Hamiltonian Mechanics', 'theory': 3, 'lab': 0},
-                {'code': 'EPH402', 'name': 'Physics of Renewable Energy', 'theory': 3, 'lab': 2},
-                {'code': 'CRD404', 'name': 'Capstone Project II', 'theory': 2, 'lab': 4},
+            'Semester VIII': [
+                {'code': 'ZLS407', 'name': 'Animal Behaviour', 'theory': 3, 'lab': 3},
+                {'code': 'BTZ407', 'name': 'Immunology and Forensic Biology', 'theory': 3, 'lab': 4},
+                {'code': 'BTS408', 'name': 'Conservation Biology', 'theory': 3, 'lab': 3},
+                {'code': 'CRD402', 'name': 'Capstone Project II', 'theory': 2, 'lab': 4},
             ]
         }
     }
 }
-
 # ==========================================
 # 4. FACULTY LIST
 # ==========================================
