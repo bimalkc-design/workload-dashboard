@@ -4,7 +4,7 @@ import plotly.express as px
 from datetime import datetime
 import json
 import os
-Student Enrolment
+
 # ==========================================
 # 1. PAGE CONFIGURATION
 # ==========================================
@@ -78,6 +78,53 @@ st.markdown("""
     
     .stSidebar .stSelectbox {
         margin-bottom: 0.5rem !important;
+    }
+    
+    /* Student counter styling */
+    .student-counter {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #f8f9fa;
+        padding: 0.3rem 0.5rem;
+        border-radius: 6px;
+        border: 1px solid #e8ecf0;
+        margin: 0.3rem 0;
+    }
+    .student-counter .counter-btn {
+        background: #1a2a4a;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 0.2rem 0.8rem;
+        font-size: 1.2rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s;
+        min-width: 32px;
+        min-height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .student-counter .counter-btn:hover {
+        background: #2a4a6a;
+        transform: scale(1.05);
+    }
+    .student-counter .counter-btn:active {
+        transform: scale(0.95);
+    }
+    .student-counter .counter-value {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #1a2a4a;
+        min-width: 40px;
+        text-align: center;
+    }
+    .student-counter .counter-label {
+        font-size: 0.8rem;
+        color: #7f8c8d;
+        margin-right: 0.5rem;
     }
     
     /* Academic Header */
@@ -317,6 +364,7 @@ st.markdown("""
         .stats-academic { grid-template-columns: repeat(2, 1fr); }
         .threshold-academic { flex-direction: column; align-items: center; gap: 0.2rem; }
         .timetable-entry { grid-template-columns: 1fr; gap: 0.1rem; padding: 0.6rem 0; }
+        .student-counter { flex-wrap: wrap; }
     }
     
     @media print {
@@ -342,6 +390,7 @@ st.markdown("""
         .stPlotlyChart { display: none !important; }
         .stDownloadButton { display: none !important; }
         .stNumberInput { display: none !important; }
+        .student-counter { display: none !important; }
         
         .print-content { display: block !important; }
         .print-content * { display: revert !important; }
@@ -940,7 +989,44 @@ if 'manual_room' not in st.session_state:
     st.session_state.manual_room = ""
 
 # ==========================================
-# 7. ACADEMIC HEADER
+# 7. STUDENT COUNTER FUNCTION
+# ==========================================
+def student_counter(label, key, min_val=25, max_val=60, default=30):
+    """Create a student counter with +/- buttons"""
+    
+    # Get current value from session state or use default
+    if key not in st.session_state:
+        st.session_state[key] = default
+    
+    # Create the counter layout
+    col1, col2, col3, col4 = st.columns([1, 1, 3, 1])
+    
+    with col1:
+        if st.button("−", key=f"{key}_minus", help="Decrease by 1"):
+            if st.session_state[key] > min_val:
+                st.session_state[key] -= 1
+                st.rerun()
+    
+    with col2:
+        st.markdown(f"""
+        <div style="text-align:center; font-size:1.2rem; font-weight:700; color:#1a2a4a; padding:0.2rem 0;">
+            {st.session_state[key]}
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col3:
+        st.caption(f"Students {min_val}-{max_val}")
+    
+    with col4:
+        if st.button("+", key=f"{key}_plus", help="Increase by 1"):
+            if st.session_state[key] < max_val:
+                st.session_state[key] += 1
+                st.rerun()
+    
+    return st.session_state[key]
+
+# ==========================================
+# 8. ACADEMIC HEADER
 # ==========================================
 st.markdown(f"""
 <div class="academic-header">
@@ -954,7 +1040,6 @@ st.markdown(f"""
                 <span class="badge" style="margin-left:0.5rem;">🏛️ Academic Year 2026-2027</span>
             </div>
         </div>
-         </div>
         <div style="text-align:right; font-size:0.9rem; color: #ffffff;">
             <div>Faculty Self-Service Portal</div>
             <div>Workload Allocation Module</div>
@@ -964,7 +1049,7 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 8. SIDEBAR
+# 9. SIDEBAR
 # ==========================================
 with st.sidebar:
     st.markdown("### Faculty Profile")
@@ -1074,7 +1159,7 @@ with st.sidebar:
                 code = sel.split(" - ")[0]
                 mod = next(m for m in modules if m['code'] == code)
                 
-                # ===== MODULE TYPE SELECTION (Always Available) =====
+                # ===== MODULE TYPE SELECTION =====
                 st.markdown("**Module Type**")
                 mod_type = st.radio(
                     "Select Module Type",
@@ -1114,7 +1199,15 @@ with st.sidebar:
                         lab = 0
                         st.info("Lab hours: 0 (Theory Only module)")
                 
-                students = st.slider("Student Enrolment", 20, 60, 30)
+                # ===== STUDENT COUNTER WITH +/- BUTTONS =====
+                st.markdown("**Student Enrolment**")
+                students = student_counter(
+                    label="Students",
+                    key="student_count_from_list",
+                    min_val=25,
+                    max_val=60,
+                    default=30
+                )
                 
                 room = st.text_input(
                     "Room / Laboratory",
@@ -1134,7 +1227,6 @@ with st.sidebar:
                 with col_a:
                     if st.button("Add Module", use_container_width=True):
                         if not any(m['code'] == code for m in st.session_state.modules):
-                            # Create module with user-specified hours
                             custom_mod = {
                                 'code': code,
                                 'name': mod['name'],
@@ -1214,14 +1306,14 @@ with st.sidebar:
                     lab = 0
                     st.info("Lab hours: 0 (Theory Only module)")
             
-            # Student Enrolment
-            students = st.slider(
-                "Student Enrolment", 
-                min_value=25, 
-                max_value=60, 
-                value=st.session_state.manual_students,
-                step=1,
-                help="Number of students enrolled in this module"
+            # ===== STUDENT COUNTER WITH +/- BUTTONS =====
+            st.markdown("**Student Enrolment**")
+            students = student_counter(
+                label="Students",
+                key="student_count_manual",
+                min_val=25,
+                max_val=60,
+                default=st.session_state.manual_students
             )
             st.session_state.manual_students = students
             
@@ -1269,567 +1361,3 @@ with st.sidebar:
                             st.success(f"✅ Added: {mod_code}")
                             # Reset manual fields
                             st.session_state.manual_module_code = ""
-                            st.session_state.manual_module_name = ""
-                            st.session_state.manual_room = ""
-                            st.rerun()
-                        else:
-                            st.warning("⚠️ Module already in list")
-                    else:
-                        st.error("Please enter Module Code and Name")
-            
-            with col_b:
-                if st.button("🗑️ Clear All", use_container_width=True):
-                    st.session_state.modules = []
-                    st.session_state.counts = {}
-                    st.session_state.rooms = {}
-                    st.rerun()
-    
-    else:
-        # ===== NO MODULES FOUND - ONLY MANUAL ENTRY =====
-        st.info("No modules found for the selected parameters. Enter manually below.")
-        
-        st.markdown("### 📝 Enter Module Details")
-        
-        # Module Code and Name
-        mod_code = st.text_input(
-            "Module Code", 
-            value=st.session_state.manual_module_code, 
-            placeholder="e.g., ENV101"
-        )
-        mod_name = st.text_input(
-            "Module Name", 
-            value=st.session_state.manual_module_name, 
-            placeholder="e.g., Environmental Science"
-        )
-        
-        # Module Type Selection
-        st.markdown("**Module Type**")
-        mod_type = st.radio(
-            "Select Module Type",
-            ["Theory Only", "Lab Only", "Theory + Lab"],
-            index=["Theory Only", "Lab Only", "Theory + Lab"].index(st.session_state.manual_module_type) 
-                if st.session_state.manual_module_type in ["Theory Only", "Lab Only", "Theory + Lab"] else 0,
-            horizontal=True,
-            key="mod_type_no_modules"
-        )
-        st.session_state.manual_module_type = mod_type
-        
-        # Hours based on type
-        col_t, col_l = st.columns(2)
-        with col_t:
-            if mod_type in ["Theory Only", "Theory + Lab"]:
-                theory = st.number_input(
-                    "Theory Hours", 
-                    min_value=0, 
-                    max_value=6, 
-                    value=st.session_state.manual_theory if st.session_state.manual_theory > 0 else 3, 
-                    step=1,
-                    key="theory_no_modules"
-                )
-            else:
-                theory = 0
-                st.info("Theory hours: 0 (Lab Only module)")
-        
-        with col_l:
-            if mod_type in ["Lab Only", "Theory + Lab"]:
-                lab = st.number_input(
-                    "Lab Hours", 
-                    min_value=0, 
-                    max_value=6, 
-                    value=st.session_state.manual_lab if st.session_state.manual_lab > 0 else 3, 
-                    step=1,
-                    key="lab_no_modules"
-                )
-            else:
-                lab = 0
-                st.info("Lab hours: 0 (Theory Only module)")
-        
-        # Student Enrolment
-        students = st.slider(
-            "Student Enrolment", 
-            min_value=25, 
-            max_value=60, 
-            value=st.session_state.manual_students,
-            step=1,
-            help="Number of students enrolled in this module"
-        )
-        st.session_state.manual_students = students
-        
-        # Room / Laboratory
-        room = st.text_input(
-            "Room / Laboratory", 
-            value=st.session_state.manual_room,
-            placeholder="e.g., Science Hall 1, Lab 203"
-        )
-        st.session_state.manual_room = room
-        
-        # Summary of module
-        st.markdown(f"""
-        <div class="module-detail-box">
-            <strong>📋 Module Summary:</strong><br>
-            Code: {mod_code if mod_code else '(Not Set)'} • Name: {mod_name if mod_name else '(Not Set)'}<br>
-            Type: {mod_type} • Theory: {theory}h • Lab: {lab}h • Total: {theory + lab}h • Students: {students}<br>
-            Room: {room if room else 'Not Assigned'}
-        </div>
-        """, unsafe_allow_html=True)
-        
-        # Save to session state
-        if mod_code:
-            st.session_state.manual_module_code = mod_code
-        if mod_name:
-            st.session_state.manual_module_name = mod_name
-        st.session_state.manual_theory = theory
-        st.session_state.manual_lab = lab
-        
-        col_a, col_b = st.columns(2)
-        with col_a:
-            if st.button("➕ Add Module", use_container_width=True):
-                if mod_code and mod_name:
-                    if not any(m['code'] == mod_code for m in st.session_state.modules):
-                        new_mod = {
-                            'code': mod_code,
-                            'name': mod_name,
-                            'theory': theory,
-                            'lab': lab
-                        }
-                        st.session_state.modules.append(new_mod)
-                        st.session_state.counts[mod_code] = students
-                        if room:
-                            st.session_state.rooms[mod_code] = room
-                        st.success(f"✅ Added: {mod_code}")
-                        # Reset manual fields
-                        st.session_state.manual_module_code = ""
-                        st.session_state.manual_module_name = ""
-                        st.session_state.manual_room = ""
-                        st.rerun()
-                    else:
-                        st.warning("⚠️ Module already in list")
-                else:
-                    st.error("Please enter Module Code and Name")
-        
-        with col_b:
-            if st.button("🗑️ Clear All", use_container_width=True):
-                st.session_state.modules = []
-                st.session_state.counts = {}
-                st.session_state.rooms = {}
-                st.rerun()
-    
-    st.divider()
-    if st.session_state.modules:
-        st.metric("Modules Selected", len(st.session_state.modules))
-        st.metric("Total Students", sum(st.session_state.counts.values()))
-    
-    st.divider()
-    st.markdown("### Administrative Access")
-    pin = st.text_input("PIN", type="password")
-    if pin == "DNS777":
-        st.session_state.admin = True
-        st.success("Administrator access granted")
-
-# ==========================================
-# 9. MAIN CONTENT
-# ==========================================
-if not st.session_state.name:
-    st.info("👈 Please select or enter your name in the sidebar to proceed")
-    st.stop()
-
-col_main, col_wam = st.columns([2, 1])
-
-with col_main:
-    st.markdown("### Selected Modules")
-    
-    if not st.session_state.modules:
-        st.info("No modules selected. Use the sidebar to add modules.")
-    else:
-        total_t, total_l = 0, 0
-        
-        for mod in st.session_state.modules:
-            students = st.session_state.counts.get(mod['code'], 25)
-            room = st.session_state.rooms.get(mod['code'], "Not Assigned")
-            total_t += mod['theory']
-            total_l += mod['lab']
-            
-            w = calculate_wam([{**mod, 'students': students}])
-            
-            # Determine module type badge
-            if mod['theory'] > 0 and mod['lab'] > 0:
-                type_badge = '<span class="module-type-badge both">📚 Theory + Lab</span>'
-            elif mod['theory'] > 0:
-                type_badge = '<span class="module-type-badge theory">📖 Theory Only</span>'
-            else:
-                type_badge = '<span class="module-type-badge lab">🧪 Lab Only</span>'
-            
-            st.markdown(f"""
-            <div class="module-academic">
-                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;">
-                    <div>
-                        <span class="code">{mod['code']}</span>
-                        <span class="name"> - {mod['name']}</span>
-                        {type_badge}
-                        <div class="details">
-                            Theory: {mod['theory']}h • Laboratory: {mod['lab']}h • Students: {students}
-                            <span style="margin-left:0.8rem;">Room: <strong>{room}</strong></span>
-                        </div>
-                    </div>
-                    <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
-                        <span style="background:#1a2a4a; color:white; padding:0.15rem 0.6rem; border-radius:4px; font-size:0.75rem;">{mod['theory'] + mod['lab']}h</span>
-                        <span style="font-weight:600; color:#1a2a4a;">WAM: {w:.1f}</span>
-                    </div>
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
-            
-            col_r, col_rm = st.columns([4, 1])
-            with col_rm:
-                if st.button("✏️ Room", key=f"edit_room_{mod['code']}"):
-                    new_room = st.text_input("Update Room", value=room, key=f"room_input_{mod['code']}")
-                    if new_room:
-                        st.session_state.rooms[mod['code']] = new_room
-                        st.rerun()
-            
-            if st.button(f"Remove {mod['code']}", key=f"rm_{mod['code']}"):
-                st.session_state.modules.remove(mod)
-                if mod['code'] in st.session_state.counts:
-                    del st.session_state.counts[mod['code']]
-                if mod['code'] in st.session_state.rooms:
-                    del st.session_state.rooms[mod['code']]
-                st.rerun()
-        
-        st.markdown(f"""
-        <div class="stats-academic">
-            <div class="item"><div class="value">{len(st.session_state.modules)}</div><div class="label">Modules</div></div>
-            <div class="item"><div class="value">{total_t}h</div><div class="label">Theory Hours</div></div>
-            <div class="item"><div class="value">{total_l}h</div><div class="label">Lab Hours</div></div>
-            <div class="item"><div class="value">{sum(st.session_state.counts.values())}</div><div class="label">Students</div></div>
-        </div>
-        """, unsafe_allow_html=True)
-
-with col_wam:
-    st.markdown("### Workload Allocation Score")
-    
-    if st.session_state.modules:
-        wam = calculate_wam([
-            {**m, 'students': st.session_state.counts.get(m['code'], 25)}
-            for m in st.session_state.modules
-        ])
-        status, emoji, color, msg = get_status(wam)
-        
-        log_activity(st.session_state.name, [
-            {'code': m['code'], 'name': m['name'], 'students': st.session_state.counts.get(m['code'], 25)}
-            for m in st.session_state.modules
-        ], wam, status)
-        
-        st.markdown(f"""
-        <div class="wam-professional">
-            <div class="number">{wam}</div>
-            <div class="label">Workload Allocation Model Score</div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown(f"""
-        <div style="text-align:center;">
-            <span class="status-badge" style="background:{color};color:white;">{emoji} {status}</span>
-            <p style="font-size:0.8rem; color:#7f8c8d; margin-top:0.3rem;">{msg}</p>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("### Workload Distribution")
-        progress = min(wam / 16, 1.0)
-        st.progress(progress)
-        st.caption("0" + " " * 50 + "16+")
-        
-        c1, c2, c3 = st.columns(3)
-        c1.metric("Theory", f"{total_t}h")
-        c2.metric("Lab", f"{total_l}h")
-        c3.metric("Total", f"{total_t + total_l}h")
-        
-        if len(st.session_state.modules) > 1:
-            data = []
-            for m in st.session_state.modules:
-                w = calculate_wam([{**m, 'students': st.session_state.counts.get(m['code'], 25)}])
-                data.append({'Module': m['code'], 'WAM': w})
-            df_chart = pd.DataFrame(data)
-            fig = px.bar(df_chart, x='Module', y='WAM', color='WAM', 
-                        color_continuous_scale='Blues', height=250)
-            fig.update_layout(
-                showlegend=False,
-                margin=dict(l=0, r=0, t=20, b=0),
-                plot_bgcolor='rgba(0,0,0,0)',
-                paper_bgcolor='rgba(0,0,0,0)'
-            )
-            st.plotly_chart(fig, use_container_width=True)
-    else:
-        st.info("Add modules to calculate your workload score")
-
-# ==========================================
-# 10. THRESHOLD GUIDE
-# ==========================================
-st.markdown("""
-<div class="threshold-academic">
-    <div class="item"><span class="dot" style="background:#ffc107;"></span> Light (WAM &lt; 12)</div>
-    <div class="item"><span class="dot" style="background:#28a745;"></span> Balanced (12 - 16)</div>
-    <div class="item"><span class="dot" style="background:#dc3545;"></span> Heavy (WAM &gt; 16)</div>
-</div>
-""", unsafe_allow_html=True)
-
-# ==========================================
-# 11. PRINTABLE CONTENT
-# ==========================================
-st.markdown('<div class="print-content">', unsafe_allow_html=True)
-
-st.markdown(f"""
-<div style="text-align:center; padding:0.4rem 0; border-bottom:3px solid #1a2a4a; margin-bottom:0.5rem;">
-    <h1 style="color:#1a2a4a; font-size:1.4rem; margin:0;">Workload & Roaster Report</h1>
-    <p style="color:#495057; margin:0.1rem 0; font-size:0.75rem;">Department of Natural Sciences • Royal University of Bhutan</p>
-    <p style="color:#7f8c8d; font-size:0.7rem; margin:0;">{datetime.now().strftime('%B %d, %Y')} • Autumn 2026</p>
-</div>
-""", unsafe_allow_html=True)
-
-st.markdown(f"""
-<div style="display:grid; grid-template-columns:1fr 1fr; gap:0.3rem; margin-bottom:0.5rem; padding:0.4rem; background:#f8f9fa; border-radius:4px; font-size:0.7rem;">
-    <div><strong>Faculty:</strong> {st.session_state.name}</div>
-    <div><strong>Designation:</strong> {designation if 'designation' in locals() else 'Not Specified'}</div>
-    <div><strong>Programme:</strong> {prog if 'prog' in locals() else 'Not Specified'}</div>
-    <div><strong>Semester:</strong> Autumn 2026</div>
-</div>
-""", unsafe_allow_html=True)
-
-if st.session_state.modules:
-    st.markdown("### Teaching Assignment")
-    
-    data = []
-    for m in st.session_state.modules:
-        students = st.session_state.counts.get(m['code'], 25)
-        room = st.session_state.rooms.get(m['code'], "Not Assigned")
-        w = calculate_wam([{**m, 'students': students}])
-        data.append({
-            'Code': m['code'],
-            'Module': m['name'],
-            'Theory': m['theory'],
-            'Lab': m['lab'],
-            'Total': m['theory'] + m['lab'],
-            'Students': students,
-            'Room': room,
-            'WAM': w
-        })
-    df_print = pd.DataFrame(data)
-    
-    st.table(df_print)
-    
-    st.markdown(f"""
-    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:0.2rem; margin-top:0.3rem; padding:0.4rem; background:#f8f9fa; border-radius:4px; text-align:center; font-size:0.7rem;">
-        <div><strong>Modules</strong><br>{len(st.session_state.modules)}</div>
-        <div><strong>Theory</strong><br>{df_print['Theory'].sum()}h</div>
-        <div><strong>Lab</strong><br>{df_print['Lab'].sum()}h</div>
-        <div><strong>Students</strong><br>{df_print['Students'].sum()}</div>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    wam_total = calculate_wam([
-        {**m, 'students': st.session_state.counts.get(m['code'], 25)}
-        for m in st.session_state.modules
-    ])
-    status, emoji, color, msg = get_status(wam_total)
-    
-    st.markdown(f"""
-    <div style="background:#1a2a4a; color:white; padding:0.5rem; border-radius:4px; margin-top:0.5rem; text-align:center;">
-        <div style="font-size:1.2rem; font-weight:700;">{wam_total}</div>
-        <div style="font-size:0.65rem; opacity:0.8;">Workload Allocation Model Score</div>
-        <div style="margin-top:0.2rem; background:{color}; display:inline-block; padding:0.1rem 0.8rem; border-radius:3px; color:white; font-weight:600; font-size:0.7rem;">{emoji} {status}</div>
-    </div>
-    """, unsafe_allow_html=True)
-else:
-    st.info("No modules selected")
-
-st.markdown("""
-<div style="text-align:center; margin-top:0.8rem; padding-top:0.4rem; border-top:2px solid #e8ecf0; color:#7f8c8d; font-size:0.6rem;">
-    Generated by Workload & Roaster System • Royal University of Bhutan
-</div>
-""", unsafe_allow_html=True)
-
-st.markdown('</div>', unsafe_allow_html=True)
-
-# ==========================================
-# 12. DETAILED SECTIONS
-# ==========================================
-if st.session_state.modules:
-    st.divider()
-    
-    tab1, tab2, tab3, tab4 = st.tabs(["Detailed Breakdown", "Analytics", "History", "Timetable"])
-    
-    with tab1:
-        data = []
-        for m in st.session_state.modules:
-            students = st.session_state.counts.get(m['code'], 25)
-            room = st.session_state.rooms.get(m['code'], "Not Assigned")
-            w = calculate_wam([{**m, 'students': students}])
-            data.append({
-                'Code': m['code'],
-                'Module': m['name'],
-                'Theory': m['theory'],
-                'Lab': m['lab'],
-                'Students': students,
-                'Room': room,
-                'WAM': w,
-                'Type': 'Theory + Lab' if m['lab'] > 0 and m['theory'] > 0 else 'Theory Only' if m['theory'] > 0 else 'Lab Only'
-            })
-        df = pd.DataFrame(data)
-        st.dataframe(df, use_container_width=True, hide_index=True)
-        
-        csv = df.to_csv(index=False).encode('utf-8')
-        st.download_button("Download CSV", csv, f"workload_{datetime.now().strftime('%Y%m%d')}.csv", "text/csv")
-    
-    with tab2:
-        c1, c2 = st.columns(2)
-        with c1:
-            fig = px.pie(values=[df['Theory'].sum(), df['Lab'].sum()], 
-                        names=['Theory Hours', 'Lab Hours'], 
-                        title="Theory vs Laboratory Distribution",
-                        color_discrete_sequence=['#1a2a4a', '#c9a84c'])
-            fig.update_layout(height=300)
-            st.plotly_chart(fig, use_container_width=True)
-        with c2:
-            fig = px.bar(df, x='Code', y='WAM', title="WAM Distribution by Module", 
-                        color='WAM', color_continuous_scale='Blues', height=300)
-            fig.update_layout(showlegend=False)
-            st.plotly_chart(fig, use_container_width=True)
-        
-        st.subheader("Summary Statistics")
-        c1, c2, c3, c4 = st.columns(4)
-        c1.metric("Average WAM", f"{df['WAM'].mean():.1f}")
-        c2.metric("Maximum WAM", f"{df['WAM'].max():.1f}")
-        c3.metric("Minimum WAM", f"{df['WAM'].min():.1f}")
-        c4.metric("Total Students", df['Students'].sum())
-    
-    with tab3:
-        st.subheader("Workload History")
-        history = get_history(st.session_state.name)
-        if history:
-            df_h = pd.DataFrame(history)
-            df_h['timestamp'] = pd.to_datetime(df_h['timestamp'])
-            df_h = df_h.sort_values('timestamp', ascending=False)
-            st.dataframe(df_h[['timestamp', 'wam', 'status']], use_container_width=True, hide_index=True)
-        else:
-            st.info("No historical records found")
-    
-    with tab4:
-        st.subheader("Timetable View")
-        st.caption("Academic schedule with room allocations")
-        
-        st.markdown(f"""
-        <div class="timetable-academic">
-            <div class="header">
-                Teaching Timetable
-                <span style="font-size:0.8rem; font-weight:400; color:#7f8c8d; float:right;">
-                    {st.session_state.name} • {datetime.now().strftime('%B %d, %Y')}
-                </span>
-            </div>
-        """, unsafe_allow_html=True)
-        
-        for i, row in df.iterrows():
-            st.markdown(f"""
-            <div class="timetable-entry">
-                <div><span class="label">Module:</span> <span class="value">{row['Code']}</span></div>
-                <div><span class="label">Title:</span> <span class="value">{row['Module']}</span></div>
-                <div><span class="label">Hours:</span> <span class="value">{row['Theory']}T + {row['Lab']}L</span></div>
-                <div><span class="label">Students:</span> <span class="value">{row['Students']}</span></div>
-                <div><span class="label">Room:</span> <span class="value" style="color:#1a2a4a; font-weight:600;">{row['Room']}</span></div>
-            </div>
-            """, unsafe_allow_html=True)
-        
-        st.markdown("""
-            <div style="margin-top:1rem; padding-top:0.5rem; border-top:2px solid #e8ecf0; text-align:center; font-size:0.75rem; color:#7f8c8d;">
-                Generated by Workload & Roaster System • Royal University of Bhutan
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-
-# ==========================================
-# 13. PRINT BUTTON
-# ==========================================
-st.divider()
-
-st.markdown("""
-<script>
-function printReport() {
-    window.print();
-}
-</script>
-""", unsafe_allow_html=True)
-
-col1, col2, col3 = st.columns([1, 2, 1])
-
-with col2:
-    st.markdown("""
-    <div class="no-print" style="text-align:center; padding:0.5rem 0;">
-        <button onclick="printReport()" style="
-            background: #1a2a4a;
-            color: white;
-            border: none;
-            padding: 0.7rem 3rem;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 2px 8px rgba(26,42,74,0.2);
-            width: 100%;
-        " onmouseover="this.style.background='#2a4a6a'; this.style.boxShadow='0 4px 12px rgba(26,42,74,0.3)';" 
-        onmouseout="this.style.background='#1a2a4a'; this.style.boxShadow='0 2px 8px rgba(26,42,74,0.2)';">
-            🖨️ Print Complete Report
-        </button>
-    </div>
-    """, unsafe_allow_html=True)
-
-# ==========================================
-# 14. ADMIN SECTION
-# ==========================================
-if st.session_state.admin:
-    st.divider()
-    st.markdown("""
-    <div class="admin-academic">
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;">
-            <div>
-                <span class="title">🔐 Administrative Dashboard</span>
-                <span class="sub"> • Master Workload Records</span>
-            </div>
-            <div style="font-size:0.8rem; opacity:0.6;">Secure Access</div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    log_file = 'workload_logs.json'
-    if os.path.exists(log_file):
-        try:
-            with open(log_file, 'r') as f:
-                logs = json.load(f)
-            if logs:
-                df_a = pd.DataFrame(logs)
-                df_a['timestamp'] = pd.to_datetime(df_a['timestamp'])
-                
-                c1, c2, c3, c4 = st.columns(4)
-                c1.metric("Total Submissions", len(df_a))
-                c2.metric("Unique Faculty", df_a['faculty'].nunique())
-                c3.metric("Average WAM", round(df_a['wam'].mean(), 2))
-                c4.metric("Heavy Load Cases", len(df_a[df_a['status'] == 'Heavy Load']))
-                
-                st.dataframe(df_a.sort_values('timestamp', ascending=False), use_container_width=True, hide_index=True)
-                
-                csv_a = df_a.to_csv(index=False).encode('utf-8')
-                st.download_button("Download Full Report", csv_a, f"DNS_Report_{datetime.now().strftime('%Y%m%d')}.csv", "text/csv")
-                
-                if st.button("Purge Database", use_container_width=True):
-                    os.remove(log_file)
-                    st.rerun()
-        except:
-            st.info("No data available")
-
-# ==========================================
-# 15. FOOTER
-# ==========================================
-st.divider()
-st.markdown("""
-<div style="text-align:center; color:#7f8c8d; font-size:0.75rem; padding:0.5rem 0;">
-    Department of Natural Sciences • Royal University of Bhutan • Autumn 2026
-</div>
-""", unsafe_allow_html=True)
