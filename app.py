@@ -990,7 +990,7 @@ if 'manual_room' not in st.session_state:
 # ==========================================
 # 7. STUDENT COUNTER FUNCTION
 # ==========================================
-def student_counter(label, key, min_val=25, max_val=60, default=30):
+def student_counter(label, key, min_val=20, max_val=60, default=30):
     """Create a student counter with +/- buttons"""
     
     # Get current value from session state or use default
