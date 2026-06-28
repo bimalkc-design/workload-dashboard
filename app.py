@@ -15,7 +15,7 @@ st.set_page_config(
 )
 
 # ==========================================
-# 2. PROFESSIONAL ACADEMIC STYLING WITH FIXES
+# 2. PROFESSIONAL ACADEMIC STYLING
 # ==========================================
 st.markdown("""
 <style>
@@ -25,8 +25,6 @@ st.markdown("""
     .main { padding: 0 0.5rem !important; }
     .block-container { padding: 0.5rem 0.5rem 1rem 0.5rem !important; max-width: 100% !important; }
     
-    /* ===== SIDEBAR FIXES - PREVENT OVERFLOW ===== */
-    /* Main sidebar container */
     section[data-testid="stSidebar"] {
         height: 100vh !important;
         overflow: hidden !important;
@@ -37,7 +35,6 @@ st.markdown("""
         z-index: 10 !important;
     }
     
-    /* Sidebar content wrapper - make it scrollable */
     section[data-testid="stSidebar"] > div:first-child {
         height: 100% !important;
         overflow-y: auto !important;
@@ -48,15 +45,12 @@ st.markdown("""
         scroll-behavior: smooth !important;
     }
     
-    /* Fix for Streamlit's sidebar content */
     .stSidebar .st-emotion-cache-1r6slb0 {
         max-height: 100vh !important;
         overflow-y: auto !important;
         padding-bottom: 2rem !important;
     }
     
-    /* ===== SELECTBOX DROPDOWN FIXES ===== */
-    /* Ensure selectbox container is positioned properly */
     .stSelectbox {
         position: relative !important;
         z-index: 1 !important;
@@ -66,12 +60,10 @@ st.markdown("""
         position: relative !important;
     }
     
-    /* Fix for the dropdown menu - force it to appear within sidebar */
     div[data-baseweb="select"] {
         position: relative !important;
     }
     
-    /* The actual dropdown popup */
     div[data-baseweb="popover"] {
         position: fixed !important;
         z-index: 99999 !important;
@@ -86,7 +78,6 @@ st.markdown("""
         box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
     }
     
-    /* Dropdown listbox */
     .stSelectbox [role="listbox"] {
         max-height: 200px !important;
         overflow-y: auto !important;
@@ -95,7 +86,6 @@ st.markdown("""
         padding: 4px 0 !important;
     }
     
-    /* Dropdown options */
     .stSelectbox [role="option"] {
         padding: 6px 12px !important;
         font-size: 0.9rem !important;
@@ -105,13 +95,11 @@ st.markdown("""
         background: #f0f2f6 !important;
     }
     
-    /* Fix for the select input field */
     .stSelectbox .st-emotion-cache-1whx7kd {
         position: relative !important;
         z-index: 2 !important;
     }
     
-    /* ===== SIDEBAR SCROLLBAR ===== */
     section[data-testid="stSidebar"] > div:first-child::-webkit-scrollbar {
         width: 4px;
     }
@@ -129,35 +117,27 @@ st.markdown("""
         background: #a88a3a;
     }
     
-    /* ===== ADDITIONAL SIDEBAR FIXES ===== */
-    /* Ensure sidebar content doesn't overflow horizontally */
     .stSidebar .st-emotion-cache-1r6slb0 {
         padding-right: 0.5rem !important;
         padding-left: 0.5rem !important;
     }
     
-    /* Fix for radio buttons in sidebar */
     .stSidebar .stRadio {
         margin-bottom: 0.5rem !important;
     }
     
-    /* Fix for text inputs in sidebar */
     .stSidebar .stTextInput {
         margin-bottom: 0.5rem !important;
     }
     
-    /* Fix for sliders in sidebar */
     .stSidebar .stSlider {
         margin-bottom: 0.5rem !important;
     }
     
-    /* Fix for buttons in sidebar */
     .stSidebar .stButton {
         margin-bottom: 0.5rem !important;
     }
     
-    /* Rest of your existing CSS... */
-    /* Academic Header */
     .academic-header {
         background: #1a2a4a;
         padding: 1.5rem 2rem;
@@ -193,7 +173,6 @@ st.markdown("""
         color: #c9a84c;
     }
     
-    /* WAM Card - Professional */
     .wam-professional {
         background: #1a2a4a;
         padding: 1.5rem;
@@ -216,7 +195,6 @@ st.markdown("""
         letter-spacing: 1px;
     }
     
-    /* Status Badge */
     .status-badge {
         display: inline-block;
         padding: 0.3rem 1.5rem;
@@ -226,7 +204,6 @@ st.markdown("""
         letter-spacing: 0.3px;
     }
     
-    /* Module Cards - Academic */
     .module-academic {
         background: #ffffff;
         border: 1px solid #e8ecf0;
@@ -255,7 +232,6 @@ st.markdown("""
         margin-top: 0.1rem;
     }
     
-    /* Stats Grid - Academic */
     .stats-academic {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
@@ -279,7 +255,6 @@ st.markdown("""
         letter-spacing: 0.5px;
     }
     
-    /* Threshold Guide */
     .threshold-academic {
         display: flex;
         justify-content: center;
@@ -306,7 +281,6 @@ st.markdown("""
         flex-shrink: 0;
     }
     
-    /* Admin Zone */
     .admin-academic {
         background: #1a2a4a;
         padding: 1rem 1.5rem;
@@ -318,7 +292,6 @@ st.markdown("""
     .admin-academic .title { font-weight: 600; font-size: 1.1rem; }
     .admin-academic .sub { font-size: 0.85rem; opacity: 0.7; }
     
-    /* Buttons */
     .stButton > button {
         border-radius: 4px;
         font-weight: 600;
@@ -335,7 +308,6 @@ st.markdown("""
         box-shadow: 0 2px 8px rgba(26,42,74,0.2);
     }
     
-    /* Timetable Card */
     .timetable-academic {
         background: #ffffff;
         border: 1px solid #e8ecf0;
@@ -362,7 +334,6 @@ st.markdown("""
     .timetable-entry .label { font-weight: 600; color: #495057; }
     .timetable-entry .value { color: #212529; }
     
-    /* Mobile */
     @media (max-width: 768px) {
         .academic-header h1 { font-size: 1.4rem; }
         .wam-professional .number { font-size: 2.5rem; }
@@ -371,9 +342,7 @@ st.markdown("""
         .timetable-entry { grid-template-columns: 1fr; gap: 0.1rem; padding: 0.6rem 0; }
     }
     
-    /* PRINT STYLES - Print everything */
     @media print {
-        /* Hide Streamlit elements */
         .stApp { background: white !important; }
         .stSidebar { display: none !important; }
         .stButton { display: none !important; }
@@ -392,33 +361,141 @@ st.markdown("""
         .stSuccess { display: none !important; }
         .stException { display: none !important; }
         .stSpinner { display: none !important; }
+        .stDataFrame { display: none !important; }
+        .stPlotlyChart { display: none !important; }
+        .stDownloadButton { display: none !important; }
         
-        /* Show print content */
         .print-content { display: block !important; }
+        .print-content * { display: revert !important; }
         
-        /* Print styling */
         .academic-header { 
             background: #1a2a4a !important; 
             -webkit-print-color-adjust: exact !important; 
             print-color-adjust: exact !important;
-            padding: 1rem 1.5rem !important;
+            padding: 0.8rem 1.2rem !important;
+            margin-bottom: 0.8rem !important;
         }
+        .academic-header h1 { font-size: 1.4rem !important; }
+        .academic-header .subtitle { font-size: 0.75rem !important; }
+        .academic-header .meta { font-size: 0.6rem !important; }
+        
         .wam-professional { 
             background: #1a2a4a !important; 
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
+            padding: 0.8rem !important;
+            margin: 0.3rem 0 !important;
         }
-        .status-badge { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-        .module-academic { break-inside: avoid; border: 1px solid #ddd !important; }
-        .timetable-academic { break-inside: avoid; border: 1px solid #ddd !important; }
-        .timetable-entry { break-inside: avoid; }
+        .wam-professional .number { font-size: 2rem !important; }
+        .wam-professional .label { font-size: 0.6rem !important; }
         
-        /* Page setup */
-        @page {
-            size: A4;
-            margin: 1.5cm;
+        .status-badge { 
+            -webkit-print-color-adjust: exact !important; 
+            print-color-adjust: exact !important;
+            padding: 0.15rem 1rem !important;
+            font-size: 0.7rem !important;
         }
-        body { font-size: 11pt !important; }
+        
+        .module-academic { 
+            break-inside: avoid; 
+            border: 1px solid #ddd !important;
+            padding: 0.4rem 0.8rem !important;
+            margin: 0.15rem 0 !important;
+        }
+        .module-academic .code { font-size: 0.8rem !important; }
+        .module-academic .name { font-size: 0.75rem !important; }
+        .module-academic .details { font-size: 0.65rem !important; }
+        
+        .timetable-academic { 
+            break-inside: avoid; 
+            border: 1px solid #ddd !important;
+            padding: 0.8rem !important;
+            margin: 0.3rem 0 !important;
+        }
+        .timetable-academic .header { 
+            font-size: 0.9rem !important;
+            padding-bottom: 0.3rem !important;
+            margin-bottom: 0.5rem !important;
+        }
+        .timetable-entry { 
+            break-inside: avoid;
+            padding: 0.2rem 0 !important;
+            font-size: 0.7rem !important;
+            grid-template-columns: 0.8fr 1.5fr 0.8fr 0.8fr 1.2fr !important;
+            gap: 0.3rem !important;
+        }
+        
+        .print-content table {
+            font-size: 0.7rem !important;
+            border-collapse: collapse !important;
+            width: 100% !important;
+        }
+        .print-content table th,
+        .print-content table td {
+            padding: 0.2rem 0.4rem !important;
+            border: 1px solid #ddd !important;
+        }
+        .print-content table th {
+            background: #f0f0f0 !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        
+        .print-content [style*="display:grid"] {
+            padding: 0.4rem !important;
+            margin-top: 0.3rem !important;
+            gap: 0.2rem !important;
+        }
+        .print-content [style*="display:grid"] div {
+            font-size: 0.7rem !important;
+        }
+        
+        .print-content [style*="background:#1a2a4a"] {
+            padding: 0.5rem !important;
+            margin-top: 0.5rem !important;
+        }
+        .print-content [style*="background:#1a2a4a"] div:first-child {
+            font-size: 1.2rem !important;
+        }
+        .print-content [style*="background:#1a2a4a"] div:last-child {
+            font-size: 0.7rem !important;
+        }
+        
+        .print-content [style*="margin-top:2rem"] {
+            margin-top: 0.8rem !important;
+            padding-top: 0.5rem !important;
+            font-size: 0.6rem !important;
+        }
+        
+        .print-content [style*="display:grid; grid-template-columns:1fr 1fr"] {
+            padding: 0.4rem !important;
+            margin-bottom: 0.5rem !important;
+            gap: 0.3rem !important;
+        }
+        .print-content [style*="display:grid; grid-template-columns:1fr 1fr"] div {
+            font-size: 0.7rem !important;
+        }
+        
+        .print-content [style*="text-align:center; padding:1rem 0; border-bottom:3px solid"] {
+            padding: 0.4rem 0 !important;
+            margin-bottom: 0.5rem !important;
+        }
+        .print-content [style*="text-align:center; padding:1rem 0; border-bottom:3px solid"] h1 {
+            font-size: 1.2rem !important;
+        }
+        .print-content [style*="text-align:center; padding:1rem 0; border-bottom:3px solid"] p {
+            font-size: 0.7rem !important;
+        }
+        
+        @page {
+            size: A4 portrait;
+            margin: 0.8cm 0.8cm 0.8cm 0.8cm !important;
+        }
+        body { 
+            font-size: 10pt !important; 
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
         .print-container { padding: 0 !important; }
     }
     
@@ -476,7 +553,7 @@ MODULE_DATABASE = {
                 {'code': 'ECH301', 'name': 'Environmental Chemistry', 'theory': 3, 'lab': 3},
                 {'code': 'BAC301', 'name': 'Basic Applied Chemistry', 'theory': 3, 'lab': 2},
                 {'code': 'PCH304', 'name': 'Quantum Chemistry and Spectroscopy', 'theory': 4, 'lab': 0},
-                {'code': 'NCH301', 'name': 'Chemistry of Natural Product', 'theory': 3, 'lab': 3},
+                {'code': 'NCH301', 'name': 'Chemistry of Natural Products', 'theory': 3, 'lab': 3},
                 {'code': 'BCH302', 'name': 'Principles of Biochemistry II', 'theory': 3, 'lab': 3},
             ]
         }
@@ -560,7 +637,7 @@ MODULE_DATABASE = {
                 {'code': 'BTZ202', 'name': 'Genetics', 'theory': 3, 'lab': 4},
                 {'code': 'ZLS202', 'name': 'Cell and Molecular Biology', 'theory': 3, 'lab': 4},
                 {'code': 'ZLS203', 'name': 'Chordate Biology', 'theory': 3, 'lab': 3},
-                {'code': 'BTZ202', 'name': 'Microbiology', 'theory': 3, 'lab': 6},
+                {'code': 'BTZ203', 'name': 'Microbiology', 'theory': 3, 'lab': 6},
             ]
         },
         'Year 3': {
@@ -573,141 +650,13 @@ MODULE_DATABASE = {
             ],
             'Semester VI': [
                 {'code': 'BTS305', 'name': 'Principles of Plant Systematics', 'theory': 3, 'lab': 3},
-                {'code': 'BTS306', 'name': 'Horticulture and Postharvest Management', 'theory': 3, 'lab': 3},
+                {'code': 'BTS307', 'name': 'Horticulture and Postharvest Management', 'theory': 3, 'lab': 3},
                 {'code': 'BTZ303', 'name': 'Microbiology', 'theory': 3, 'lab': 6},
                 {'code': 'BTZ304', 'name': 'Bioinformatics', 'theory': 2, 'lab': 4},
                 {'code': 'ZLS307', 'name': 'Freshwater Biology', 'theory': 3, 'lab': 6},
                 {'code': 'ZLS308', 'name': 'Animal Physiology', 'theory': 3, 'lab': 6},
-                {'code': 'BTS307', 'name': 'Economic Botany', 'theory': 3, 'lab': 6},
-                {'code': 'BTS308', 'name': 'Plant Biotechnology and Tissue Culture', 'theory': 3, 'lab': 3},
-            ]
-        }
-    },
-    'Physics_New': {
-        'Year 1': {
-            'Semester I': [
-                {'code': 'CME101', 'name': 'Newtonian Mechanics', 'theory': 3, 'lab': 2},
-                {'code': 'CSP101', 'name': 'Foundations of Python Programming', 'theory': 2, 'lab': 3},
-                {'code': 'FMT101', 'name': 'Fundamentals of Mathematics', 'theory': 4, 'lab': 0},
-                {'code': 'LAC101', 'name': 'རྫོང་ཁ་ཤེས་ཡྫོན་འབྲི་རྩལ།', 'theory': 2, 'lab': 0},
-                {'code': 'ACS101', 'name': 'Academic Skills', 'theory': 2, 'lab': 0},
-            ],
-            'Semester II': [
-                {'code': 'PHW101', 'name': 'Oscillations and Waves', 'theory': 3, 'lab': 2},
-                {'code': 'DAT101', 'name': 'Statistical Computing I', 'theory': 2, 'lab': 3},
-                {'code': 'FCH101', 'name': 'Fundamentals of Chemistry', 'theory': 3, 'lab': 2},
-                {'code': 'LAC102', 'name': 'རྫོང་ཁ་རྩྫོམ་རིག།', 'theory': 2, 'lab': 0},
-                {'code': 'Elective I', 'name': 'Elective I', 'theory': 2, 'lab': 0},
-            ]
-        },
-        'Year 2': {
-            'Semester I': [
-                {'code': 'APH201', 'name': 'Physics of Space and Satellites', 'theory': 3, 'lab': 2},
-                {'code': 'EMT201', 'name': 'Electricity and Magnetism', 'theory': 3, 'lab': 3},
-                {'code': 'MMP201', 'name': 'Essential Mathematics for Physics', 'theory': 3, 'lab': 0},
-                {'code': 'APH202', 'name': 'Introduction to Electronic Systems', 'theory': 2, 'lab': 3},
-                {'code': 'Elective II', 'name': 'Elective II', 'theory': 2, 'lab': 0},
-            ],
-            'Semester II': [
-                {'code': 'MMP202', 'name': 'Mathematical Methods in Physics', 'theory': 3, 'lab': 0},
-                {'code': 'FMP201', 'name': 'Modern Physics', 'theory': 3, 'lab': 2},
-                {'code': 'PHW202', 'name': 'Optics', 'theory': 3, 'lab': 3},
-                {'code': 'TPH201', 'name': 'Thermal Physics', 'theory': 3, 'lab': 2},
-                {'code': 'Elective III', 'name': 'Elective III', 'theory': 2, 'lab': 0},
-            ]
-        },
-        'Year 3': {
-            'Semester I': [
-                {'code': 'APH303', 'name': 'Computational Physics', 'theory': 3, 'lab': 3},
-                {'code': 'APH304', 'name': 'Applied Integrated Circuits and Logic Design', 'theory': 3, 'lab': 3},
-                {'code': 'EPH301', 'name': 'Atmospheric Physics', 'theory': 3, 'lab': 2},
-                {'code': 'QME301', 'name': 'Quantum Mechanics', 'theory': 4, 'lab': 0},
-                {'code': 'Elective IV', 'name': 'Elective IV', 'theory': 2, 'lab': 0},
-            ],
-            'Semester II': [
-                {'code': 'ANP301', 'name': 'Atomic Physics', 'theory': 3, 'lab': 3},
-                {'code': 'ANP302', 'name': 'Nuclear Physics', 'theory': 3, 'lab': 2},
-                {'code': 'SSP301', 'name': 'Condensed Matter Physics', 'theory': 3, 'lab': 3},
-                {'code': 'APH305', 'name': 'Machine Learning for Physics', 'theory': 3, 'lab': 3},
-                {'code': 'Elective V', 'name': 'Elective V', 'theory': 2, 'lab': 0},
-            ]
-        },
-        'Year 4': {
-            'Semester I': [
-                {'code': 'THP402', 'name': 'Statistical Physics', 'theory': 4, 'lab': 0},
-                {'code': 'EMT402', 'name': 'Electromagnetic Theory', 'theory': 4, 'lab': 0},
-                {'code': 'SSP402', 'name': 'Advanced Condensed Matter Physics', 'theory': 3, 'lab': 3},
-                {'code': 'QME402', 'name': 'Advanced Quantum Mechanics', 'theory': 4, 'lab': 0},
-                {'code': 'CRD403', 'name': 'Capstone Project I', 'theory': 2, 'lab': 4},
-            ],
-            'Semester II': [
-                {'code': 'CME402', 'name': 'Lagrangian and Hamiltonian Mechanics', 'theory': 3, 'lab': 0},
-                {'code': 'EPH402', 'name': 'Physics of Renewable Energy', 'theory': 3, 'lab': 2},
-                {'code': 'CRD404', 'name': 'Capstone Project II', 'theory': 2, 'lab': 4},
-            ]
-        }
-    },
-    'LifeSciences_New': {
-        'Year 1': {
-            'Semester I': [
-                {'code': 'BTZ101', 'name': 'Fundamentals of Life Science', 'theory': 3, 'lab': 4},
-                {'code': 'FCH101', 'name': 'Fundamentals of Chemistry', 'theory': 3, 'lab': 2},
-                {'code': 'FMT101', 'name': 'Fundamentals of Mathematics', 'theory': 3, 'lab': 0},
-                {'code': 'LAC101', 'name': 'རྫོང་ཁ་ཤེས་ཡྫོན་འབྲི་རྩལ།', 'theory': 2, 'lab': 0},
-                {'code': 'ACS101', 'name': 'Academic Skills', 'theory': 2, 'lab': 0},
-            ],
-            'Semester II': [
-                {'code': 'BTS101', 'name': 'Plant Diversity', 'theory': 3, 'lab': 3},
-                {'code': 'PLS101', 'name': 'Fundamentals of Physics for Life Sciences', 'theory': 2, 'lab': 2},
-                {'code': 'CSP101', 'name': 'Foundations of Python Programming', 'theory': 2, 'lab': 3},
-                {'code': 'LAC102', 'name': 'རྫོང་ཁ་རྩྫོམ་རིག།', 'theory': 2, 'lab': 0},
-                {'code': 'Elective I', 'name': 'Elective I', 'theory': 2, 'lab': 0},
-            ]
-        },
-        'Year 2': {
-            'Semester I': [
-                {'code': 'BTS202', 'name': 'Plant Anatomy and Physiology', 'theory': 3, 'lab': 3},
-                {'code': 'BCH201', 'name': 'Biochemistry', 'theory': 3, 'lab': 4},
-                {'code': 'ZLS201', 'name': 'Invertebrate Biology and Parasitology', 'theory': 3, 'lab': 3},
-                {'code': 'DAT101', 'name': 'Statistical Computing I', 'theory': 2, 'lab': 3},
-                {'code': 'Elective II', 'name': 'Elective II', 'theory': 2, 'lab': 0},
-            ],
-            'Semester II': [
-                {'code': 'BTS203', 'name': 'Embryology of Angiosperms', 'theory': 3, 'lab': 6},
-                {'code': 'BTZ202', 'name': 'Genetics', 'theory': 3, 'lab': 4},
-                {'code': 'ZLS202', 'name': 'Cell and Molecular Biology', 'theory': 3, 'lab': 4},
-                {'code': 'ZLS203', 'name': 'Chordate Biology', 'theory': 3, 'lab': 3},
-                {'code': 'Elective III', 'name': 'Elective III', 'theory': 2, 'lab': 0},
-            ]
-        },
-        'Year 3': {
-            'Semester I': [
-                {'code': 'BTS304', 'name': 'Fungi and Plant Pathology', 'theory': 3, 'lab': 3},
-                {'code': 'GRS301', 'name': 'GIS and Remote Sensing', 'theory': 2, 'lab': 3},
-                {'code': 'ZLS304', 'name': 'Anatomy and Physiology of Vertebrates', 'theory': 3, 'lab': 3},
-                {'code': 'ZLS305', 'name': 'Developmental Biology', 'theory': 3, 'lab': 3},
-                {'code': 'Elective IV', 'name': 'Elective IV', 'theory': 2, 'lab': 0},
-            ],
-            'Semester II': [
-                {'code': 'BTS305', 'name': 'Principles of Plant Systematics', 'theory': 3, 'lab': 3},
-                {'code': 'BTS306', 'name': 'Horticulture and Postharvest Management', 'theory': 3, 'lab': 3},
-                {'code': 'BTZ303', 'name': 'Microbiology', 'theory': 3, 'lab': 6},
-                {'code': 'BTZ304', 'name': 'Bioinformatics', 'theory': 2, 'lab': 4},
-                {'code': 'Elective V', 'name': 'Elective V', 'theory': 2, 'lab': 0},
-            ]
-        },
-        'Year 4': {
-            'Semester I': [
-                {'code': 'BTS407', 'name': 'Ethnobotany and Phytochemistry', 'theory': 3, 'lab': 4},
-                {'code': 'BTZ405', 'name': 'Biotechnology and Tissue Culture', 'theory': 3, 'lab': 4},
-                {'code': 'BTZ406', 'name': 'Ecology and Biodiversity Conservation', 'theory': 3, 'lab': 3},
-                {'code': 'ZLS406', 'name': 'Freshwater Biology', 'theory': 3, 'lab': 3},
-                {'code': 'CRD403', 'name': 'Capstone Project I', 'theory': 2, 'lab': 4},
-            ],
-            'Semester II': [
-                {'code': 'ZLS407', 'name': 'Animal Behaviour', 'theory': 3, 'lab': 3},
-                {'code': 'BTZ407', 'name': 'Immunology and Forensic Biology', 'theory': 3, 'lab': 4},
-                {'code': 'CRD404', 'name': 'Capstone Project II', 'theory': 2, 'lab': 4},
+                {'code': 'BTS308', 'name': 'Economic Botany', 'theory': 3, 'lab': 6},
+                {'code': 'BTS309', 'name': 'Plant Biotechnology and Tissue Culture', 'theory': 3, 'lab': 3},
             ]
         }
     },
@@ -715,63 +664,198 @@ MODULE_DATABASE = {
         'Year 1': {
             'Semester I': [
                 {'code': 'ACS101', 'name': 'Academic Skills', 'theory': 2, 'lab': 0},
-                {'code': 'MEC101', 'name': 'Mechanics I', 'theory': 3, 'lab': 2},
                 {'code': 'GCH101', 'name': 'General Chemistry I', 'theory': 3, 'lab': 2},
                 {'code': 'FMT101', 'name': 'Foundations of Mathematics I', 'theory': 3, 'lab': 0},
-                {'code': 'MPH101', 'name': 'Foundations of Practical Physics', 'theory': 2, 'lab': 3},
+                {'code': 'LAC101', 'name': 'རྫོང་ཁ་ཤེས་ཡྫོན་འབྲི་རྩལ།', 'theory': 2, 'lab': 0},
+                {'code': 'CSP101', 'name': 'Foundations of Python Programming', 'theory': 2, 'lab': 3},
             ],
             'Semester II': [
-                {'code': 'FMT102', 'name': 'Mathematical Software', 'theory': 2, 'lab': 2},
-                {'code': 'MEC102', 'name': 'Waves and Oscillations', 'theory': 3, 'lab': 2},
                 {'code': 'GCH102', 'name': 'General Chemistry II', 'theory': 3, 'lab': 2},
-                {'code': 'FMT103', 'name': 'Foundations of Mathematics II', 'theory': 3, 'lab': 0},
-                {'code': 'DZG101', 'name': 'Dzongkha Communication', 'theory': 2, 'lab': 0},
+                {'code': 'FCH101', 'name': 'Fundamentals of Inorganic Chemistry', 'theory': 3, 'lab': 2},
+                {'code': 'FMT102', 'name': 'Mathematical Software', 'theory': 2, 'lab': 2},
+                {'code': 'LAC102', 'name': 'རྫོང་ཁ་རྩྫོམ་རིག།', 'theory': 2, 'lab': 0},
+                {'code': 'PLS101', 'name': 'Fundamentals of Physics for Life Sciences', 'theory': 2, 'lab': 2},
             ]
         },
         'Year 2': {
             'Semester III': [
-                {'code': 'MEC203', 'name': 'Electromagnetism', 'theory': 3, 'lab': 3},
-                {'code': 'MEC204', 'name': 'Mechanics II', 'theory': 3, 'lab': 3},
+                {'code': 'ICH101', 'name': 'Inorganic Chemistry I', 'theory': 3, 'lab': 3},
+                {'code': 'PCH201', 'name': 'Physical Chemistry I', 'theory': 3, 'lab': 3},
                 {'code': 'FMT204', 'name': 'Foundations of Mathematics III', 'theory': 3, 'lab': 0},
-                {'code': 'PLT101', 'name': 'Programming Fundamentals', 'theory': 2, 'lab': 3},
-                {'code': 'MMP201', 'name': 'Mathematical Physics I', 'theory': 3, 'lab': 0},
+                {'code': 'DAT101', 'name': 'Statistical Computing I', 'theory': 2, 'lab': 3},
+                {'code': 'OCH201', 'name': 'Organic Chemistry I', 'theory': 3, 'lab': 3},
             ],
             'Semester IV': [
-                {'code': 'MPH202', 'name': 'Foundations of Modern Physics', 'theory': 3, 'lab': 2},
-                {'code': 'OPH201', 'name': 'Optics', 'theory': 3, 'lab': 3},
+                {'code': 'OCH202', 'name': 'Organic Chemistry II', 'theory': 3, 'lab': 3},
+                {'code': 'PCH202', 'name': 'Physical Chemistry II', 'theory': 3, 'lab': 3},
                 {'code': 'AMT202', 'name': 'Foundations of Statistics', 'theory': 3, 'lab': 0},
-                {'code': 'TPH201', 'name': 'Thermal Physics', 'theory': 3, 'lab': 2},
-                {'code': 'ELE201', 'name': 'Electronic Circuits and Devices', 'theory': 3, 'lab': 3},
+                {'code': 'ACH201', 'name': 'Introduction to Analytical Chemistry', 'theory': 3, 'lab': 2},
+                {'code': 'ICH202', 'name': 'Inorganic Chemistry II', 'theory': 3, 'lab': 3},
             ]
         },
         'Year 3': {
             'Semester V': [
-                {'code': 'MPH303', 'name': 'Atomic Physics', 'theory': 3, 'lab': 3},
-                {'code': 'MPH304', 'name': 'Quantum Physics', 'theory': 4, 'lab': 0},
-                {'code': 'MMP302', 'name': 'Computational Physics', 'theory': 3, 'lab': 3},
-                {'code': 'TPH302', 'name': 'Statistical Mechanics', 'theory': 4, 'lab': 0},
-                {'code': 'RSM301', 'name': 'Research Methods', 'theory': 3, 'lab': 0},
+                {'code': 'OCH303', 'name': 'Organic Chemistry III', 'theory': 3, 'lab': 3},
+                {'code': 'PCH303', 'name': 'Physical Chemistry III', 'theory': 3, 'lab': 3},
+                {'code': 'OCH304', 'name': 'Spectroscopic Methods in Chemistry', 'theory': 4, 'lab': 0},
+                {'code': 'BCH301', 'name': 'Principles of Biochemistry I', 'theory': 3, 'lab': 3},
+                {'code': 'ICH203', 'name': 'Inorganic Chemistry III', 'theory': 3, 'lab': 3},
             ],
             'Semester VI': [
-                {'code': 'MMP303', 'name': 'Mathematical Physics II', 'theory': 3, 'lab': 0},
-                {'code': 'MPH305', 'name': 'Solid State Physics I', 'theory': 3, 'lab': 2},
-                {'code': 'MPH306', 'name': 'Nuclear Physics', 'theory': 3, 'lab': 2},
-                {'code': 'ELE302', 'name': 'Analogue and Digital Electronics', 'theory': 3, 'lab': 3},
-                {'code': 'MEC305', 'name': 'Electromagnetic Theory', 'theory': 4, 'lab': 0},
+                {'code': 'ECH301', 'name': 'Environmental Chemistry', 'theory': 3, 'lab': 3},
+                {'code': 'BAC301', 'name': 'Basic Applied Chemistry', 'theory': 3, 'lab': 2},
+                {'code': 'PCH304', 'name': 'Quantum Chemistry and Spectroscopy', 'theory': 4, 'lab': 0},
+                {'code': 'NCH301', 'name': 'Chemistry of Natural Products', 'theory': 3, 'lab': 3},
+                {'code': 'BCH302', 'name': 'Principles of Biochemistry II', 'theory': 3, 'lab': 3},
+                {'code': 'RSM301', 'name': 'Research Methods', 'theory': 3, 'lab': 0},
             ]
         },
         'Year 4': {
+            'Semester VII': [
+                {'code': 'ACH402', 'name': 'Advanced Analytical Chemistry', 'theory': 3, 'lab': 3},
+                {'code': 'ICH404', 'name': 'Advanced Inorganic Chemistry', 'theory': 3, 'lab': 3},
+                {'code': 'OCH405', 'name': 'Advanced Organic Chemistry', 'theory': 3, 'lab': 3},
+                {'code': 'PCH405', 'name': 'Advanced Physical Chemistry', 'theory': 3, 'lab': 3},
+                {'code': 'CRD401', 'name': 'Capstone Project I', 'theory': 2, 'lab': 4},
+            ],
+            'Semester VIII': [
+                {'code': 'MCH401', 'name': 'Medicinal Chemistry', 'theory': 3, 'lab': 2},
+                {'code': 'PCH406', 'name': 'Polymer Chemistry', 'theory': 3, 'lab': 2},
+                {'code': 'NCH402', 'name': 'Nanomaterials Chemistry', 'theory': 3, 'lab': 2},
+                {'code': 'CRD402', 'name': 'Capstone Project II', 'theory': 2, 'lab': 4},
+            ]
+        }
+    },
+    'Physics_New': {
+        'Year 1': {
             'Semester I': [
+                {'code': 'ACS101', 'name': 'Academic Skills', 'theory': 2, 'lab': 0},
+                {'code': 'CME101', 'name': 'Newtonian Mechanics', 'theory': 3, 'lab': 2},
+                {'code': 'CSP101', 'name': 'Foundations of Python Programming', 'theory': 2, 'lab': 3},
+                {'code': 'FMT101', 'name': 'Fundamentals of Mathematics I', 'theory': 4, 'lab': 0},
+                {'code': 'LAC101', 'name': 'རྫོང་ཁ་ཤེས་ཡྫོན་འབྲི་རྩལ།', 'theory': 2, 'lab': 0},
+            ],
+            'Semester II': [
+                {'code': 'PHW101', 'name': 'Oscillations and Waves', 'theory': 3, 'lab': 2},
+                {'code': 'DAT101', 'name': 'Statistical Computing I', 'theory': 2, 'lab': 3},
+                {'code': 'FCH101', 'name': 'Fundamentals of Chemistry', 'theory': 3, 'lab': 2},
+                {'code': 'LAC102', 'name': 'རྫོང་ཁ་རྩྫོམ་རིག།', 'theory': 2, 'lab': 0},
+                {'code': 'FMT102', 'name': 'Fundamentals of Mathematics II', 'theory': 3, 'lab': 0},
+            ]
+        },
+        'Year 2': {
+            'Semester III': [
+                {'code': 'APH201', 'name': 'Physics of Space and Satellites', 'theory': 3, 'lab': 2},
+                {'code': 'EMT201', 'name': 'Electricity and Magnetism', 'theory': 3, 'lab': 3},
+                {'code': 'MMP201', 'name': 'Essential Mathematics for Physics', 'theory': 3, 'lab': 0},
+                {'code': 'APH202', 'name': 'Introduction to Electronic Systems', 'theory': 2, 'lab': 3},
+                {'code': 'MEC201', 'name': 'Mechanics II', 'theory': 3, 'lab': 2},
+            ],
+            'Semester IV': [
+                {'code': 'MMP202', 'name': 'Mathematical Methods in Physics', 'theory': 3, 'lab': 0},
+                {'code': 'FMP201', 'name': 'Modern Physics', 'theory': 3, 'lab': 2},
+                {'code': 'PHW202', 'name': 'Optics', 'theory': 3, 'lab': 3},
+                {'code': 'TPH201', 'name': 'Thermal Physics', 'theory': 3, 'lab': 2},
+                {'code': 'DAT102', 'name': 'Statistical Computing II', 'theory': 2, 'lab': 3},
+            ]
+        },
+        'Year 3': {
+            'Semester V': [
+                {'code': 'APH303', 'name': 'Computational Physics', 'theory': 3, 'lab': 3},
+                {'code': 'APH304', 'name': 'Applied Integrated Circuits and Logic Design', 'theory': 3, 'lab': 3},
+                {'code': 'EPH301', 'name': 'Atmospheric Physics', 'theory': 3, 'lab': 2},
+                {'code': 'QME301', 'name': 'Quantum Mechanics I', 'theory': 4, 'lab': 0},
+                {'code': 'RSM301', 'name': 'Research Methods', 'theory': 3, 'lab': 0},
+            ],
+            'Semester VI': [
+                {'code': 'ANP301', 'name': 'Atomic Physics', 'theory': 3, 'lab': 3},
+                {'code': 'ANP302', 'name': 'Nuclear Physics', 'theory': 3, 'lab': 2},
+                {'code': 'SSP301', 'name': 'Condensed Matter Physics', 'theory': 3, 'lab': 3},
+                {'code': 'APH305', 'name': 'Machine Learning for Physics', 'theory': 3, 'lab': 3},
+                {'code': 'QME302', 'name': 'Quantum Mechanics II', 'theory': 3, 'lab': 0},
+            ]
+        },
+        'Year 4': {
+            'Semester VII': [
                 {'code': 'THP402', 'name': 'Statistical Physics', 'theory': 4, 'lab': 0},
                 {'code': 'EMT402', 'name': 'Electromagnetic Theory', 'theory': 4, 'lab': 0},
                 {'code': 'SSP402', 'name': 'Advanced Condensed Matter Physics', 'theory': 3, 'lab': 3},
-                {'code': 'QME402', 'name': 'Advanced Quantum Mechanics', 'theory': 4, 'lab': 0},
-                {'code': 'CRD403', 'name': 'Capstone Project I', 'theory': 2, 'lab': 4},
+                {'code': 'QME403', 'name': 'Advanced Quantum Mechanics', 'theory': 4, 'lab': 0},
+                {'code': 'CRD401', 'name': 'Capstone Project I', 'theory': 2, 'lab': 4},
             ],
-            'Semester II': [
+            'Semester VIII': [
                 {'code': 'CME402', 'name': 'Lagrangian and Hamiltonian Mechanics', 'theory': 3, 'lab': 0},
                 {'code': 'EPH402', 'name': 'Physics of Renewable Energy', 'theory': 3, 'lab': 2},
-                {'code': 'CRD404', 'name': 'Capstone Project II', 'theory': 2, 'lab': 4},
+                {'code': 'APH406', 'name': 'Astrophysics', 'theory': 3, 'lab': 2},
+                {'code': 'CRD402', 'name': 'Capstone Project II', 'theory': 2, 'lab': 4},
+            ]
+        }
+    },
+    'LifeSciences_New': {
+        'Year 1': {
+            'Semester I': [
+                {'code': 'ACS101', 'name': 'Academic Skills', 'theory': 2, 'lab': 0},
+                {'code': 'BTZ101', 'name': 'Fundamentals of Life Science', 'theory': 3, 'lab': 4},
+                {'code': 'FCH101', 'name': 'Fundamentals of Chemistry', 'theory': 3, 'lab': 2},
+                {'code': 'FMT101', 'name': 'Fundamentals of Mathematics', 'theory': 3, 'lab': 0},
+                {'code': 'LAC101', 'name': 'རྫོང་ཁ་ཤེས་ཡྫོན་འབྲི་རྩལ།', 'theory': 2, 'lab': 0},
+            ],
+            'Semester II': [
+                {'code': 'BTS101', 'name': 'Plant Diversity', 'theory': 3, 'lab': 3},
+                {'code': 'PLS101', 'name': 'Fundamentals of Physics for Life Sciences', 'theory': 2, 'lab': 2},
+                {'code': 'CSP101', 'name': 'Foundations of Python Programming', 'theory': 2, 'lab': 3},
+                {'code': 'LAC102', 'name': 'རྫོང་ཁ་རྩྫོམ་རིག།', 'theory': 2, 'lab': 0},
+                {'code': 'DAT101', 'name': 'Statistical Computing I', 'theory': 2, 'lab': 3},
+            ]
+        },
+        'Year 2': {
+            'Semester III': [
+                {'code': 'BTS202', 'name': 'Plant Anatomy and Physiology', 'theory': 3, 'lab': 3},
+                {'code': 'BCH201', 'name': 'Biochemistry', 'theory': 3, 'lab': 4},
+                {'code': 'ZLS201', 'name': 'Invertebrate Biology and Parasitology', 'theory': 3, 'lab': 3},
+                {'code': 'ZLS204', 'name': 'Developmental Biology', 'theory': 3, 'lab': 0},
+                {'code': 'BTZ201', 'name': 'Cell Biology', 'theory': 3, 'lab': 3},
+            ],
+            'Semester IV': [
+                {'code': 'BTS203', 'name': 'Embryology of Angiosperms', 'theory': 3, 'lab': 6},
+                {'code': 'BTZ202', 'name': 'Genetics', 'theory': 3, 'lab': 4},
+                {'code': 'ZLS202', 'name': 'Molecular Biology', 'theory': 3, 'lab': 4},
+                {'code': 'ZLS203', 'name': 'Chordate Biology', 'theory': 3, 'lab': 3},
+                {'code': 'BTZ203', 'name': 'Microbiology', 'theory': 3, 'lab': 6},
+            ]
+        },
+        'Year 3': {
+            'Semester V': [
+                {'code': 'BTS304', 'name': 'Fungi and Plant Pathology', 'theory': 3, 'lab': 3},
+                {'code': 'GRS301', 'name': 'GIS and Remote Sensing', 'theory': 2, 'lab': 3},
+                {'code': 'ZLS304', 'name': 'Anatomy and Physiology of Vertebrates', 'theory': 3, 'lab': 3},
+                {'code': 'ZLS305', 'name': 'Developmental Biology', 'theory': 3, 'lab': 3},
+                {'code': 'BTS306', 'name': 'Plant Breeding and Horticulture', 'theory': 3, 'lab': 6},
+            ],
+            'Semester VI': [
+                {'code': 'BTS305', 'name': 'Principles of Plant Systematics', 'theory': 3, 'lab': 3},
+                {'code': 'BTS307', 'name': 'Horticulture and Postharvest Management', 'theory': 3, 'lab': 3},
+                {'code': 'BTZ303', 'name': 'Microbiology', 'theory': 3, 'lab': 6},
+                {'code': 'BTZ304', 'name': 'Bioinformatics', 'theory': 2, 'lab': 4},
+                {'code': 'ZLS307', 'name': 'Freshwater Biology', 'theory': 3, 'lab': 6},
+                {'code': 'ZLS308', 'name': 'Animal Physiology', 'theory': 3, 'lab': 6},
+                {'code': 'BTS308', 'name': 'Economic Botany', 'theory': 3, 'lab': 6},
+                {'code': 'BTS309', 'name': 'Plant Biotechnology and Tissue Culture', 'theory': 3, 'lab': 3},
+            ]
+        },
+        'Year 4': {
+            'Semester VII': [
+                {'code': 'BTS407', 'name': 'Ethnobotany and Phytochemistry', 'theory': 3, 'lab': 4},
+                {'code': 'BTZ405', 'name': 'Biotechnology and Tissue Culture', 'theory': 3, 'lab': 4},
+                {'code': 'BTZ406', 'name': 'Ecology and Biodiversity Conservation', 'theory': 3, 'lab': 3},
+                {'code': 'ZLS406', 'name': 'Freshwater Biology', 'theory': 3, 'lab': 3},
+                {'code': 'CRD401', 'name': 'Capstone Project I', 'theory': 2, 'lab': 4},
+            ],
+            'Semester VIII': [
+                {'code': 'ZLS407', 'name': 'Animal Behaviour', 'theory': 3, 'lab': 3},
+                {'code': 'BTZ407', 'name': 'Immunology and Forensic Biology', 'theory': 3, 'lab': 4},
+                {'code': 'BTS408', 'name': 'Conservation Biology', 'theory': 3, 'lab': 3},
+                {'code': 'CRD402', 'name': 'Capstone Project II', 'theory': 2, 'lab': 4},
             ]
         }
     }
@@ -854,6 +938,22 @@ if 'name' not in st.session_state:
     st.session_state.name = ""
 if 'admin' not in st.session_state:
     st.session_state.admin = False
+if 'manual_programme' not in st.session_state:
+    st.session_state.manual_programme = ""
+if 'manual_curriculum' not in st.session_state:
+    st.session_state.manual_curriculum = ""
+if 'manual_year' not in st.session_state:
+    st.session_state.manual_year = ""
+if 'manual_semester' not in st.session_state:
+    st.session_state.manual_semester = ""
+if 'manual_module_code' not in st.session_state:
+    st.session_state.manual_module_code = ""
+if 'manual_module_name' not in st.session_state:
+    st.session_state.manual_module_name = ""
+if 'manual_theory' not in st.session_state:
+    st.session_state.manual_theory = 3
+if 'manual_lab' not in st.session_state:
+    st.session_state.manual_lab = 0
 
 # ==========================================
 # 7. ACADEMIC HEADER
@@ -863,15 +963,14 @@ st.markdown(f"""
     <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap;">
         <div>
             <h1>Workload & Roaster System</h1>
-            <div class="subtitle">Department of Natural Sciences • Sherubtse College •Royal University of Bhutan</div>
+            <div class="subtitle">Department of Natural Sciences • Sherubtse College • Royal University of Bhutan</div>
             <div class="meta">
                 <span class="badge">📅 {datetime.now().strftime('%B %d, %Y')}</span>
                 <span class="badge" style="margin-left:0.5rem;">📚 Autumn 2026</span>
                 <span class="badge" style="margin-left:0.5rem;">🏛️ Academic Year 2026-2027</span>
             </div>
         </div>
-     </div>
-        <div style="text-align:right; font-size:0.8rem; color:#8899b0;">
+        <div style="text-align:right; font-size:0.9rem; color: #ffffff;">
             <div>Faculty Self-Service Portal</div>
             <div>Workload Allocation Module</div>
         </div>
@@ -904,64 +1003,208 @@ with st.sidebar:
         st.session_state.name = name
         st.success(f"Welcome, {name}")
     
-    st.selectbox(
+    designation = st.selectbox(
         "Designation",
-        ["Professor", "Associate Professor", "Assistant Professor", "Senior Lecturer", "Lecturer"]
+        ["Assistant Professor", "Senior Lecturer", "Lecturer", "Associate Lecturer", "Assistant Lecturer"]
     )
     
     st.divider()
     st.markdown("### Module Selection")
     
-    prog = st.selectbox("Programme", ["Physics", "Chemistry", "Life Sciences"])
-    curr = st.selectbox("Curriculum", ["Old (3-Year)", "New (4-Year)"])
+    # ===== PROGRAMME SELECTION WITH MANUAL ENTRY =====
+    prog_option = st.radio("Select Programme", ["From List", "Enter Manually"], key="prog_radio", horizontal=True)
     
-    prog_key = {"Physics":"Physics", "Chemistry":"Chemistry", "Life Sciences":"LifeSciences"}[prog]
-    curr_key = "Old" if curr == "Old (3-Year)" else "New"
-    key = f"{prog_key}_{curr_key}"
+    if prog_option == "From List":
+        prog = st.selectbox("Programme", ["Physics", "Chemistry", "Life Sciences"])
+        st.session_state.manual_programme = ""
+    else:
+        prog = st.text_input("Enter Programme", value=st.session_state.manual_programme, placeholder="e.g., Environmental Science")
+        if prog:
+            st.session_state.manual_programme = prog
     
-    year = st.selectbox("Year", ["Year 1", "Year 2", "Year 3", "Year 4"])
-    sem = st.selectbox("Semester", ["Semester I", "Semester II", "Semester III", "Semester IV", "Semester V", "Semester VI"])
+    # ===== CURRICULUM SELECTION WITH MANUAL ENTRY =====
+    curr_option = st.radio("Select Curriculum", ["From List", "Enter Manually"], key="curr_radio", horizontal=True)
     
+    if curr_option == "From List":
+        curr = st.selectbox("Curriculum", ["Old (3-Year)", "New (4-Year)"])
+        st.session_state.manual_curriculum = ""
+    else:
+        curr = st.text_input("Enter Curriculum", value=st.session_state.manual_curriculum, placeholder="e.g., New (4-Year)")
+        if curr:
+            st.session_state.manual_curriculum = curr
+    
+    # ===== YEAR SELECTION WITH MANUAL ENTRY =====
+    year_option = st.radio("Select Year", ["From List", "Enter Manually"], key="year_radio", horizontal=True)
+    
+    if year_option == "From List":
+        year = st.selectbox("Year", ["Year 1", "Year 2", "Year 3", "Year 4"])
+        st.session_state.manual_year = ""
+    else:
+        year = st.text_input("Enter Year", value=st.session_state.manual_year, placeholder="e.g., Year 1")
+        if year:
+            st.session_state.manual_year = year
+    
+    # ===== SEMESTER SELECTION WITH MANUAL ENTRY =====
+    sem_option = st.radio("Select Semester", ["From List", "Enter Manually"], key="sem_radio", horizontal=True)
+    
+    if sem_option == "From List":
+        sem = st.selectbox("Semester", ["Semester I", "Semester II", "Semester III", "Semester IV", "Semester V", "Semester VI", "Semester VII", "Semester VIII"])
+        st.session_state.manual_semester = ""
+    else:
+        sem = st.text_input("Enter Semester", value=st.session_state.manual_semester, placeholder="e.g., Semester I")
+        if sem:
+            st.session_state.manual_semester = sem
+    
+    # ===== GET MODULES =====
     modules = []
     try:
-        modules = MODULE_DATABASE[key][year][sem]
+        prog_key = {"Physics":"Physics", "Chemistry":"Chemistry", "Life Sciences":"LifeSciences"}.get(prog, prog)
+        curr_key = "Old" if curr == "Old (3-Year)" else "New" if curr == "New (4-Year)" else curr
+        key = f"{prog_key}_{curr_key}"
+        
+        if key in MODULE_DATABASE and year in MODULE_DATABASE[key] and sem in MODULE_DATABASE[key][year]:
+            modules = MODULE_DATABASE[key][year][sem]
+        else:
+            for p in ["Physics", "Chemistry", "LifeSciences"]:
+                for c in ["Old", "New"]:
+                    test_key = f"{p}_{c}"
+                    if test_key in MODULE_DATABASE:
+                        if year in MODULE_DATABASE[test_key] and sem in MODULE_DATABASE[test_key][year]:
+                            modules = MODULE_DATABASE[test_key][year][sem]
+                            break
+                if modules:
+                    break
     except:
-        st.warning("No modules available for the selected parameters")
+        pass
     
     if modules:
-        opts = [f"{m['code']} - {m['name']}" for m in modules]
-        sel = st.selectbox("Select Module", ["-- Select --"] + opts)
+        # ===== MODULE SELECTION WITH MANUAL ENTRY =====
+        mod_option = st.radio("Select Module", ["From List", "Enter Manually"], key="mod_radio", horizontal=True)
         
-        if sel != "-- Select --":
-            code = sel.split(" - ")[0]
-            mod = next(m for m in modules if m['code'] == code)
+        if mod_option == "From List":
+            opts = [f"{m['code']} - {m['name']}" for m in modules]
+            sel = st.selectbox("Select Module", ["-- Select --"] + opts)
             
-            students = st.slider("Student Enrolment", 25, 40, 30)
+            if sel != "-- Select --" and sel:
+                code = sel.split(" - ")[0]
+                mod = next(m for m in modules if m['code'] == code)
+                
+                students = st.slider("Student Enrolment", 25, 40, 30)
+                
+                room = st.text_input(
+                    "Room / Laboratory",
+                    value=st.session_state.rooms.get(code, ""),
+                    placeholder="e.g., Science Hall 1, Lab 203"
+                )
+                
+                col_a, col_b = st.columns(2)
+                with col_a:
+                    if st.button("Add Module", use_container_width=True):
+                        if not any(m['code'] == code for m in st.session_state.modules):
+                            st.session_state.modules.append(mod)
+                            st.session_state.counts[code] = students
+                            if room:
+                                st.session_state.rooms[code] = room
+                            st.success(f"Added: {code}")
+                            st.rerun()
+                        else:
+                            st.warning("Module already in list")
+                with col_b:
+                    if st.button("Clear All", use_container_width=True):
+                        st.session_state.modules = []
+                        st.session_state.counts = {}
+                        st.session_state.rooms = {}
+                        st.rerun()
+        
+        else:
+            # ===== MANUAL MODULE ENTRY =====
+            st.markdown("**Enter Module Details**")
+            mod_code = st.text_input("Module Code", value=st.session_state.manual_module_code, placeholder="e.g., ENV101")
+            mod_name = st.text_input("Module Name", value=st.session_state.manual_module_name, placeholder="e.g., Environmental Science")
             
-            room = st.text_input(
-                "Room / Laboratory",
-                value=st.session_state.rooms.get(code, ""),
-                placeholder="e.g., Science Hall 1, Lab 203"
-            )
+            col_t, col_l = st.columns(2)
+            with col_t:
+                theory = st.number_input("Theory Hours", min_value=0, max_value=6, value=st.session_state.manual_theory, step=1)
+            with col_l:
+                lab = st.number_input("Lab Hours", min_value=0, max_value=6, value=st.session_state.manual_lab, step=1)
             
-            col_a, col_b = st.columns(2)
-            with col_a:
-                if st.button("Add Module", use_container_width=True):
-                    if not any(m['code'] == code for m in st.session_state.modules):
-                        st.session_state.modules.append(mod)
-                        st.session_state.counts[code] = students
+            if mod_code and mod_name:
+                st.session_state.manual_module_code = mod_code
+                st.session_state.manual_module_name = mod_name
+                st.session_state.manual_theory = theory
+                st.session_state.manual_lab = lab
+                
+                students = st.slider("Student Enrolment", 25, 40, 30)
+                room = st.text_input("Room / Laboratory", placeholder="e.g., Science Hall 1")
+                
+                if st.button("Add Manual Module", use_container_width=True):
+                    if not any(m['code'] == mod_code for m in st.session_state.modules):
+                        new_mod = {
+                            'code': mod_code,
+                            'name': mod_name,
+                            'theory': theory,
+                            'lab': lab
+                        }
+                        st.session_state.modules.append(new_mod)
+                        st.session_state.counts[mod_code] = students
                         if room:
-                            st.session_state.rooms[code] = room
-                        st.success(f"Added: {code}")
+                            st.session_state.rooms[mod_code] = room
+                        st.success(f"Added: {mod_code}")
                         st.rerun()
                     else:
                         st.warning("Module already in list")
-            with col_b:
+                
                 if st.button("Clear All", use_container_width=True):
                     st.session_state.modules = []
                     st.session_state.counts = {}
                     st.session_state.rooms = {}
                     st.rerun()
+    
+    else:
+        # ===== NO MODULES FOUND - ONLY MANUAL ENTRY =====
+        st.info("No modules found for the selected parameters. Enter manually below.")
+        
+        st.markdown("**Enter Module Details**")
+        mod_code = st.text_input("Module Code", value=st.session_state.manual_module_code, placeholder="e.g., ENV101")
+        mod_name = st.text_input("Module Name", value=st.session_state.manual_module_name, placeholder="e.g., Environmental Science")
+        
+        col_t, col_l = st.columns(2)
+        with col_t:
+            theory = st.number_input("Theory Hours", min_value=0, max_value=6, value=st.session_state.manual_theory, step=1)
+        with col_l:
+            lab = st.number_input("Lab Hours", min_value=0, max_value=6, value=st.session_state.manual_lab, step=1)
+        
+        if mod_code and mod_name:
+            st.session_state.manual_module_code = mod_code
+            st.session_state.manual_module_name = mod_name
+            st.session_state.manual_theory = theory
+            st.session_state.manual_lab = lab
+            
+            students = st.slider("Student Enrolment", 25, 40, 30)
+            room = st.text_input("Room / Laboratory", placeholder="e.g., Science Hall 1")
+            
+            if st.button("Add Manual Module", use_container_width=True):
+                if not any(m['code'] == mod_code for m in st.session_state.modules):
+                    new_mod = {
+                        'code': mod_code,
+                        'name': mod_name,
+                        'theory': theory,
+                        'lab': lab
+                    }
+                    st.session_state.modules.append(new_mod)
+                    st.session_state.counts[mod_code] = students
+                    if room:
+                        st.session_state.rooms[mod_code] = room
+                    st.success(f"Added: {mod_code}")
+                    st.rerun()
+                else:
+                    st.warning("Module already in list")
+            
+            if st.button("Clear All", use_container_width=True):
+                st.session_state.modules = []
+                st.session_state.counts = {}
+                st.session_state.rooms = {}
+                st.rerun()
     
     st.divider()
     if st.session_state.modules:
@@ -1113,31 +1356,27 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 11. PRINTABLE CONTENT - COMPLETE PAGE
+# 11. PRINTABLE CONTENT
 # ==========================================
-# This section contains everything that will be printed
 st.markdown('<div class="print-content">', unsafe_allow_html=True)
 
-# Print Header
 st.markdown(f"""
-<div style="text-align:center; padding:1rem 0; border-bottom:3px solid #1a2a4a; margin-bottom:1.5rem;">
-    <h1 style="color:#1a2a4a; font-size:1.8rem; margin:0;">Workload & Roaster Report</h1>
-    <p style="color:#495057; margin:0.2rem 0;">Department of Natural Sciences • Royal University of Bhutan</p>
-    <p style="color:#7f8c8d; font-size:0.85rem; margin:0;">{datetime.now().strftime('%B %d, %Y')} • Autumn 2026</p>
+<div style="text-align:center; padding:0.4rem 0; border-bottom:3px solid #1a2a4a; margin-bottom:0.5rem;">
+    <h1 style="color:#1a2a4a; font-size:1.4rem; margin:0;">Workload & Roaster Report</h1>
+    <p style="color:#495057; margin:0.1rem 0; font-size:0.75rem;">Department of Natural Sciences • Royal University of Bhutan</p>
+    <p style="color:#7f8c8d; font-size:0.7rem; margin:0;">{datetime.now().strftime('%B %d, %Y')} • Autumn 2026</p>
 </div>
 """, unsafe_allow_html=True)
 
-# Faculty Info
 st.markdown(f"""
-<div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.5rem; padding:1rem; background:#f8f9fa; border-radius:6px;">
-    <div><strong>Faculty Name:</strong> {st.session_state.name}</div>
-    <div><strong>Designation:</strong> {st.session_state.get('designation', 'Not Specified')}</div>
-    <div><strong>Programme:</strong> {st.session_state.get('programme', 'Not Specified')}</div>
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:0.3rem; margin-bottom:0.5rem; padding:0.4rem; background:#f8f9fa; border-radius:4px; font-size:0.7rem;">
+    <div><strong>Faculty:</strong> {st.session_state.name}</div>
+    <div><strong>Designation:</strong> {designation if 'designation' in locals() else 'Not Specified'}</div>
+    <div><strong>Programme:</strong> {prog if 'prog' in locals() else 'Not Specified'}</div>
     <div><strong>Semester:</strong> Autumn 2026</div>
 </div>
 """, unsafe_allow_html=True)
 
-# Modules Table
 if st.session_state.modules:
     st.markdown("### Teaching Assignment")
     
@@ -1157,20 +1396,17 @@ if st.session_state.modules:
         })
     df_print = pd.DataFrame(data)
     
-    # Display as table
     st.table(df_print)
     
-    # Summary
     st.markdown(f"""
-    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:0.5rem; margin-top:1rem; padding:1rem; background:#f8f9fa; border-radius:6px; text-align:center;">
-        <div><strong>Total Modules</strong><br>{len(st.session_state.modules)}</div>
-        <div><strong>Total Theory</strong><br>{df_print['Theory'].sum()}h</div>
-        <div><strong>Total Lab</strong><br>{df_print['Lab'].sum()}h</div>
-        <div><strong>Total Students</strong><br>{df_print['Students'].sum()}</div>
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:0.2rem; margin-top:0.3rem; padding:0.4rem; background:#f8f9fa; border-radius:4px; text-align:center; font-size:0.7rem;">
+        <div><strong>Modules</strong><br>{len(st.session_state.modules)}</div>
+        <div><strong>Theory</strong><br>{df_print['Theory'].sum()}h</div>
+        <div><strong>Lab</strong><br>{df_print['Lab'].sum()}h</div>
+        <div><strong>Students</strong><br>{df_print['Students'].sum()}</div>
     </div>
     """, unsafe_allow_html=True)
     
-    # WAM Score
     wam_total = calculate_wam([
         {**m, 'students': st.session_state.counts.get(m['code'], 25)}
         for m in st.session_state.modules
@@ -1178,26 +1414,25 @@ if st.session_state.modules:
     status, emoji, color, msg = get_status(wam_total)
     
     st.markdown(f"""
-    <div style="background:#1a2a4a; color:white; padding:1rem; border-radius:6px; margin-top:1rem; text-align:center;">
-        <div style="font-size:1.5rem; font-weight:700;">{wam_total}</div>
-        <div style="font-size:0.8rem; opacity:0.8;">Workload Allocation Model Score</div>
-        <div style="margin-top:0.3rem; background:{color}; display:inline-block; padding:0.2rem 1rem; border-radius:4px; color:white; font-weight:600;">{emoji} {status}</div>
+    <div style="background:#1a2a4a; color:white; padding:0.5rem; border-radius:4px; margin-top:0.5rem; text-align:center;">
+        <div style="font-size:1.2rem; font-weight:700;">{wam_total}</div>
+        <div style="font-size:0.65rem; opacity:0.8;">Workload Allocation Model Score</div>
+        <div style="margin-top:0.2rem; background:{color}; display:inline-block; padding:0.1rem 0.8rem; border-radius:3px; color:white; font-weight:600; font-size:0.7rem;">{emoji} {status}</div>
     </div>
     """, unsafe_allow_html=True)
 else:
     st.info("No modules selected")
 
-# Footer
 st.markdown("""
-<div style="text-align:center; margin-top:2rem; padding-top:1rem; border-top:2px solid #e8ecf0; color:#7f8c8d; font-size:0.75rem;">
+<div style="text-align:center; margin-top:0.8rem; padding-top:0.4rem; border-top:2px solid #e8ecf0; color:#7f8c8d; font-size:0.6rem;">
     Generated by Workload & Roaster System • Royal University of Bhutan
 </div>
 """, unsafe_allow_html=True)
 
-st.markdown('</div>', unsafe_allow_html=True)  # End print-content
+st.markdown('</div>', unsafe_allow_html=True)
 
 # ==========================================
-# 12. DETAILED SECTIONS (Non-printable)
+# 12. DETAILED SECTIONS
 # ==========================================
 if st.session_state.modules:
     st.divider()
@@ -1292,11 +1527,10 @@ if st.session_state.modules:
         """, unsafe_allow_html=True)
 
 # ==========================================
-# 13. PRINT BUTTON - FIXED VERSION
+# 13. PRINT BUTTON
 # ==========================================
 st.divider()
 
-# Inject JavaScript for print functionality
 st.markdown("""
 <script>
 function printReport() {
@@ -1305,11 +1539,9 @@ function printReport() {
 </script>
 """, unsafe_allow_html=True)
 
-# Create columns for centering
 col1, col2, col3 = st.columns([1, 2, 1])
 
 with col2:
-    # Custom button with onclick handler
     st.markdown("""
     <div class="no-print" style="text-align:center; padding:0.5rem 0;">
         <button onclick="printReport()" style="
