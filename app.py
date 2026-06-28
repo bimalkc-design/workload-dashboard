@@ -987,42 +987,15 @@ if 'manual_students' not in st.session_state:
 if 'manual_room' not in st.session_state:
     st.session_state.manual_room = ""
 
-# ==========================================
-# 7. STUDENT COUNTER FUNCTION
-# ==========================================
-def student_counter(label, key, min_val=20, max_val=60, default=30):
-    """Create a student counter with +/- buttons"""
-    
-    # Get current value from session state or use default
-    if key not in st.session_state:
-        st.session_state[key] = default
-    
-    # Create the counter layout
-    col1, col2, col3, col4 = st.columns([1, 1, 3, 1])
-    
-    with col1:
-        if st.button("−", key=f"{key}_minus", help="Decrease by 1"):
-            if st.session_state[key] > min_val:
-                st.session_state[key] -= 1
-                st.rerun()
-    
-    with col2:
-        st.markdown(f"""
-        <div style="text-align:center; font-size:1.2rem; font-weight:700; color:#1a2a4a; padding:0.2rem 0;">
-            {st.session_state[key]}
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col3:
-        st.caption(f"Students {min_val}-{max_val}")
-    
-    with col4:
-        if st.button("+", key=f"{key}_plus", help="Increase by 1"):
-            if st.session_state[key] < max_val:
-                st.session_state[key] += 1
-                st.rerun()
-    
-    return st.session_state[key]
+# ===== STUDENT COUNTER WITH +/- BUTTONS =====
+st.markdown("**Student Enrolment**")
+students = student_counter(
+    label="Students",
+    key="student_count_no_modules",
+    min_val=20,  # Changed from 25 to 20
+    max_val=70,  # Changed from 60 to 70
+    default=30
+)
 
 # ==========================================
 # 8. ACADEMIC HEADER
