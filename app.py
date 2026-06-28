@@ -4,7 +4,6 @@ import plotly.express as px
 from datetime import datetime
 import json
 import os
-import base64
 
 # ==========================================
 # 1. PAGE CONFIGURATION
@@ -25,22 +24,6 @@ st.markdown("""
     
     .main { padding: 0 0.5rem !important; }
     .block-container { padding: 0.5rem 0.5rem 1rem 0.5rem !important; max-width: 100% !important; }
-    
-    /* Fix dropdown to open downward */
-    .stSelectbox > div > div {
-        position: relative !important;
-    }
-    .stSelectbox > div > div > div {
-        position: relative !important;
-    }
-    .stSelectbox [data-baseweb="popover"] {
-        position: relative !important;
-        top: 0 !important;
-        left: 0 !important;
-    }
-    .stSelectbox [data-baseweb="select"] {
-        position: relative !important;
-    }
     
     /* Academic Header */
     .academic-header {
@@ -220,13 +203,6 @@ st.markdown("""
         box-shadow: 0 2px 8px rgba(26,42,74,0.2);
     }
     
-    .print-btn > button {
-        background: #2a6a4a;
-    }
-    .print-btn > button:hover {
-        background: #3a8a5a;
-    }
-    
     /* Timetable Card */
     .timetable-academic {
         background: #ffffff;
@@ -269,39 +245,59 @@ st.markdown("""
         .timetable-entry { grid-template-columns: 1fr; gap: 0.1rem; padding: 0.6rem 0; }
     }
     
-    /* Print Styles */
+    /* PRINT STYLES - Print everything */
     @media print {
+        /* Hide Streamlit elements */
         .stApp { background: white !important; }
-        .academic-header { background: #1a2a4a !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-        .wam-professional { background: #1a2a4a !important; -webkit-print-color-adjust: exact !important; }
-        .status-badge { -webkit-print-color-adjust: exact !important; }
-        .module-academic { break-inside: avoid; border: 1px solid #ddd !important; }
         .stSidebar { display: none !important; }
         .stButton { display: none !important; }
         .stTabs { display: none !important; }
-        .threshold-academic { display: none !important; }
+        .stSelectbox { display: none !important; }
+        .stTextInput { display: none !important; }
+        .stSlider { display: none !important; }
+        .stRadio { display: none !important; }
+        .stMarkdown .threshold-academic { display: none !important; }
         .admin-academic { display: none !important; }
         .no-print { display: none !important; }
-        .print-only { display: block !important; }
-        .timetable-academic { break-inside: avoid; border: 1px solid #ddd !important; }
         .stats-academic { display: none !important; }
+        .stAlert { display: none !important; }
+        .stInfo { display: none !important; }
+        .stWarning { display: none !important; }
+        .stSuccess { display: none !important; }
+        .stException { display: none !important; }
+        .stSpinner { display: none !important; }
+        
+        /* Show print content */
+        .print-content { display: block !important; }
+        
+        /* Print styling */
+        .academic-header { 
+            background: #1a2a4a !important; 
+            -webkit-print-color-adjust: exact !important; 
+            print-color-adjust: exact !important;
+            padding: 1rem 1.5rem !important;
+        }
+        .wam-professional { 
+            background: #1a2a4a !important; 
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        .status-badge { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+        .module-academic { break-inside: avoid; border: 1px solid #ddd !important; }
+        .timetable-academic { break-inside: avoid; border: 1px solid #ddd !important; }
+        .timetable-entry { break-inside: avoid; }
+        
+        /* Page setup */
+        @page {
+            size: A4;
+            margin: 1.5cm;
+        }
+        body { font-size: 11pt !important; }
+        .print-container { padding: 0 !important; }
     }
-    .print-only { display: none; }
     
-    /* Fix for dropdowns */
-    .stSelectbox {
-        position: relative;
-        z-index: 100;
-    }
-    .stSelectbox div[data-baseweb="select"] {
-        position: relative;
-    }
-    .stSelectbox ul {
-        position: absolute !important;
-        top: 100% !important;
-        left: 0 !important;
-        z-index: 1000 !important;
-    }
+    .print-content { display: none; }
+    .no-print { display: block; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -990,12 +986,96 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 11. DETAILED SECTIONS
+# 11. PRINTABLE CONTENT - COMPLETE PAGE
+# ==========================================
+# This section contains everything that will be printed
+st.markdown('<div class="print-content">', unsafe_allow_html=True)
+
+# Print Header
+st.markdown(f"""
+<div style="text-align:center; padding:1rem 0; border-bottom:3px solid #1a2a4a; margin-bottom:1.5rem;">
+    <h1 style="color:#1a2a4a; font-size:1.8rem; margin:0;">Workload & Roaster Report</h1>
+    <p style="color:#495057; margin:0.2rem 0;">Department of Natural Sciences • Royal University of Bhutan</p>
+    <p style="color:#7f8c8d; font-size:0.85rem; margin:0;">{datetime.now().strftime('%B %d, %Y')} • Autumn 2026</p>
+</div>
+""", unsafe_allow_html=True)
+
+# Faculty Info
+st.markdown(f"""
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.5rem; padding:1rem; background:#f8f9fa; border-radius:6px;">
+    <div><strong>Faculty Name:</strong> {st.session_state.name}</div>
+    <div><strong>Designation:</strong> {st.session_state.get('designation', 'Not Specified')}</div>
+    <div><strong>Programme:</strong> {st.session_state.get('programme', 'Not Specified')}</div>
+    <div><strong>Semester:</strong> Autumn 2026</div>
+</div>
+""", unsafe_allow_html=True)
+
+# Modules Table
+if st.session_state.modules:
+    st.markdown("### Teaching Assignment")
+    
+    data = []
+    for m in st.session_state.modules:
+        students = st.session_state.counts.get(m['code'], 25)
+        room = st.session_state.rooms.get(m['code'], "Not Assigned")
+        w = calculate_wam([{**m, 'students': students}])
+        data.append({
+            'Code': m['code'],
+            'Module': m['name'],
+            'Theory': m['theory'],
+            'Lab': m['lab'],
+            'Students': students,
+            'Room': room,
+            'WAM': w
+        })
+    df_print = pd.DataFrame(data)
+    
+    # Display as table
+    st.table(df_print)
+    
+    # Summary
+    st.markdown(f"""
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:0.5rem; margin-top:1rem; padding:1rem; background:#f8f9fa; border-radius:6px; text-align:center;">
+        <div><strong>Total Modules</strong><br>{len(st.session_state.modules)}</div>
+        <div><strong>Total Theory</strong><br>{df_print['Theory'].sum()}h</div>
+        <div><strong>Total Lab</strong><br>{df_print['Lab'].sum()}h</div>
+        <div><strong>Total Students</strong><br>{df_print['Students'].sum()}</div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # WAM Score
+    wam_total = calculate_wam([
+        {**m, 'students': st.session_state.counts.get(m['code'], 25)}
+        for m in st.session_state.modules
+    ])
+    status, emoji, color, msg = get_status(wam_total)
+    
+    st.markdown(f"""
+    <div style="background:#1a2a4a; color:white; padding:1rem; border-radius:6px; margin-top:1rem; text-align:center;">
+        <div style="font-size:1.5rem; font-weight:700;">{wam_total}</div>
+        <div style="font-size:0.8rem; opacity:0.8;">Workload Allocation Model Score</div>
+        <div style="margin-top:0.3rem; background:{color}; display:inline-block; padding:0.2rem 1rem; border-radius:4px; color:white; font-weight:600;">{emoji} {status}</div>
+    </div>
+    """, unsafe_allow_html=True)
+else:
+    st.info("No modules selected")
+
+# Footer
+st.markdown("""
+<div style="text-align:center; margin-top:2rem; padding-top:1rem; border-top:2px solid #e8ecf0; color:#7f8c8d; font-size:0.75rem;">
+    Generated by Workload & Roaster System • Royal University of Bhutan
+</div>
+""", unsafe_allow_html=True)
+
+st.markdown('</div>', unsafe_allow_html=True)  # End print-content
+
+# ==========================================
+# 12. DETAILED SECTIONS (Non-printable)
 # ==========================================
 if st.session_state.modules:
     st.divider()
     
-    tab1, tab2, tab3, tab4 = st.tabs(["Detailed Breakdown", "Analytics", "History", "Timetable & Roaster"])
+    tab1, tab2, tab3, tab4 = st.tabs(["Detailed Breakdown", "Analytics", "History", "Timetable"])
     
     with tab1:
         data = []
@@ -1053,21 +1133,16 @@ if st.session_state.modules:
             st.info("No historical records found")
     
     with tab4:
-        st.subheader("Timetable & Roaster")
+        st.subheader("Timetable View")
         st.caption("Academic schedule with room allocations")
         
         st.markdown(f"""
-        <div class="timetable-academic" id="timetable-print">
+        <div class="timetable-academic">
             <div class="header">
-                Teaching Timetable & Roaster
+                Teaching Timetable
                 <span style="font-size:0.8rem; font-weight:400; color:#7f8c8d; float:right;">
                     {st.session_state.name} • {datetime.now().strftime('%B %d, %Y')}
                 </span>
-            </div>
-            <div style="margin-bottom:0.8rem; font-size:0.85rem; color:#495057;">
-                <span><strong>Department:</strong> Natural Sciences</span>
-                <span style="margin-left:1.5rem;"><strong>Semester:</strong> Autumn 2026</span>
-                <span style="margin-left:1.5rem;"><strong>Academic Year:</strong> 2026-2027</span>
             </div>
         """, unsafe_allow_html=True)
         
@@ -1088,30 +1163,33 @@ if st.session_state.modules:
             </div>
         </div>
         """, unsafe_allow_html=True)
-        
-        # Print Button - Working version
-        st.markdown("""
-        <div class="no-print" style="margin-top:1rem;">
-            <button onclick="window.print()" style="
-                background: #1a2a4a;
-                color: white;
-                border: none;
-                padding: 0.5rem 2rem;
-                border-radius: 4px;
-                font-weight: 600;
-                font-size: 0.9rem;
-                cursor: pointer;
-                transition: all 0.2s ease;
-                width: 100%;
-            " onmouseover="this.style.background='#2a4a6a'" 
-            onmouseout="this.style.background='#1a2a4a'">
-                🖨️ Print Timetable
-            </button>
-        </div>
-        """, unsafe_allow_html=True)
 
 # ==========================================
-# 12. ADMIN SECTION
+# 13. PRINT BUTTON - AT BOTTOM OF PAGE
+# ==========================================
+st.divider()
+st.markdown("""
+<div class="no-print" style="text-align:center; padding:0.5rem 0;">
+    <button onclick="window.print()" style="
+        background: #1a2a4a;
+        color: white;
+        border: none;
+        padding: 0.7rem 3rem;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 8px rgba(26,42,74,0.2);
+    " onmouseover="this.style.background='#2a4a6a'; this.style.boxShadow='0 4px 12px rgba(26,42,74,0.3)';" 
+    onmouseout="this.style.background='#1a2a4a'; this.style.boxShadow='0 2px 8px rgba(26,42,74,0.2)';">
+        🖨️ Print Complete Report
+    </button>
+</div>
+""", unsafe_allow_html=True)
+
+# ==========================================
+# 14. ADMIN SECTION
 # ==========================================
 if st.session_state.admin:
     st.divider()
@@ -1154,7 +1232,7 @@ if st.session_state.admin:
             st.info("No data available")
 
 # ==========================================
-# 13. FOOTER
+# 15. FOOTER
 # ==========================================
 st.divider()
 st.markdown("""
