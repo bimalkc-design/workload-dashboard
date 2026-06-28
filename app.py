@@ -11,7 +11,6 @@ st.set_page_config(page_title="DNS Workload Command", page_icon="🎓", layout="
 
 MASTER_LOG = "dns_workload_master.csv"
 
-# Professional Academic Styling
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Playfair+Display:wght@700&display=swap');
@@ -29,11 +28,10 @@ st.markdown("""
         padding: 10px 15px; border-radius: 4px; font-weight: 700; margin-bottom: 1rem;
     }
 
-    /* Reference Card Styling */
     .tutor-card-print {
         background: white; border: 2px solid var(--rub-blue);
         padding: 1rem; border-radius: 10px; margin-bottom: 1rem;
-        min-height: 200px; font-family: 'Inter', sans-serif;
+        min-height: 220px; font-family: 'Inter', sans-serif;
     }
     .card-header {
         background: var(--rub-blue); color: var(--rub-gold);
@@ -42,7 +40,7 @@ st.markdown("""
         font-size: 0.8rem;
     }
     .card-label { color: var(--rub-red); font-weight: 700; font-size: 0.7rem; text-transform: uppercase; }
-    .card-value { color: var(--rub-blue); font-weight: 700; font-size: 1rem; }
+    .card-value { color: var(--rub-blue); font-weight: 700; font-size: 1rem; line-height: 1.2; }
 
     @media print {
         .no-print { display: none !important; }
@@ -52,7 +50,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 2. COMPLETE MODULE DATABASE
+# 2. MODULE DATABASE (Truncated for readability)
 # ==========================================
 MODULE_DATABASE = {
     'Chemistry_Old': {
@@ -62,53 +60,24 @@ MODULE_DATABASE = {
                 {'code': 'FCH101', 'name': 'Fundamentals of Inorganic Chemistry', 'theory': 3, 'lab': 2},
                 {'code': 'FPH101', 'name': 'Foundations of Physics I', 'theory': 2, 'lab': 3},
                 {'code': 'FMT101', 'name': 'Foundations of Mathematics I', 'theory': 3, 'lab': 0},
-            ],
-            'Semester II': [
-                {'code': 'FCH102', 'name': 'Fundamentals of Physical Chemistry', 'theory': 3, 'lab': 2},
-                {'code': 'APC101', 'name': 'IT Skills', 'theory': 2, 'lab': 2},
-                {'code': 'FCH103', 'name': 'Fundamentals of Organic Chemistry', 'theory': 3, 'lab': 2},
-                {'code': 'FPH102', 'name': 'Foundations of Physics II', 'theory': 2, 'lab': 3},
-                {'code': 'FMT103', 'name': 'Foundations of Mathematics II', 'theory': 3, 'lab': 0},
-            ]
-        },
-        'Year 2': {
-            'Semester III': [
-                {'code': 'ICH101', 'name': 'Inorganic Chemistry I', 'theory': 3, 'lab': 3},
-                {'code': 'PCH201', 'name': 'Physical Chemistry I', 'theory': 3, 'lab': 3},
             ]
         }
     },
-    'Physics_New': {
-        'Year 1': {
-            'Semester I': [
-                {'code': 'CME101', 'name': 'Newtonian Mechanics', 'theory': 3, 'lab': 2},
-                {'code': 'CSP101', 'name': 'Python Programming', 'theory': 2, 'lab': 3},
-            ]
-        }
-    },
-    'LifeSciences_New': {
-        'Year 1': {
-            'Semester I': [
-                {'code': 'BTZ101', 'name': 'Fundamentals of Life Science', 'theory': 3, 'lab': 4},
-            ]
-        }
-    }
-} # Logic scales to support your full list
+    'Physics_New': { 'Year 1': { 'Semester I': [{'code': 'CME101', 'name': 'Newtonian Mechanics', 'theory': 3, 'lab': 2}] } },
+    'LifeSciences_New': { 'Year 1': { 'Semester I': [{'code': 'BTZ101', 'name': 'Fundamentals of Life Science', 'theory': 3, 'lab': 4}] } }
+}
 
-FACULTY_LIST = sorted([
-    "Dr. Jas Raj Subba", "Mr. Sangay Wangchuk", "Mrs. Punam Mafchan", "Ms. Kuenzang Choki", 
-    "Ms. Sangay Yuden", "Mr. Tashi Dendup", "Shacha Thinley", "Nachiketa Homchaudhuri"
-])
+FACULTY_LIST = sorted(["Dr. Jas Raj Subba", "Mr. Sangay Wangchuk", "Mrs. Punam Mafchan", "Ms. Kuenzang Choki", "Ms. Sangay Yuden", "Mr. Tashi Dendup"])
 
 # ==========================================
 # 3. UTILITIES & PERSISTENCE
 # ==========================================
 def commit_to_master(faculty, position, basket):
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M")
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     data = []
     for m in basket:
         data.append({
-            "Date": timestamp, "Faculty": faculty, "Rank": position,
+            "Timestamp": timestamp, "Faculty": faculty, "Rank": position,
             "Code": m['code'], "Module": m['name'], "Type": m['type'],
             "Classroom": m['room'] if m['room'] else "Not Specified", 
             "Theory": m['theory'], "Lab": m['lab'],
@@ -129,27 +98,33 @@ with st.sidebar:
     user_name = st.selectbox("Your Identity", ["-- Select --", "➕ New..."] + FACULTY_LIST)
     if user_name == "➕ New...": user_name = st.text_input("Enter Full Name")
     
-    user_rank = st.selectbox("Designation", [
-        "Assistant Lecturer", "Associate Lecturer", "Lecturer", "Senior Lecturer", 
-        "Assistant Professor", "Associate Professor", "Dean", "HoD"
-    ])
+    user_rank = st.selectbox("Designation", ["Assistant Lecturer", "Associate Lecturer", "Lecturer", "Senior Lecturer", "Assistant Professor", "Associate Professor"])
     
     st.divider()
-    st.markdown("### 🔒 HoD Access")
+    st.markdown("### 🔒 HoD/Dean Access")
     admin_pass = st.text_input("Admin PIN", type="password")
     is_admin = (admin_pass == "DNS777")
 
 # ==========================================
-# 5. ADMIN COMMAND CENTER
+# 5. ADMIN COMMAND CENTER (CLEAR RECORDS HERE)
 # ==========================================
 if is_admin:
-    st.markdown("<div class='dean-header'><h1>HoD Audit Terminal</h1></div>", unsafe_allow_html=True)
+    st.markdown("<div class='dean-header'><h1>HoD Master Audit Terminal</h1></div>", unsafe_allow_html=True)
     if os.path.isfile(MASTER_LOG):
         m_df = pd.read_csv(MASTER_LOG)
+        st.markdown("### All Departmental Submissions")
         st.dataframe(m_df, use_container_width=True)
-        st.download_button("📥 Download All Records (CSV)", m_df.to_csv(index=False), "DNS_MASTER.csv")
+        
+        col1, col2 = st.columns(2)
+        with col1:
+            st.download_button("📥 Export Master CSV", m_df.to_csv(index=False), "MASTER_WORKLOAD.csv")
+        with col2:
+            if st.button("🔥 PURGE ALL RECORDS (PERMANENT)", type="secondary"):
+                os.remove(MASTER_LOG)
+                st.success("Database cleared successfully.")
+                st.rerun()
     else:
-        st.info("No records found.")
+        st.info("Database file not found. It will be created upon the first submission.")
     st.stop()
 
 # ==========================================
@@ -164,7 +139,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 if user_name == "-- Select --" or not user_name:
-    st.info("👋 Select your name in the sidebar to begin.")
+    st.info("👋 Please authenticate via the sidebar to access the planner.")
     st.stop()
 
 if 'basket' not in st.session_state: st.session_state.basket = []
@@ -178,13 +153,13 @@ with tab_plan:
         prog = st.selectbox("Program", ["Physics", "Chemistry", "LifeSciences"])
         curr = st.selectbox("Curriculum", ["New", "Old"])
         yr = st.selectbox("Year", ["Year 1", "Year 2", "Year 3", "Year 4"])
-        sem = st.selectbox("Semester", ["Semester I", "Semester II", "Semester III", "Semester IV"])
+        sem = st.selectbox("Semester", ["Semester I", "Semester II"])
         
         db_key = f"{prog}_{curr}"
         m_code, m_name = "", ""
         if db_key in MODULE_DATABASE and yr in MODULE_DATABASE[db_key] and sem in MODULE_DATABASE[db_key][yr]:
             mods = MODULE_DATABASE[db_key][yr][sem]
-            sel_mod = st.selectbox("Module Selection", [f"{m['code']} - {m['name']}" for m in mods] + ["Manual Entry"])
+            sel_mod = st.selectbox("Select Module", [f"{m['code']} - {m['name']}" for m in mods] + ["Manual Entry"])
             if sel_mod != "Manual Entry":
                 entry = next(m for m in mods if f"{m['code']} - {m['name']}" == sel_mod)
                 m_code, m_name = entry['code'], entry['name']
@@ -193,56 +168,68 @@ with tab_plan:
             m_code = st.text_input("Module Code")
             m_name = st.text_input("Module Name")
             
-        m_type = st.selectbox("Component Type", ["Theory + Lab", "Theory Only", "Lab Only"])
-        m_room = st.text_input("Classroom/Lab Name", placeholder="e.g. Hall 1")
+        m_type = st.selectbox("Component", ["Theory + Lab", "Theory Only", "Lab Only"])
+        m_room = st.text_input("Classroom/Venue")
         m_st = st.number_input("Students", 1, 300, 30)
         m_th = st.number_input("Theory Hours", 0, 10, 3)
         m_lb = st.number_input("Lab Hours", 0, 10, 0)
 
-        if st.button("➕ Add to My Draft"):
+        if st.button("➕ Add to My Draft", type="primary"):
             st.session_state.basket.append({'code': m_code, 'name': m_name, 'type': m_type, 'room': m_room, 'theory': m_th, 'lab': m_lb, 'students': m_st})
             st.rerun()
 
     with c_pre:
-        st.markdown('<div class="section-head">📋 Current Draft</div>', unsafe_allow_html=True)
-        for i, m in enumerate(st.session_state.basket):
-            st.markdown(f"**{m['code']}** - {m['name']} ({m['room']})")
-            if st.button(f"🗑️ Remove {m['code']}", key=f"del_{i}"):
-                st.session_state.basket.pop(i)
-                st.rerun()
+        st.markdown('<div class="section-head">📋 My Draft Canvas</div>', unsafe_allow_html=True)
         
         if st.session_state.basket:
-            if st.button("🚀 SUBMIT FINAL PLAN"):
+            # CLEAR DRAFT BUTTON
+            if st.button("🗑️ Clear Entire Draft"):
+                st.session_state.basket = []
+                st.rerun()
+                
+            for i, m in enumerate(st.session_state.basket):
+                st.markdown(f"✅ **{m['code']}** - {m['name']} ({m['room']})")
+            
+            st.divider()
+            if st.button("🚀 SUBMIT FINAL PLAN TO MASTER LOG", type="primary"):
                 commit_to_master(user_name, user_rank, st.session_state.basket)
                 st.balloons()
                 st.session_state.basket = []
+                st.success("Submitted successfully! Go to the 'Printable Cards' tab to see your reference.")
                 st.rerun()
+        else:
+            st.info("Draft is empty.")
 
 # ==========================================
 # 7. PRINTABLE REFERENCE CARDS
 # ==========================================
 with tab_cards:
-    st.markdown('<div class="no-print"><h3>💳 Personal Reference Cards</h3><p>Click the button below to print your schedule cards.</p></div>', unsafe_allow_html=True)
+    st.markdown('<div class="no-print"><h3>💳 Reference Cards</h3><p>Submit your drafting plan to update these cards.</p></div>', unsafe_allow_html=True)
     
-    # JavaScript Print Trigger
-    if st.button("🖨️ Print My Cards", type="primary", key="print_btn"):
-        components.html("<script>window.print();</script>", height=0)
-
     if os.path.isfile(MASTER_LOG):
         all_data = pd.read_csv(MASTER_LOG).fillna("Not Specified")
         my_data = all_data[all_data['Faculty'] == user_name]
         
         if not my_data.empty:
+            # Filter to show only the MOST RECENT submission session to avoid clutter
+            latest_timestamp = my_data['Timestamp'].max()
+            display_data = my_data[my_data['Timestamp'] == latest_timestamp]
+            
+            st.markdown(f"**Showing Cards for Submission Date:** `{latest_timestamp}`")
+            
+            if st.button("🖨️ Print These Cards", type="primary"):
+                components.html("<script>window.print();</script>", height=0)
+
             grid = st.columns(3)
-            for idx, row in my_data.iterrows():
+            for idx, row in display_data.iterrows():
                 with grid[idx % 3]:
                     st.markdown(f"""
                     <div class="tutor-card-print">
-                        <div class="card-header">{row['Rank'].upper()} REFERENCE CARD</div>
-                        <span class="card-label">Faculty Name</span><br><span class="card-value">{row['Faculty']}</span><br>
+                        <div class="card-header">{row['Rank'].upper()} REFERENCE</div>
+                        <span class="card-label">Faculty</span><br><span class="card-value">{row['Faculty']}</span><br>
                         <span class="card-label">Module</span><br><span class="card-value">{row['Code']} - {row['Module']}</span><br>
-                        <span class="card-label">Venue / Room</span><br><span class="card-value" style="color:var(--rub-red);">{row['Classroom']}</span><br>
-                        <hr style="margin: 10px 0; border: 1px solid #eee;">
+                        <span class="card-label">Venue</span><br><span class="card-value" style="color:var(--rub-red);">{row['Classroom']}</span><br>
+                        <hr style="margin: 8px 0; border: 0.5px solid #eee;">
                         <div style="display:flex; justify-content:space-between; font-size:0.8rem;">
                             <div><b>{row['Type']}</b></div>
                             <div>{row['Theory']}T | {row['Lab']}L</div>
@@ -250,6 +237,11 @@ with tab_cards:
                     </div>
                     """, unsafe_allow_html=True)
         else:
-            st.info("Submit your plan first.")
+            st.info("No submitted entries found for your identity.")
     else:
-        st.info("Database empty.")
+        st.info("The master database is currently empty.")
+
+# ==========================================
+# 8. FOOTER
+# ==========================================
+st.markdown("<br><hr><div style='text-align: center; color: #7f8c8d; font-size: 0.8rem;'>Department of Natural Sciences • Dean's Command Portal • Cycle 2026</div>", unsafe_allow_html=True)
