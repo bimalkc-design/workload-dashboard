@@ -51,72 +51,6 @@ st.markdown("""
         padding-bottom: 2rem !important;
     }
     
-    .stSelectbox {
-        position: relative !important;
-        z-index: 1 !important;
-    }
-    
-    .stSelectbox > div {
-        position: relative !important;
-    }
-    
-    div[data-baseweb="select"] {
-        position: relative !important;
-    }
-    
-    div[data-baseweb="popover"] {
-        position: fixed !important;
-        z-index: 99999 !important;
-        max-height: 200px !important;
-        overflow-y: auto !important;
-        width: auto !important;
-        min-width: 200px !important;
-        max-width: 300px !important;
-        background: white !important;
-        border: 1px solid #ddd !important;
-        border-radius: 4px !important;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
-    }
-    
-    .stSelectbox [role="listbox"] {
-        max-height: 200px !important;
-        overflow-y: auto !important;
-        background: white !important;
-        border: none !important;
-        padding: 4px 0 !important;
-    }
-    
-    .stSelectbox [role="option"] {
-        padding: 6px 12px !important;
-        font-size: 0.9rem !important;
-    }
-    
-    .stSelectbox [role="option"]:hover {
-        background: #f0f2f6 !important;
-    }
-    
-    .stSelectbox .st-emotion-cache-1whx7kd {
-        position: relative !important;
-        z-index: 2 !important;
-    }
-    
-    section[data-testid="stSidebar"] > div:first-child::-webkit-scrollbar {
-        width: 4px;
-    }
-    
-    section[data-testid="stSidebar"] > div:first-child::-webkit-scrollbar-track {
-        background: #f1f1f1;
-    }
-    
-    section[data-testid="stSidebar"] > div:first-child::-webkit-scrollbar-thumb {
-        background: #c9a84c;
-        border-radius: 2px;
-    }
-    
-    section[data-testid="stSidebar"] > div:first-child::-webkit-scrollbar-thumb:hover {
-        background: #a88a3a;
-    }
-    
     .stSidebar .st-emotion-cache-1r6slb0 {
         padding-right: 0.5rem !important;
         padding-left: 0.5rem !important;
@@ -138,6 +72,15 @@ st.markdown("""
         margin-bottom: 0.5rem !important;
     }
     
+    .stSidebar .stNumberInput {
+        margin-bottom: 0.5rem !important;
+    }
+    
+    .stSidebar .stSelectbox {
+        margin-bottom: 0.5rem !important;
+    }
+    
+    /* Academic Header */
     .academic-header {
         background: #1a2a4a;
         padding: 1.5rem 2rem;
@@ -173,6 +116,7 @@ st.markdown("""
         color: #c9a84c;
     }
     
+    /* WAM Card */
     .wam-professional {
         background: #1a2a4a;
         padding: 1.5rem;
@@ -334,6 +278,27 @@ st.markdown("""
     .timetable-entry .label { font-weight: 600; color: #495057; }
     .timetable-entry .value { color: #212529; }
     
+    .module-type-badge {
+        display: inline-block;
+        padding: 0.1rem 0.6rem;
+        border-radius: 3px;
+        font-size: 0.65rem;
+        font-weight: 600;
+        margin-left: 0.3rem;
+    }
+    .module-type-badge.theory {
+        background: #e3f2fd;
+        color: #1565c0;
+    }
+    .module-type-badge.lab {
+        background: #f3e5f5;
+        color: #7b1fa2;
+    }
+    .module-type-badge.both {
+        background: #e8f5e9;
+        color: #2e7d32;
+    }
+    
     @media (max-width: 768px) {
         .academic-header h1 { font-size: 1.4rem; }
         .wam-professional .number { font-size: 2.5rem; }
@@ -364,6 +329,7 @@ st.markdown("""
         .stDataFrame { display: none !important; }
         .stPlotlyChart { display: none !important; }
         .stDownloadButton { display: none !important; }
+        .stNumberInput { display: none !important; }
         
         .print-content { display: block !important; }
         .print-content * { display: revert !important; }
@@ -950,10 +916,16 @@ if 'manual_module_code' not in st.session_state:
     st.session_state.manual_module_code = ""
 if 'manual_module_name' not in st.session_state:
     st.session_state.manual_module_name = ""
+if 'manual_module_type' not in st.session_state:
+    st.session_state.manual_module_type = "Theory Only"
 if 'manual_theory' not in st.session_state:
     st.session_state.manual_theory = 3
 if 'manual_lab' not in st.session_state:
     st.session_state.manual_lab = 0
+if 'manual_students' not in st.session_state:
+    st.session_state.manual_students = 30
+if 'manual_room' not in st.session_state:
+    st.session_state.manual_room = ""
 
 # ==========================================
 # 7. ACADEMIC HEADER
@@ -1097,6 +1069,10 @@ with st.sidebar:
                     placeholder="e.g., Science Hall 1, Lab 203"
                 )
                 
+                # Show module type
+                mod_type = "Theory + Lab" if mod['theory'] > 0 and mod['lab'] > 0 else "Theory Only" if mod['lab'] == 0 else "Lab Only"
+                st.caption(f"📋 Type: {mod_type} | Theory: {mod['theory']}h | Lab: {mod['lab']}h")
+                
                 col_a, col_b = st.columns(2)
                 with col_a:
                     if st.button("Add Module", use_container_width=True):
@@ -1117,27 +1093,230 @@ with st.sidebar:
                         st.rerun()
         
         else:
-            # ===== MANUAL MODULE ENTRY =====
-            st.markdown("**Enter Module Details**")
-            mod_code = st.text_input("Module Code", value=st.session_state.manual_module_code, placeholder="e.g., ENV101")
-            mod_name = st.text_input("Module Name", value=st.session_state.manual_module_name, placeholder="e.g., Environmental Science")
+            # ===== MANUAL MODULE ENTRY WITH FULL OPTIONS =====
+            st.markdown("### 📝 Enter Module Details")
             
+            # Module Code and Name
+            mod_code = st.text_input(
+                "Module Code", 
+                value=st.session_state.manual_module_code, 
+                placeholder="e.g., ENV101"
+            )
+            mod_name = st.text_input(
+                "Module Name", 
+                value=st.session_state.manual_module_name, 
+                placeholder="e.g., Environmental Science"
+            )
+            
+            # Module Type Selection
+            st.markdown("**Module Type**")
+            mod_type = st.radio(
+                "Select Module Type",
+                ["Theory Only", "Lab Only", "Theory + Lab"],
+                index=["Theory Only", "Lab Only", "Theory + Lab"].index(st.session_state.manual_module_type) 
+                    if st.session_state.manual_module_type in ["Theory Only", "Lab Only", "Theory + Lab"] else 0,
+                horizontal=True
+            )
+            st.session_state.manual_module_type = mod_type
+            
+            # Hours based on type
             col_t, col_l = st.columns(2)
             with col_t:
-                theory = st.number_input("Theory Hours", min_value=0, max_value=6, value=st.session_state.manual_theory, step=1)
-            with col_l:
-                lab = st.number_input("Lab Hours", min_value=0, max_value=6, value=st.session_state.manual_lab, step=1)
+                if mod_type in ["Theory Only", "Theory + Lab"]:
+                    theory = st.number_input(
+                        "Theory Hours", 
+                        min_value=0, 
+                        max_value=6, 
+                        value=st.session_state.manual_theory if st.session_state.manual_theory > 0 else 3, 
+                        step=1
+                    )
+                else:
+                    theory = 0
+                    st.info("Theory hours: 0 (Lab Only module)")
             
-            if mod_code and mod_name:
+            with col_l:
+                if mod_type in ["Lab Only", "Theory + Lab"]:
+                    lab = st.number_input(
+                        "Lab Hours", 
+                        min_value=0, 
+                        max_value=6, 
+                        value=st.session_state.manual_lab if st.session_state.manual_lab > 0 else 3, 
+                        step=1
+                    )
+                else:
+                    lab = 0
+                    st.info("Lab hours: 0 (Theory Only module)")
+            
+            # Student Enrolment
+            students = st.slider(
+                "Student Enrolment", 
+                min_value=25, 
+                max_value=60, 
+                value=st.session_state.manual_students,
+                step=1,
+                help="Number of students enrolled in this module"
+            )
+            st.session_state.manual_students = students
+            
+            # Room / Laboratory
+            room = st.text_input(
+                "Room / Laboratory", 
+                value=st.session_state.manual_room,
+                placeholder="e.g., Science Hall 1, Lab 203"
+            )
+            st.session_state.manual_room = room
+            
+            # Summary of module
+            st.info(f"""
+            📋 **Module Summary:**
+            - Type: {mod_type}
+            - Theory Hours: {theory}h
+            - Lab Hours: {lab}h
+            - Total Hours: {theory + lab}h
+            - Students: {students}
+            - Room: {room if room else 'Not Assigned'}
+            """)
+            
+            # Save to session state
+            if mod_code:
                 st.session_state.manual_module_code = mod_code
+            if mod_name:
                 st.session_state.manual_module_name = mod_name
-                st.session_state.manual_theory = theory
-                st.session_state.manual_lab = lab
-                
-                students = st.slider("Student Enrolment", 25, 40, 30)
-                room = st.text_input("Room / Laboratory", placeholder="e.g., Science Hall 1")
-                
-                if st.button("Add Manual Module", use_container_width=True):
+            st.session_state.manual_theory = theory
+            st.session_state.manual_lab = lab
+            
+            col_a, col_b = st.columns(2)
+            with col_a:
+                if st.button("➕ Add Module", use_container_width=True):
+                    if mod_code and mod_name:
+                        if not any(m['code'] == mod_code for m in st.session_state.modules):
+                            new_mod = {
+                                'code': mod_code,
+                                'name': mod_name,
+                                'theory': theory,
+                                'lab': lab
+                            }
+                            st.session_state.modules.append(new_mod)
+                            st.session_state.counts[mod_code] = students
+                            if room:
+                                st.session_state.rooms[mod_code] = room
+                            st.success(f"✅ Added: {mod_code}")
+                            # Reset manual fields
+                            st.session_state.manual_module_code = ""
+                            st.session_state.manual_module_name = ""
+                            st.session_state.manual_room = ""
+                            st.rerun()
+                        else:
+                            st.warning("⚠️ Module already in list")
+                    else:
+                        st.error("Please enter Module Code and Name")
+            
+            with col_b:
+                if st.button("🗑️ Clear All", use_container_width=True):
+                    st.session_state.modules = []
+                    st.session_state.counts = {}
+                    st.session_state.rooms = {}
+                    st.rerun()
+    
+    else:
+        # ===== NO MODULES FOUND - ONLY MANUAL ENTRY =====
+        st.info("No modules found for the selected parameters. Enter manually below.")
+        
+        st.markdown("### 📝 Enter Module Details")
+        
+        # Module Code and Name
+        mod_code = st.text_input(
+            "Module Code", 
+            value=st.session_state.manual_module_code, 
+            placeholder="e.g., ENV101"
+        )
+        mod_name = st.text_input(
+            "Module Name", 
+            value=st.session_state.manual_module_name, 
+            placeholder="e.g., Environmental Science"
+        )
+        
+        # Module Type Selection
+        st.markdown("**Module Type**")
+        mod_type = st.radio(
+            "Select Module Type",
+            ["Theory Only", "Lab Only", "Theory + Lab"],
+            index=["Theory Only", "Lab Only", "Theory + Lab"].index(st.session_state.manual_module_type) 
+                if st.session_state.manual_module_type in ["Theory Only", "Lab Only", "Theory + Lab"] else 0,
+            horizontal=True
+        )
+        st.session_state.manual_module_type = mod_type
+        
+        # Hours based on type
+        col_t, col_l = st.columns(2)
+        with col_t:
+            if mod_type in ["Theory Only", "Theory + Lab"]:
+                theory = st.number_input(
+                    "Theory Hours", 
+                    min_value=0, 
+                    max_value=6, 
+                    value=st.session_state.manual_theory if st.session_state.manual_theory > 0 else 3, 
+                    step=1
+                )
+            else:
+                theory = 0
+                st.info("Theory hours: 0 (Lab Only module)")
+        
+        with col_l:
+            if mod_type in ["Lab Only", "Theory + Lab"]:
+                lab = st.number_input(
+                    "Lab Hours", 
+                    min_value=0, 
+                    max_value=6, 
+                    value=st.session_state.manual_lab if st.session_state.manual_lab > 0 else 3, 
+                    step=1
+                )
+            else:
+                lab = 0
+                st.info("Lab hours: 0 (Theory Only module)")
+        
+        # Student Enrolment
+        students = st.slider(
+            "Student Enrolment", 
+            min_value=25, 
+            max_value=60, 
+            value=st.session_state.manual_students,
+            step=1,
+            help="Number of students enrolled in this module"
+        )
+        st.session_state.manual_students = students
+        
+        # Room / Laboratory
+        room = st.text_input(
+            "Room / Laboratory", 
+            value=st.session_state.manual_room,
+            placeholder="e.g., Science Hall 1, Lab 203"
+        )
+        st.session_state.manual_room = room
+        
+        # Summary of module
+        st.info(f"""
+        📋 **Module Summary:**
+        - Type: {mod_type}
+        - Theory Hours: {theory}h
+        - Lab Hours: {lab}h
+        - Total Hours: {theory + lab}h
+        - Students: {students}
+        - Room: {room if room else 'Not Assigned'}
+        """)
+        
+        # Save to session state
+        if mod_code:
+            st.session_state.manual_module_code = mod_code
+        if mod_name:
+            st.session_state.manual_module_name = mod_name
+        st.session_state.manual_theory = theory
+        st.session_state.manual_lab = lab
+        
+        col_a, col_b = st.columns(2)
+        with col_a:
+            if st.button("➕ Add Module", use_container_width=True):
+                if mod_code and mod_name:
                     if not any(m['code'] == mod_code for m in st.session_state.modules):
                         new_mod = {
                             'code': mod_code,
@@ -1149,58 +1328,19 @@ with st.sidebar:
                         st.session_state.counts[mod_code] = students
                         if room:
                             st.session_state.rooms[mod_code] = room
-                        st.success(f"Added: {mod_code}")
+                        st.success(f"✅ Added: {mod_code}")
+                        # Reset manual fields
+                        st.session_state.manual_module_code = ""
+                        st.session_state.manual_module_name = ""
+                        st.session_state.manual_room = ""
                         st.rerun()
                     else:
-                        st.warning("Module already in list")
-                
-                if st.button("Clear All", use_container_width=True):
-                    st.session_state.modules = []
-                    st.session_state.counts = {}
-                    st.session_state.rooms = {}
-                    st.rerun()
-    
-    else:
-        # ===== NO MODULES FOUND - ONLY MANUAL ENTRY =====
-        st.info("No modules found for the selected parameters. Enter manually below.")
-        
-        st.markdown("**Enter Module Details**")
-        mod_code = st.text_input("Module Code", value=st.session_state.manual_module_code, placeholder="e.g., ENV101")
-        mod_name = st.text_input("Module Name", value=st.session_state.manual_module_name, placeholder="e.g., Environmental Science")
-        
-        col_t, col_l = st.columns(2)
-        with col_t:
-            theory = st.number_input("Theory Hours", min_value=0, max_value=6, value=st.session_state.manual_theory, step=1)
-        with col_l:
-            lab = st.number_input("Lab Hours", min_value=0, max_value=6, value=st.session_state.manual_lab, step=1)
-        
-        if mod_code and mod_name:
-            st.session_state.manual_module_code = mod_code
-            st.session_state.manual_module_name = mod_name
-            st.session_state.manual_theory = theory
-            st.session_state.manual_lab = lab
-            
-            students = st.slider("Student Enrolment", 25, 40, 30)
-            room = st.text_input("Room / Laboratory", placeholder="e.g., Science Hall 1")
-            
-            if st.button("Add Manual Module", use_container_width=True):
-                if not any(m['code'] == mod_code for m in st.session_state.modules):
-                    new_mod = {
-                        'code': mod_code,
-                        'name': mod_name,
-                        'theory': theory,
-                        'lab': lab
-                    }
-                    st.session_state.modules.append(new_mod)
-                    st.session_state.counts[mod_code] = students
-                    if room:
-                        st.session_state.rooms[mod_code] = room
-                    st.success(f"Added: {mod_code}")
-                    st.rerun()
+                        st.warning("⚠️ Module already in list")
                 else:
-                    st.warning("Module already in list")
-            
-            if st.button("Clear All", use_container_width=True):
+                    st.error("Please enter Module Code and Name")
+        
+        with col_b:
+            if st.button("🗑️ Clear All", use_container_width=True):
                 st.session_state.modules = []
                 st.session_state.counts = {}
                 st.session_state.rooms = {}
@@ -1243,12 +1383,21 @@ with col_main:
             
             w = calculate_wam([{**mod, 'students': students}])
             
+            # Determine module type badge
+            if mod['theory'] > 0 and mod['lab'] > 0:
+                type_badge = '<span class="module-type-badge both">📚 Theory + Lab</span>'
+            elif mod['theory'] > 0:
+                type_badge = '<span class="module-type-badge theory">📖 Theory Only</span>'
+            else:
+                type_badge = '<span class="module-type-badge lab">🧪 Lab Only</span>'
+            
             st.markdown(f"""
             <div class="module-academic">
                 <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;">
                     <div>
                         <span class="code">{mod['code']}</span>
                         <span class="name"> - {mod['name']}</span>
+                        {type_badge}
                         <div class="details">
                             Theory: {mod['theory']}h • Laboratory: {mod['lab']}h • Students: {students}
                             <span style="margin-left:0.8rem;">Room: <strong>{room}</strong></span>
@@ -1390,6 +1539,7 @@ if st.session_state.modules:
             'Module': m['name'],
             'Theory': m['theory'],
             'Lab': m['lab'],
+            'Total': m['theory'] + m['lab'],
             'Students': students,
             'Room': room,
             'WAM': w
@@ -1453,7 +1603,7 @@ if st.session_state.modules:
                 'Students': students,
                 'Room': room,
                 'WAM': w,
-                'Type': 'Theory + Lab' if m['lab'] > 0 else 'Theory Only'
+                'Type': 'Theory + Lab' if m['lab'] > 0 and m['theory'] > 0 else 'Theory Only' if m['theory'] > 0 else 'Lab Only'
             })
         df = pd.DataFrame(data)
         st.dataframe(df, use_container_width=True, hide_index=True)
